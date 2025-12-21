@@ -12,4 +12,11 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Assets\Files\" />
+    <Folder Include="Models\Assets\Images\" />
+    <Folder Include="Models\ViewModels\" />
+    <Folder Include="Models\Services\" />
+  </ItemGroup>
+
 </Project>

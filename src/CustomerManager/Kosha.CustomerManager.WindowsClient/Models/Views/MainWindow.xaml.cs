@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Kosha.CustomerManager.WindowsClient;
+namespace Kosha.CustomerManager.WindowsClient.Models.Views;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -9,6 +9,7 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
+        
         InitializeComponent();
     }
 }
