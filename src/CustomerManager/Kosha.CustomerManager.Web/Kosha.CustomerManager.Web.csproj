@@ -5,4 +5,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Layers\Domain\" />
+    <Folder Include="Models\Layers\Infrastructure\" />
+    <Folder Include="Models\Layers\Presentation\" />
+    <Folder Include="Models\Layers\Persistence\" />
+  </ItemGroup>
+
 </Project>
