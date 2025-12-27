@@ -1,4 +1,8 @@
-﻿namespace Kosha.CustomerManager.Web.Shared.Results;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Kosha.CustomerManager.Web.Shared.Results;
 
 public class Result
 {
