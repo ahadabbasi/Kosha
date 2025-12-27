@@ -6,7 +6,7 @@ using Kosha.CustomerManager.Web.Shared.Results;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
 
-public interface IAuthenticationService
+public interface IUserService
 {
     /// <summary>
     /// Find user by username

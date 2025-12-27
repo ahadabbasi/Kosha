@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 using Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
+using Kosha.CustomerManager.Web.Infrastructure.Configurations;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Algorithms;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Hasher.Default;
@@ -13,14 +15,13 @@ using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using IAuthenticationService = Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication.IAuthenticationService;
 
 namespace Kosha.CustomerManager.Web.Areas.Account.Controllers;
 
 [Area(AreaNameConfiguration.Account)]
 public sealed class LoginController(
     IHasherService hasherService,
-    IAuthenticationService authenticationService
+    IUserService authenticationService
 ) : Controller
 {
     [HttpGet]
@@ -39,70 +40,83 @@ public sealed class LoginController(
     {
         IActionResult result = View(entry);
 
-        if (ModelState.IsValid)
-        {
-            Result<AuthenticationResponse> resultOfFind =
-                await authenticationService.FindByUsernameAsync(entry);
+        Result<AuthenticationResponse> resultOfFind =
+            await authenticationService.FindByUsernameAsync(entry);
 
-            if (
-                resultOfFind &&
-                resultOfFind.Data != null
-            )
+        ModelState.AddError(ErrorConfiguration.UsernameOrPasswordIsWrong);
+
+        if (!resultOfFind)
+        {
+            ModelState.Clear();
+            ModelState.AddError(resultOfFind);
+        }
+
+        if (
+            resultOfFind &&
+            resultOfFind.Data != null
+        )
+        {
+            Result resultOfVerified =
+                await hasherService.VerifyAsync(
+                    new HasherRequest(entry.Password),
+                    new HasherResponse(resultOfFind.Data.Password)
+                );
+
+            if (resultOfVerified)
             {
-                Result resultOfVerified =
-                    await hasherService.VerifyAsync(
-                        new HasherRequest(entry.Password),
-                        new HasherResponse(resultOfFind.Data.Password)
+                ModelState.Clear();
+
+                result = 
+                    RedirectToAction(
+                        nameof(HomeController.Index),
+                        nameof(HomeController).RemoveControllerFromString(),
+                        new { area = AreaNameConfiguration.Dashboard }
                     );
 
-                if (resultOfVerified)
+                if (
+                    !string.IsNullOrWhiteSpace(entry.ReturnUrl) &&
+                    Url.IsLocalUrl(entry.ReturnUrl)
+                )
                 {
-                    result =
-                        !string.IsNullOrWhiteSpace(entry.ReturnUrl) &&
-                        Url.IsLocalUrl(entry.ReturnUrl)
-                            ? Redirect(entry.ReturnUrl!)
-                            : RedirectToAction(
-                                nameof(HomeController.Index),
-                                nameof(HomeController).RemoveControllerFromString(),
-                                new { area = AreaNameConfiguration.Dashboard }
-                            );
+                    result = Redirect(entry.ReturnUrl);
+                }
 
-                    IList<Claim> claims =
-                        new List<Claim>
-                        {
-                            new(ClaimTypes.NameIdentifier, resultOfFind.Data.Id.ToString()),
-                            new (ClaimTypes.GivenName, resultOfFind.Data.Name),
-                            new (ClaimTypes.Surname, resultOfFind.Data.Family),
-                        };
-
-                    Result<IEnumerable<string>> resultOfRoles =
-                        await authenticationService.RolesAsync(
-                            entry
-                        );
-
-                    if (
-                        resultOfRoles &&
-                        resultOfRoles.Data != null &&
-                        resultOfRoles.Data.Any()
-                    )
+                IList<Claim> claims =
+                    new List<Claim>
                     {
-                        claims.Add(
-                            new Claim(ClaimTypes.Role, string.Join(", ", resultOfRoles.Data))
-                        );
-                    }
+                            new(ClaimDefinitionConfiguration.Identifier, resultOfFind.Data.Id.ToString()),
+                            new (ClaimDefinitionConfiguration.Name, resultOfFind.Data.Name),
+                            new (ClaimDefinitionConfiguration.Family, resultOfFind.Data.Family),
+                    };
 
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(new ClaimsIdentity(claims)),
-                        new AuthenticationProperties()
-                        {
-                            IsPersistent = entry.RememberMe
-                        }
+                Result<IEnumerable<string>> resultOfRoles =
+                    await authenticationService.RolesAsync(
+                        entry
+                    );
+
+                if (
+                    resultOfRoles &&
+                    resultOfRoles.Data != null &&
+                    resultOfRoles.Data.Any()
+                )
+                {
+                    claims.Add(
+                        new Claim(ClaimDefinitionConfiguration.Role, string.Join(", ", resultOfRoles.Data))
                     );
                 }
 
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(new ClaimsIdentity(claims)),
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = entry.RememberMe
+                    }
+                );
             }
+
         }
+
 
         return result;
     }

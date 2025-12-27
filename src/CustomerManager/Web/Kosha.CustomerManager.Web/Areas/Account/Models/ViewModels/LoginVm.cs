@@ -1,5 +1,5 @@
-﻿using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
 
 namespace Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 

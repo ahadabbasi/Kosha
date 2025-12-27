@@ -1,8 +1,22 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Text;
+using Kosha.CustomerManager.Web.Areas.Account.Controllers;
+using Kosha.CustomerManager.Web.Infrastructure;
+using Kosha.CustomerManager.Web.Models.Configurations;
+using Kosha.CustomerManager.Web.Models.Extensions;
+using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
+using Kosha.CustomerManager.Web.Models.Infrastructure.Models;
+using Kosha.CustomerManager.Web.Models.Infrastructure.Options;
+using Kosha.CustomerManager.Web.Models.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Kosha.CustomerManager.Web;
 
@@ -13,9 +27,65 @@ public static class Startup
         IConfiguration configuration
     )
     {
+        services.ConfigureOptions<TokenInformationConfigureOption>();
+
+        services.AddScoped<ITokenService, TokenService>();
+
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
+
+                    options.LoginPath =
+                        new PathString(
+                            string.Format(
+                                "{0}{1}{0}{2}",
+                                RouteConfiguration.Separator,
+                                AreaNameConfiguration.Account,
+                                nameof(LoginController).RemoveControllerFromString()
+                            )
+                        );
+
+                    options.LogoutPath =
+                        new PathString(
+                            string.Format(
+                                "{0}{1}{0}{2}",
+                                RouteConfiguration.Separator,
+                                AreaNameConfiguration.Account,
+                                nameof(LogoutController).RemoveControllerFromString()
+                            )
+                        );
+                }
+            )
+            .AddJwtBearer(
+                JwtBearerDefaults.AuthenticationScheme,
+                options =>
+                {
+                    TokenInformation information = new TokenInformation();
+
+                    configuration.GetSection(TokenInformationConfigureOption.Section).Bind(information);
+
+                    options.TokenValidationParameters =
+                        new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = information.Issuer,
+                            ValidAudience = information.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(information.Key))
+                        };
+                }
+            );
+
         services.AddHttpContextAccessor();
 
         services.AddControllersWithViews();
+
+        services.AddInfrastructure(configuration);
     }
 
     public static void Configuration(
