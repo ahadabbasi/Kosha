@@ -1,10 +1,10 @@
-﻿namespace Kosha.CustomerManager.Web.Domain.Helper;
+﻿using System;
 
-public interface IAudit
+namespace Kosha.CustomerManager.Web.Domain.Helper;
+
+public interface IAudit : IRowVersion, IInserted
 {
     Guid Id { get; set; }
-
-    DateTime Inserted { get; set; }
 
     DateTime? Modified { get; set; }
 }
