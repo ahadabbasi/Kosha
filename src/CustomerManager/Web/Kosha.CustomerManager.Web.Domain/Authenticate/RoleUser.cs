@@ -1,8 +1,9 @@
 ﻿using System;
+using Kosha.CustomerManager.Web.Domain.Helper;
 
 namespace Kosha.CustomerManager.Web.Domain.Authenticate;
 
-public class RoleUser
+public class RoleUser : IInserted, IRowVersion
 {
     public Guid RoleId { get; set; }
 
