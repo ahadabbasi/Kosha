@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Persistence.Contexts;
 
-public sealed class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options)
+internal sealed class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     

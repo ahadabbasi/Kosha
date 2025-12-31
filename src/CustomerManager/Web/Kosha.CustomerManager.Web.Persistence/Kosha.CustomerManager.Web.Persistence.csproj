@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Shared\Kosha.CustomerManager.Web.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\Entities\" />
+  </ItemGroup>
+
 </Project>

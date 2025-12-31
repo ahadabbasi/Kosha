@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mediator.Abstractions" Version="3.0.1" />
+    <PackageReference Include="Mediator.SourceGenerator" Version="3.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.22" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
   </ItemGroup>
 
@@ -14,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Authentication\" />
+    <Folder Include="Models\Task\Collectors\" />
+    <Folder Include="Services\Task\Collectors\" />
   </ItemGroup>
 
 </Project>

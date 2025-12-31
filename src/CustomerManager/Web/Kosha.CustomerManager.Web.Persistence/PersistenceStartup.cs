@@ -1,4 +1,6 @@
 ﻿using Kosha.CustomerManager.Web.Persistence.Contexts;
+using Kosha.CustomerManager.Web.Persistence.Helper;
+using Kosha.CustomerManager.Web.Persistence.Repositories;
 using Kosha.CustomerManager.Web.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,8 @@ public static class PersistenceStartup
         services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("default"))
         );
+
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddShared();
 

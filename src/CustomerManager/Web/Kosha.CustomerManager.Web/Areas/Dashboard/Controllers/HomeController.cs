@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kosha.CustomerManager.Web.Models.Configurations;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers
+namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
+
+[Area(AreaNameConfiguration.Dashboard)]
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

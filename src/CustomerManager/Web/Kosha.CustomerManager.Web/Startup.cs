@@ -2,6 +2,7 @@
 using System.Text;
 using Kosha.CustomerManager.Web.Areas.Account.Controllers;
 using Kosha.CustomerManager.Web.Infrastructure;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
 using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
@@ -30,6 +31,8 @@ public static class Startup
         services.ConfigureOptions<TokenInformationConfigureOption>();
 
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddScoped<ITaskBinderService, TaskBinderService>();
 
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(
@@ -85,11 +88,18 @@ public static class Startup
 
         services.AddControllersWithViews();
 
+        services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
+            }
+        );
+
         services.AddInfrastructure(configuration);
     }
 
     public static void Configuration(
-        WebApplication app, 
+        WebApplication app,
         IWebHostEnvironment environment
     )
     {
