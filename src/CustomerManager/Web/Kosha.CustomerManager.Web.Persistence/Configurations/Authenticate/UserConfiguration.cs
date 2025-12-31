@@ -30,5 +30,10 @@ internal sealed class UserConfiguration  : AuditConfiguration<User>
             .WithOne(roleUser => roleUser.User)
             .HasForeignKey(roleUser => roleUser.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(model => model.Actions)
+            .WithOne(model => model.User)
+            .HasForeignKey(model => model.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Kosha.CustomerManager.Web.Domain.Helper;
 
-public interface IAudit : IRowVersion, IInserted
+public interface IAudit : IInserted, IModified, IRowVersion
 {
     Guid Id { get; set; }
-
-    DateTime? Modified { get; set; }
 }

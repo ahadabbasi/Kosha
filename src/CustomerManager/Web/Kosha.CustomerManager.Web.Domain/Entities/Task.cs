@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Kosha.CustomerManager.Web.Domain.Helper;
 
 namespace Kosha.CustomerManager.Web.Domain.Entities;
@@ -24,4 +25,8 @@ public class Task : IAudit
     public DateTime Inserted { get; set; }
 
     public byte[] RowVersion { get; set; }
+
+    public virtual ICollection<TagTask> Tags { get; set; }
+
+    public virtual ICollection<Action> Actions { get; set; }
 }

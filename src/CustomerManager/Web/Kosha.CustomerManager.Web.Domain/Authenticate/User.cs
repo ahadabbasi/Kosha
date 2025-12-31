@@ -23,4 +23,6 @@ public class User : IAudit
     public byte[] RowVersion { get; set; }
 
     public virtual ICollection<RoleUser> Roles { get; set; }
+
+    public virtual ICollection<Domain.Entities.Action> Actions { get; set; }
 }

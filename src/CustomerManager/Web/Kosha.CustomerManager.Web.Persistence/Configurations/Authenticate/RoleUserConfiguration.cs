@@ -9,5 +9,8 @@ internal sealed class RoleUserConfiguration : IEntityTypeConfiguration<RoleUser>
     public void Configure(EntityTypeBuilder<RoleUser> builder)
     {
         builder.HasKey(model => new { model.RoleId, model.UserId });
+
+        builder.Property(model => model.RowVersion)
+            .IsRowVersion();
     }
 }
