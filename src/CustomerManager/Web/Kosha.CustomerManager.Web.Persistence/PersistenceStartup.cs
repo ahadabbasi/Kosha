@@ -1,12 +1,15 @@
 ﻿using Kosha.CustomerManager.Web.Persistence.Contexts;
+using Kosha.CustomerManager.Web.Persistence.Extensions;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Persistence.Interceptors;
 using Kosha.CustomerManager.Web.Persistence.Repositories;
+using Kosha.CustomerManager.Web.Persistence.Services;
 using Kosha.CustomerManager.Web.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Kosha.CustomerManager.Web.Persistence;
 
@@ -26,8 +29,28 @@ public static class PersistenceStartup
 
         services.AddScoped<IUserRepository, UserRepository>();
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         services.AddShared();
 
         return services;
+    }
+
+    public static IHost PersistenceConfiguration(
+        this IHost host,
+        IHostEnvironment env
+    )
+    {
+
+        if (env.IsDevelopment())
+        {
+            host.UseMigration<ApplicationContext>();
+        }
+
+        host.UseSeeder(typeof(PersistenceStartup).Assembly);
+
+        host.SharedConfiguration(env);
+
+        return host;
     }
 }

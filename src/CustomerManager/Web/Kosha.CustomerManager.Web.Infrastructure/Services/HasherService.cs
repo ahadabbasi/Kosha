@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Algorithms;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Hasher.Default;
+using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Algorithms;
+using Kosha.CustomerManager.Web.Shared.Models.Hasher.Default;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 

@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Models;
+using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Models;
 using Kosha.CustomerManager.Web.Shared.Results;
 
-namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher;
+namespace Kosha.CustomerManager.Web.Shared.Helper.Hasher;
 
 public interface IHasherService<in TRequest, TResponse>
     where TRequest : class, IHasherRequest

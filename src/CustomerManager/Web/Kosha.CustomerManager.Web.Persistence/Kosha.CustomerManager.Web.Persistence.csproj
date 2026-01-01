@@ -14,11 +14,16 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Domain\Kosha.CustomerManager.Web.Domain.csproj" />
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Shared\Kosha.CustomerManager.Web.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Attributes\" />
   </ItemGroup>
 
 </Project>

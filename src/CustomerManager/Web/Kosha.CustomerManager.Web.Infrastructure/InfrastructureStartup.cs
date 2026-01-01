@@ -1,17 +1,21 @@
 ﻿using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Algorithms;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Services;
 using Kosha.CustomerManager.Web.Infrastructure.Services.Task;
 using Kosha.CustomerManager.Web.Persistence;
+using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Algorithms;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Kosha.CustomerManager.Web.Infrastructure;
 
 public static class InfrastructureStartup
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services, 
+        IConfiguration configuration
+    )
     {
         services.AddScoped<IUserService, UserService>();
 
@@ -28,5 +32,15 @@ public static class InfrastructureStartup
         services.AddPersistence(configuration);
 
         return services;
+    }
+
+    public static IHost InfrastructureConfiguration(
+        this IHost host, 
+        IHostEnvironment env
+    )
+    {
+        host.PersistenceConfiguration(env);
+
+        return host;
     }
 }

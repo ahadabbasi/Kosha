@@ -3,6 +3,6 @@
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
 
 public record AuthenticationRequest(
-    [Required]
+    [Required, Display(Name = "نام کاربری")]
     string Username
 );
