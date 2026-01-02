@@ -9,4 +9,4 @@ public sealed record AuthenticationResponse(
     string Name, 
     string Family,
     string PhoneNumber
-) : AuthenticationRequest(Username);
+) : AuthenticationSaveRequest(Username, Password, Name, Family, PhoneNumber);

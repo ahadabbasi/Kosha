@@ -20,10 +20,4 @@
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Persistence\Kosha.CustomerManager.Web.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Task\Collectors\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Services\Task\Collectors\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Domain.Authenticate;
 
@@ -10,20 +11,23 @@ public interface IUserRepository : IAuditRepository<User>
     /// Find user by username
     /// </summary>
     /// <param name="username"></param>
+    /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<User?> GetByUsernameAsync(string username);
+    Task<User?> GetByUsernameAsync(string username, CancellationToken cancellation = default);
 
     /// <summary>
     /// Check exist username
     /// </summary>
     /// <param name="username"></param>
+    /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<bool> IsExistUsernameAsync(string username);
+    Task<bool> IsExistUsernameAsync(string username, CancellationToken cancellation = default);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="username"></param>
+    /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<IEnumerable<string>> UserRolesAsync(string username);
+    Task<IEnumerable<string>> UserRolesAsync(string username, CancellationToken cancellation = default);
 }
