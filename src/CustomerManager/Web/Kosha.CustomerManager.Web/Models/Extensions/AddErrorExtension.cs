@@ -6,7 +6,11 @@ namespace Kosha.CustomerManager.Web.Models.Extensions;
 
 public static class AddErrorExtension
 {
-    public static void AddError(this ModelStateDictionary modelState, Result result, Error? defaultError = null)
+    public static void AddError(
+        this ModelStateDictionary modelState, 
+        Result result, 
+        Error? defaultError = null
+    )
     {
         if (!result)
         {
@@ -27,7 +31,10 @@ public static class AddErrorExtension
         }
     }
 
-    public static void AddError(this ModelStateDictionary modelState, Error error)
+    public static void AddError(
+        this ModelStateDictionary modelState, 
+        Error error
+    )
     {
         modelState.AddModelError(
             error.Code,

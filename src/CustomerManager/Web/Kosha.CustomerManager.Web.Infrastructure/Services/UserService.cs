@@ -107,10 +107,7 @@ internal sealed class UserService(
     {
         Result result =
             Result.Failed(
-                new Error(
-                    "",
-                    ""
-                )
+                ErrorConfiguration.UsernameExist
             );
 
         try
@@ -122,10 +119,7 @@ internal sealed class UserService(
             {
                 result =
                     Result.Failed(
-                        new Error(
-                            "",
-                            ""
-                        )
+                        ErrorConfiguration.PhoneNumberExist
                     );
 
                 exist =
@@ -175,12 +169,74 @@ internal sealed class UserService(
         return result;
     }
 
-    public Task<Result> UpdateAsync(
+    public async Task<Result> UpdateAsync(
+        Guid id,
         AuthenticationUpdateRequest request, 
         CancellationToken cancellation = default
     )
     {
-        throw new NotImplementedException();
+        Result result =
+            Result.Failed(
+                ErrorConfiguration.UsernameExist
+            );
+
+        try
+        {
+            IQueryable<User> query =
+                repository.Query()
+                    .Where(item => item.Id != id);
+
+            bool exist =
+                await query
+                    .AnyAsync(
+                        item => item.Username.Equals(request.Username),
+                        cancellation
+                    );
+
+            if (!exist)
+            {
+                result =
+                    Result.Failed(
+                        ErrorConfiguration.PhoneNumberExist
+                    );
+
+                exist =
+                    await query
+                        .AnyAsync(
+                            item => item.PhoneNumber.Equals(request.PhoneNumber),
+                            cancellation
+                        );
+
+                if (!exist)
+                {
+                    result = false;
+
+                    User? entity =
+                        await repository.GetByIdAsync(id);
+
+                    if (entity != null)
+                    {
+                        entity.Name = request.Name; 
+                        entity.Family = request.Family;
+                        entity.Username = request.Username;
+                        entity.PhoneNumber = request.PhoneNumber;
+
+                        repository.Update(entity);
+
+                        await unitOfWork.SaveChangesAsync(cancellation);
+
+                        result = true;
+                    }
+
+                }
+            }
+        }
+        catch (Exception)
+        {
+            //
+        }
+
+        return result;
     }
 
     public async Task<Result> ChangePasswordAsync(

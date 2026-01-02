@@ -79,7 +79,10 @@ public static class Startup
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = information.Issuer,
                             ValidAudience = information.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(information.Key))
+                            IssuerSigningKey = 
+                                new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(information.Key)
+                                )
                         };
                 }
             );
@@ -103,6 +106,8 @@ public static class Startup
         IWebHostEnvironment environment
     )
     {
+        app.UseInfrastructure(environment);
+
         if (!environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
@@ -115,6 +120,7 @@ public static class Startup
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(

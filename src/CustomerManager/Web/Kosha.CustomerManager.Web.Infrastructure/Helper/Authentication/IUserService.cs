@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
@@ -56,10 +57,12 @@ public interface IUserService
     /// <summary>
     /// Update user information
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result> UpdateAsync(
+        Guid id,
         AuthenticationUpdateRequest request,
         CancellationToken cancellation = default
     );

@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Algorithms;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Hasher.Default;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
 using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
@@ -24,7 +22,6 @@ namespace Kosha.CustomerManager.Web.Areas.Account.Controllers.Applications;
 ]
 public sealed class TokenController(
     IUserService authenticationService,
-    IHasherService hasherService,
     ITokenService tokenService
 ) : ControllerBase
 {
@@ -35,7 +32,7 @@ public sealed class TokenController(
 
         Result<AuthenticationResponse> resultOfFind =
             await authenticationService.FindByUsernameAsync(
-                entry,
+                new AuthenticationRequest(entry.Username),
                 cancellation
             );
 
@@ -53,9 +50,11 @@ public sealed class TokenController(
         )
         {
             Result resultOfVerified =
-                await hasherService.VerifyAsync(
-                    new HasherRequest(entry.Password),
-                    new HasherResponse(resultOfFind.Data.Password),
+                await authenticationService.VerifyPasswordAsync(
+                    new AuthenticationVerifiedPasswordRequest(
+                        resultOfFind, 
+                        entry.Password
+                    ),
                     cancellation
                 );
 
@@ -67,7 +66,7 @@ public sealed class TokenController(
 
                 Result<IEnumerable<string>> resultOfRoles =
                     await authenticationService.RolesAsync(
-                        entry,
+                        resultOfFind,
                         cancellation
                     );
 

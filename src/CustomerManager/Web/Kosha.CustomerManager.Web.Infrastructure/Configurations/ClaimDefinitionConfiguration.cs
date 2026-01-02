@@ -6,7 +6,9 @@ public class ClaimDefinitionConfiguration
 {
     public const string Identifier = ClaimTypes.NameIdentifier;
 
-    public const string Name = ClaimTypes.Name;
+    public const string Username = ClaimTypes.Name;
+
+    public const string Name = ClaimTypes.GivenName;
 
     public const string Family = ClaimTypes.Surname;
 

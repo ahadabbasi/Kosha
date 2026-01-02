@@ -1,0 +1,19 @@
+﻿@using Kosha.CustomerManager.Web.Models.Extensions
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Html.MetronicBodyCssClasses(
+        "antialiased",
+        "flex",
+        "h-full",
+        "text-base",
+        "text-foreground",
+        "bg-background"
+    );
+}
+
+<div class="flex items-center justify-center grow bg-center bg-no-repeat page-bg">
+    <div class="kt-card max-w-[380px] w-full">
+        @RenderBody()
+    </div>
+</div>

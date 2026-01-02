@@ -22,6 +22,18 @@ public class ErrorConfiguration
             "Username couldn't found"
         );
 
+    public static readonly Error UsernameExist =
+        new(
+            nameof(UsernameExist),
+            "Username already exist"
+        );
+
+    public static readonly Error PhoneNumberExist =
+        new(
+            nameof(PhoneNumberExist),
+            "Phone number already exist"
+        );
+
     public static readonly Error HashedNotMatch =
         new (
             nameof(HashedNotMatch),

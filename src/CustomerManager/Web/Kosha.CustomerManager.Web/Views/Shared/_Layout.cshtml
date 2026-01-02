@@ -1,46 +1,67 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Kosha.CustomerManager.Web.Models.Extensions
+<!DOCTYPE html>
+<html class="h-full" data-kt-theme="true" data-kt-theme-mode="light" dir="rtl" lang="fa">
 <head>
+    <title>
+        @Html.PageTitle()
+    </title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Kosha.CustomerManager.Web</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <meta content="follow, index" name="robots" />
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+    <link href="~/lib/metronic/9.3.1/media/app/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="~/lib/metronic/9.3.1/media/app/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+    <link href="~/lib/metronic/9.3.1/media/app/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+    <link href="~/favicon.ico" rel="shortcut icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="~/lib/metronic/9.3.1/vendors/apexcharts/apexcharts.css" rel="stylesheet" />
+    <link href="~/lib/metronic/9.3.1/vendors/keenicons/styles.bundle.css" rel="stylesheet" />
+    <link href="~/lib/metronic/9.3.1/css/styles.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kosha.CustomerManager.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<body class="@Html.MetronicBodyCssClasses()">
+    <!-- Theme Mode -->
+    <script>
+        const defaultThemeMode = 'light'; // light|dark|system
+                 let themeMode;
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Kosha.CustomerManager.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+                 if (document.documentElement) {
+                     if (localStorage.getItem('kt-theme')) {
+                         themeMode = localStorage.getItem('kt-theme');
+                     } else if (
+                         document.documentElement.hasAttribute('data-kt-theme-mode')
+                     ) {
+                         themeMode =
+                             document.documentElement.getAttribute('data-kt-theme-mode');
+                     } else {
+                         themeMode = defaultThemeMode;
+                     }
+
+                     if (themeMode === 'system') {
+                         themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+                             ? 'dark'
+                             : 'light';
+                     }
+
+                     document.documentElement.classList.add(themeMode);
+                 }
+    </script>
+    <!-- End of Theme Mode -->
+    <!-- Page -->
+    <style>
+        .page-bg {
+            background-image: url('/lib/metronic/9.3.1/media/images/2600x1200/bg-10.png');
+        }
+
+        .dark .page-bg {
+            background-image: url('/lib/metronic/9.3.1/media/images/2600x1200/bg-10-dark.png');
+        }
+    </style>
+    @RenderBody()
+    <!-- End of Page -->
+    <!-- Scripts -->
+    <script src="~/lib/metronic/9.3.1/js/core.bundle.js"></script>
+    <script src="~/lib/metronic/9.3.1/vendors/ktui/ktui.min.js"></script>
+    @await RenderSectionAsync("Scripts", false)
+    <!-- End of Scripts -->
 </body>
 </html>

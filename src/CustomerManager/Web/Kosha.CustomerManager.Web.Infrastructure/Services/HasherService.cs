@@ -11,7 +11,10 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 
 internal sealed class HasherService : IHasherService
 {
-    public Task<Result<HasherResponse>> HashAsync(HasherRequest request, CancellationToken cancellationToken = default)
+    public Task<Result<HasherResponse>> HashAsync(
+        HasherRequest request, 
+        CancellationToken cancellationToken = default
+    )
     {
         return System.Threading.Tasks.Task.FromResult(
             Result.Success(
@@ -30,11 +33,19 @@ internal sealed class HasherService : IHasherService
         );
     }
 
-    public async Task<Result> VerifyAsync(HasherRequest request, HasherResponse hashed, CancellationToken cancellationToken = default)
+    public async Task<Result> VerifyAsync(
+        HasherRequest request, 
+        HasherResponse hashed, 
+        CancellationToken cancellationToken = default
+    )
     {
         Result result = ErrorConfiguration.HashedNotMatch;
 
-        Result<HasherResponse> resultOfHash = await HashAsync(request, cancellationToken);
+        Result<HasherResponse> resultOfHash =
+            await HashAsync(
+                request, 
+                cancellationToken
+            );
 
         if (
             resultOfHash.IsSuccess &&

@@ -1,0 +1,174 @@
+﻿@using Kosha.CustomerManager.Web.Areas.Account.Controllers
+@using Kosha.CustomerManager.Web.Models.Extensions
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Html.MetronicBodyCssClasses(
+        "antialiased",
+        "flex",
+        "h-full",
+        "text-base",
+        "text-foreground",
+        "bg-background",
+        "[--header-height:58px]",
+        "[--sidebar-width:58px]",
+        "lg:overflow-hidden",
+        "bg-muted"
+    );
+}
+
+@section Styles
+{
+    <link href="~/css/site.css" rel="stylesheet"/>
+    @await RenderSectionAsync("Styles", false)
+}
+
+<!-- Base -->
+<div class="flex grow">
+    <!-- Header -->
+    <header class="flex items-center fixed z-10 top-0 left-0 right-0 shrink-0 h-(--header-height) bg-muted" id="header">
+        <!-- Container -->
+        <div class="kt-container-fluid flex justify-between items-stretch px-5 lg:ps-0 lg:gap-4" id="header_container">
+            <div class="flex items-center me-1">
+                <div class="flex items-center justify-center lg:w-(--sidebar-width) gap-1 shrink-0">
+                    <button class="kt-btn kt-btn-icon kt-btn-ghost -ms-2 lg:hidden" data-kt-drawer-toggle="#sidebar">
+                        <i class="ki-filled ki-menu">
+                        </i>
+                    </button>
+                    <a class="mx-1" href="#">
+                        <img class="dark:hidden min-h-[24px]" src="~/lib/metronic/9.3.1/media/app/mini-logo-primary.svg" />
+                        <img class="hidden dark:block min-h-[24px]" src="~/lib/metronic/9.3.1/media/app/mini-logo-primary-dark.svg" />
+                    </a>
+                </div>
+            </div>
+            <!-- End of Logo -->
+            <!-- Topbar -->
+            <div class="flex items-center lg:gap-3.5">
+
+                <div class="flex items-center gap-1.5">
+                    <!-- Search -->
+                    <button class="group kt-btn kt-btn-ghost kt-btn-icon size-9 rounded-full hover:[&_i]:text-primary">
+                        <i class="ki-filled ki-magnifier text-lg group-hover:text-primary">
+                        </i>
+                    </button>
+                    <!-- End of Search -->
+                </div>
+                <!-- User -->
+                <div data-kt-dropdown="true" data-kt-dropdown-offset="10px, 10px" data-kt-dropdown-offset-rtl="-20px, 10px" data-kt-dropdown-placement="bottom-end" data-kt-dropdown-placement-rtl="bottom-start" data-kt-dropdown-trigger="click">
+                    <div class="cursor-pointer shrink-0" data-kt-dropdown-toggle="true">
+                        <img alt="" class="size-9 rounded-full border-2 border-input shrink-0" src="~/lib/metronic/9.3.1/media/avatars/blank.png" />
+                    </div>
+                    <div class="kt-dropdown-menu w-[250px]" data-kt-dropdown-menu="true">
+                        <div class="flex items-center justify-between px-2.5 py-1.5 gap-1.5">
+                            <div class="flex items-center gap-2">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-sm text-foreground font-semibold leading-none">
+                                        Cody Fisher
+                                    </span>
+                                    <a class="text-xs text-secondary-foreground hover:text-primary font-medium leading-none" href="#">
+                                        c.fisher@gmail.com
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="kt-dropdown-menu-sub">
+                            <li>
+                                <div class="kt-dropdown-menu-separator">
+                                </div>
+                            </li>
+                            <li>
+                                <a class="kt-dropdown-menu-link" href="@Url.Action(nameof(ProfileController.Index), nameof(ProfileController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                                    <i class="ki-filled ki-profile-circle">
+                                    </i>
+                                    حساب کاربری من
+                                </a>
+                            </li>
+                            <li>
+                                <div class="kt-dropdown-menu-separator">
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="px-2.5 pt-1.5 mb-2.5 flex flex-col gap-3.5">
+                            <div class="flex items-center gap-2 justify-between">
+                                <span class="flex items-center gap-2">
+                                    <i class="ki-filled ki-moon text-base text-muted-foreground">
+                                    </i>
+                                    <span class="font-medium text-2sm">
+                                        قالب مشکی
+                                    </span>
+                                </span>
+                                <input class="kt-switch" data-kt-theme-switch-state="dark" data-kt-theme-switch-toggle="true" name="check" type="checkbox" value="1" />
+                            </div>
+                            <a class="kt-btn kt-btn-outline justify-center w-full" href="@Url.Action(nameof(LogoutController.Index), nameof(LogoutController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Account })">
+                                خروج
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of User -->
+            </div>
+            <!-- End of Topbar -->
+        </div>
+        <!-- End of Container -->
+    </header>
+    <!-- End of Header -->
+    <!-- Wrapper -->
+    <div class="flex flex-col lg:flex-row grow pt-(--header-height)">
+        <!-- Sidebar -->
+        <div class="fixed w-(--sidebar-width) lg:top-(--header-height) top-0 bottom-0 z-20 hidden lg:flex flex-col items-stretch shrink-0 group py-3 lg:py-0 [--kt-drawer-enable:true] lg:[--kt-drawer-enable:false]" data-kt-drawer="true" data-kt-drawer-class="kt-drawer kt-drawer-start top-0 bottom-0" id="sidebar">
+            <div class="flex grow shrink-0" id="sidebar_content">
+                <div class="kt-scrollable-y-auto grow gap-2.5 shrink-0 flex items-center flex-col max-h-[calc(100dvh-10px))] lg:max-h-[calc(100dvh-70px))]">
+                    <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="#">
+                        <span class="kt-menu-icon">
+                            <i class="ki-filled ki-chart-line-star text-lg">
+                            </i>
+                        </span>
+                        <span class="kt-tooltip" data-kt-tooltip-content="true">
+                            Dashboard
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- End of Sidebar -->
+        <!-- Main -->
+        <div class="flex grow rounded-xl bg-background border-x border-b border-input mx-5 lg:ms-(--sidebar-width) mb-5">
+            <div class="flex flex-col grow kt-scrollable-y lg:[scrollbar-width:auto] pt-7 lg:[&_.kt-container-fluid]:pe-4" id="scrollable_content">
+                <main role="content">
+                    <!-- Container -->
+                    <div class="kt-container-fluid">
+                        <div class="animate-pulse rounded-lg" data-slot="skeleton">
+                            @RenderBody()
+                        </div>
+                    </div>
+                    <!-- End of Container -->
+                </main>
+                <!-- Footer -->
+                <footer class="py-3 mt-auto">
+                    <!-- Container -->
+                    <div class="kt-container-fluid">
+                        <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-3 py-2">
+                            <div class="flex order-2 md:order-1 gap-2 font-normal text-sm">
+                                <span class="text-muted-foreground">
+                                    1404©
+                                </span>
+                                <a class="text-secondary-foreground hover:text-primary" href="#">
+                                     شرکت موج مبتکر
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Container -->
+                </footer>
+                <!-- End of Footer -->
+            </div>
+        </div>
+        <!-- End of Main -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Base -->
+
+@section Scripts{
+    @await RenderSectionAsync("Scripts", false)
+}

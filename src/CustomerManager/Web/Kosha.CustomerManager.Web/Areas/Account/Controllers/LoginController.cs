@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,11 +7,10 @@ using Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 using Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Hasher.Algorithms;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Hasher.Default;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
+using Kosha.CustomerManager.Web.Shared.Models.Configurations;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,28 +20,30 @@ namespace Kosha.CustomerManager.Web.Areas.Account.Controllers;
 
 [Area(AreaNameConfiguration.Account)]
 public sealed class LoginController(
-    IHasherService hasherService,
     IUserService authenticationService
 ) : Controller
 {
     [HttpGet]
-    public IActionResult Index(string? returnUrl = null)
-        => View(
-            new LoginVm(
-                string.Empty,
-                string.Empty,
-                false,
-                returnUrl
-            )
+    public IActionResult Index(string? returnUrl = null)=> 
+        View(
+            new LoginVm
+            {
+                ReturnUrl = returnUrl
+            }
         );
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [
+        HttpPost, 
+        ValidateAntiForgeryToken
+    ]
     public async Task<IActionResult> Index([Bind] LoginVm entry)
     {
         IActionResult result = View(entry);
 
         Result<AuthenticationResponse> resultOfFind =
-            await authenticationService.FindByUsernameAsync(entry);
+            await authenticationService.FindByUsernameAsync(
+                new AuthenticationRequest(entry.Username)    
+            );
 
         ModelState.AddError(ErrorConfiguration.UsernameOrPasswordIsWrong);
 
@@ -57,10 +59,12 @@ public sealed class LoginController(
         )
         {
             Result resultOfVerified =
-                await hasherService.VerifyAsync(
-                    new HasherRequest(entry.Password),
-                    new HasherResponse(resultOfFind.Data.Password)
-                );
+                    await authenticationService.VerifyPasswordAsync(
+                        new AuthenticationVerifiedPasswordRequest(
+                            resultOfFind,
+                            entry.Password
+                        )
+                    );
 
             if (resultOfVerified)
             {
@@ -84,34 +88,79 @@ public sealed class LoginController(
                 IList<Claim> claims =
                     new List<Claim>
                     {
-                            new(ClaimDefinitionConfiguration.Identifier, resultOfFind.Data.Id.ToString()),
-                            new (ClaimDefinitionConfiguration.Name, resultOfFind.Data.Name),
-                            new (ClaimDefinitionConfiguration.Family, resultOfFind.Data.Family),
+                        new(
+                            ClaimDefinitionConfiguration.Identifier, 
+                            resultOfFind.Data.Id.ToString()
+                        ),
+                        new(
+                            ClaimDefinitionConfiguration.Username,
+                            resultOfFind.Data.Username
+                        ),
+                        new(
+                            ClaimDefinitionConfiguration.PhoneNumber,
+                            resultOfFind.Data.PhoneNumber
+                        )
                     };
+
+                foreach ((string type, string value) in 
+                        new Dictionary<string, string>
+                        {
+                            {
+                                ClaimDefinitionConfiguration.Name,
+                                resultOfFind.Data.Name
+                            },
+                            {
+                                ClaimDefinitionConfiguration.Family,
+                                resultOfFind.Data.Family
+                            }
+                        }
+                    )
+                {
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        claims.Add(new Claim(type, value));
+                    }
+                }
 
                 Result<IEnumerable<string>> resultOfRoles =
                     await authenticationService.RolesAsync(
-                        entry
+                        resultOfFind
                     );
+
+                IList<string> roles = new List<string>();
 
                 if (
                     resultOfRoles &&
                     resultOfRoles.Data != null &&
                     resultOfRoles.Data.Any()
                 )
-                {
-                    claims.Add(
-                        new Claim(ClaimDefinitionConfiguration.Role, string.Join(", ", resultOfRoles.Data))
-                    );
-                }
+                    foreach (string role in resultOfRoles.Data) 
+                        roles.Add(role);
+
+                if (!roles.Any(item => item.Equals(RoleNameConfiguration.User, StringComparison.OrdinalIgnoreCase))) 
+                    roles.Add(RoleNameConfiguration.User);
+
+                claims.Add(
+                    new Claim(
+                        ClaimDefinitionConfiguration.Role, 
+                        string.Join(
+                            ", ", 
+                            roles
+                        )
+                    )
+                );
 
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(new ClaimsIdentity(claims)),
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = entry.RememberMe
-                    }
+                    new ClaimsPrincipal(
+                        [
+                            new ClaimsIdentity(
+                                claims,
+                                CookieAuthenticationDefaults.AuthenticationScheme
+                            )
+                        ]
+                    ),
+                    new AuthenticationProperties { IsPersistent = entry.RememberMe }
                 );
             }
 
