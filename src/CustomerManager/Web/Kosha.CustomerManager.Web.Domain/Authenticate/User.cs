@@ -12,9 +12,9 @@ public class User : IAudit
 
     public string Password { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public string Family { get; set; }
+    public string? Family { get; set; }
 
     public string PhoneNumber { get; set; }
 
