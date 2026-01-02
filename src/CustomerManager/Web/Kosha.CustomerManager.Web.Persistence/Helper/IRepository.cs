@@ -1,25 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Domain.Helper;
+﻿using System.Linq;
 
 namespace Kosha.CustomerManager.Web.Persistence.Helper;
 
 public interface IRepository<TEntity>
-    where TEntity : class, IAudit
+    where TEntity : class
 {
     /// <summary>
     /// Get queryable entity
     /// </summary>
     /// <returns></returns>
     IQueryable<TEntity> Query();
-
-    /// <summary>
-    /// Find entity by id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    Task<TEntity?> GetByIdAsync(Guid id);
 
     /// <summary>
     /// Add new entity
@@ -38,17 +28,4 @@ public interface IRepository<TEntity>
     /// </summary>
     /// <param name="entity"></param>
     void Delete(TEntity entity);
-
-    /// <summary>
-    /// Remove entity by id
-    /// </summary>
-    /// <param name="id"></param>
-    void Delete(Guid id);
-
-    /// <summary>
-    /// Check entity existence by id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    Task<bool> ExistsAsync(Guid id);
 }

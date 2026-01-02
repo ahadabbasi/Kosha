@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Persistence.Repositories;
 
-internal sealed class UserRepository(ApplicationContext context) : Repository<User>(context), IUserRepository
+internal sealed class UserRepository(ApplicationContext context) : AuditRepository<User>(context), IUserRepository
 {
     public Task<User?> GetByUsernameAsync(string username) => 
         Query()

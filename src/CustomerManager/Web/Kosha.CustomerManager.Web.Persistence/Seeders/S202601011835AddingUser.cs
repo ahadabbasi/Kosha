@@ -12,17 +12,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Persistence.Seeders;
 
 [Seed(202601011835)]
-public sealed class S202601011835AddingUser(
+internal sealed class S202601011835AddingUser(
     IUserRepository repository,
     IUnitOfWork unitOfWork,
     IHasherService hasherService
 ) : IDataSeeder
 {
+    internal const string AhadUsername = "ahad";
+
     private readonly IDictionary<string, string> _users = 
-            new Dictionary<string, string>()
+            new Dictionary<string, string>
             {
                 {
-                    "ahad",
+                    AhadUsername,
                     "09120276307"
                 }
             };
@@ -50,7 +52,7 @@ public sealed class S202601011835AddingUser(
                     )
                     {
                         repository.Add(
-                            new User()
+                            new User
                             {
                                 Username = username,
                                 Password = resultOfHash.Data.Hashed,

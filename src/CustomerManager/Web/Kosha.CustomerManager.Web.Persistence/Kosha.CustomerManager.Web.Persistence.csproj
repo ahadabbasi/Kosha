@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Attributes\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

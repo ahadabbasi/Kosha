@@ -27,6 +27,10 @@ public static class PersistenceStartup
             }
         );
 
+        services.AddScoped(typeof(IAuditRepository<>), typeof(AuditRepository<>));
+
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
         services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
