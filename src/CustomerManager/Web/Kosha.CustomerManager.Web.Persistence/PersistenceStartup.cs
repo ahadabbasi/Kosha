@@ -36,20 +36,21 @@ public static class PersistenceStartup
         return services;
     }
 
-    public static IHost PersistenceConfiguration(
+    public static IHost UsePersistence(
         this IHost host,
         IHostEnvironment env
     )
     {
-
+        /*
         if (env.IsDevelopment())
         {
             host.UseMigration<ApplicationContext>();
         }
 
         host.UseSeeder(typeof(PersistenceStartup).Assembly);
+        */
 
-        host.SharedConfiguration(env);
+        host.UseShared(env);
 
         return host;
     }

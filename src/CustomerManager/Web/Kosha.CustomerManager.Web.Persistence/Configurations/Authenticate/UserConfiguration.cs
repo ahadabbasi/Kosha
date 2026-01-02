@@ -26,6 +26,13 @@ internal sealed class UserConfiguration  : AuditConfiguration<User>
         builder.Property(model => model.Family)
             .IsRequired(false);
 
+        builder.Property(model => model.PhoneNumber)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        builder.HasIndex(model => model.PhoneNumber)
+            .IsUnique();
+
         builder.HasMany(model => model.Roles)
             .WithOne(roleUser => roleUser.User)
             .HasForeignKey(roleUser => roleUser.UserId)

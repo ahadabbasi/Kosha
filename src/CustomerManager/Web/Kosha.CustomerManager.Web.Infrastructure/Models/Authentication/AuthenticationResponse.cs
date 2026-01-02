@@ -7,5 +7,6 @@ public sealed record AuthenticationResponse(
     string Username, 
     string Password, 
     string Name, 
-    string Family
+    string Family,
+    string PhoneNumber
 ) : AuthenticationRequest(Username);

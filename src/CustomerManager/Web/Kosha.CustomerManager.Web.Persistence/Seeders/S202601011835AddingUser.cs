@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Domain.Authenticate;
@@ -8,6 +7,7 @@ using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Algorithms;
 using Kosha.CustomerManager.Web.Shared.Models.Hasher.Default;
 using Kosha.CustomerManager.Web.Shared.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Persistence.Seeders;
 
@@ -18,7 +18,14 @@ public sealed class S202601011835AddingUser(
     IHasherService hasherService
 ) : IDataSeeder
 {
-    private readonly IEnumerable<string> _users = ["ahad"];
+    private readonly IDictionary<string, string> _users = 
+            new Dictionary<string, string>()
+            {
+                {
+                    "ahad",
+                    "09120276307"
+                }
+            };
 
     public async Task InvokeAsync(CancellationToken cancellation = default)
     {
@@ -31,15 +38,23 @@ public sealed class S202601011835AddingUser(
                 resultOfHash.Data is not null
             )
             {
-                foreach (string user in _users)
+                foreach ((string username, string phoneNumber) in _users)
                 {
-                    if (!await repository.IsExistUsernameAsync(user))
+                    if (
+                        !await repository.IsExistUsernameAsync(username) && 
+                        !await repository.Query()
+                            .AnyAsync(
+                                item => item.PhoneNumber == phoneNumber,
+                                cancellation
+                            )
+                    )
                     {
                         repository.Add(
                             new User()
                             {
-                                Username = user,
-                                Password = resultOfHash.Data.Hashed
+                                Username = username,
+                                Password = resultOfHash.Data.Hashed,
+                                PhoneNumber = phoneNumber
                             }
                         );
 
@@ -49,7 +64,7 @@ public sealed class S202601011835AddingUser(
                 }
             }
         }
-        catch(Exception exception)
+        catch
         {
             //
         }

@@ -16,6 +16,8 @@ public class User : IAudit
 
     public string Family { get; set; }
 
+    public string PhoneNumber { get; set; }
+
     public DateTime Inserted { get; set; }
 
     public DateTime? Modified { get; set; }

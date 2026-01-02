@@ -34,12 +34,12 @@ public static class InfrastructureStartup
         return services;
     }
 
-    public static IHost InfrastructureConfiguration(
+    public static IHost UseInfrastructure(
         this IHost host, 
         IHostEnvironment env
     )
     {
-        host.PersistenceConfiguration(env);
+        host.UsePersistence(env);
 
         return host;
     }

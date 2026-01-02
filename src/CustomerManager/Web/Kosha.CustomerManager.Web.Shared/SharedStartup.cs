@@ -14,7 +14,7 @@ public static class SharedStartup
         return services;
     }
 
-    public static IHost SharedConfiguration(
+    public static IHost UseShared(
         this IHost host,
         IHostEnvironment env
     )
