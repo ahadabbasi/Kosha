@@ -36,7 +36,7 @@ public interface IAuthenticationMethodService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result<IAuthenticationRefreshResponse>> RefreshAsync(
-        AuthenticationSignInRequest request,
+        AuthenticationRefreshRequest request,
         CancellationToken cancellation = default
     );
 }

@@ -30,7 +30,11 @@ public static class Startup
     {
         services.ConfigureOptions<TokenInformationConfigureOption>();
 
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IBearerAuthenticationMethodService, BearerAuthenticationMethodService>();
+
+        services.AddScoped<ICookieAuthenticationMethodService, CookieAuthenticationMethodService>();
+
+        services.AddScoped<AuthenticationClaimGeneratorService>();
 
         services.AddScoped<ITaskBinderService, TaskBinderService>();
 
@@ -66,7 +70,7 @@ public static class Startup
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
                 {
-                    TokenInformation information = new TokenInformation();
+                    BearerTokenInformation information = new BearerTokenInformation();
 
                     configuration.GetSection(TokenInformationConfigureOption.Section).Bind(information);
 

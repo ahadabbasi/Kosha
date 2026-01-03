@@ -1,3 +1,100 @@
 .mt-auto{
     margin-top: auto !important;
 }
+.after\:absolute {
+  &::after {
+    content: var(--tw-content);
+    position: absolute;
+  }
+}
+.after\:start-\[20px\] {
+  &::after {
+    content: var(--tw-content);
+    inset-inline-start: 20px;
+  }
+}
+.after\:start-\[32px\] {
+  &::after {
+    content: var(--tw-content);
+    inset-inline-start: 32px;
+  }
+}
+.after\:top-0 {
+  &::after {
+    content: var(--tw-content);
+    top: calc(var(--spacing) * 0);
+  }
+}
+.after\:bottom-0 {
+  &::after {
+    content: var(--tw-content);
+    bottom: calc(var(--spacing) * 0);
+  }
+}
+.after\:left-\[11px\] {
+  &::after {
+    content: var(--tw-content);
+    left: 11px;
+  }
+}
+.after\:size-1\.5 {
+  &::after {
+    content: var(--tw-content);
+    width: calc(var(--spacing) * 1.5);
+    height: calc(var(--spacing) * 1.5);
+  }
+}
+.after\:size-\[6px\] {
+  &::after {
+    content: var(--tw-content);
+    width: 6px;
+    height: 6px;
+  }
+}
+.after\:-translate-x-2\/4 {
+  &::after {
+    content: var(--tw-content);
+    --tw-translate-x: calc(calc(2/4 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+}
+.after\:-translate-y-1\/2 {
+  &::after {
+    content: var(--tw-content);
+    --tw-translate-y: calc(calc(1/2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+}
+.after\:-translate-y-2\/4 {
+  &::after {
+    content: var(--tw-content);
+    --tw-translate-y: calc(calc(2/4 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+}
+.after\:rounded-full {
+  &::after {
+    content: var(--tw-content);
+    border-radius: calc(infinity * 1px);
+  }
+}
+.after\:border-s {
+  &::after {
+    content: var(--tw-content);
+    border-inline-start-style: var(--tw-border-style);
+    border-inline-start-width: 1px;
+  }
+}
+.after\:border-l {
+  &::after {
+    content: var(--tw-content);
+    border-left-style: var(--tw-border-style);
+    border-left-width: 1px;
+  }
+}
+.after\:border-border {
+  &::after {
+    content: var(--tw-content);
+    border-color: var(--border);
+  }
+}

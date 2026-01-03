@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Kosha.CustomerManager.WindowsClient.Models.Entities;
+﻿namespace Kosha.CustomerManager.WindowsClient.Models.Entities;
 
 public class Checklist
 {

@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication.Models;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
 using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
-using Kosha.CustomerManager.Web.Models.Infrastructure.Models;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,18 +20,18 @@ namespace Kosha.CustomerManager.Web.Areas.Account.Controllers.Applications;
     ApiController
 ]
 public sealed class TokenController(
-    IUserService authenticationService,
-    ITokenService tokenService
+    IUserService userService,
+    IBearerAuthenticationMethodService authenticationMethodService
 ) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Index([FromBody] LoginVm entry, CancellationToken cancellation)
     {
-        TokenResponse? response = null;
+        IAuthenticationSignInResponse? response = null;
 
-        Result<AuthenticationResponse> resultOfFind =
-            await authenticationService.FindByUsernameAsync(
-                new AuthenticationRequest(entry.Username),
+        Result<UserResponse> resultOfFind =
+            await userService.FindByUsernameAsync(
+                new UserRequest(entry.Username),
                 cancellation
             );
 
@@ -49,52 +48,22 @@ public sealed class TokenController(
             resultOfFind.Data != null
         )
         {
-            Result resultOfVerified =
-                await authenticationService.VerifyPasswordAsync(
-                    new AuthenticationVerifiedPasswordRequest(
+            Result<IAuthenticationSignInResponse> resultOfVerified =
+                await authenticationMethodService.SignInAsync(
+                    new AuthenticationSignInRequest(
                         resultOfFind, 
-                        entry.Password
+                        entry.Password,
+                        true
                     ),
                     cancellation
                 );
 
-            if (resultOfVerified)
+            if (resultOfVerified && resultOfVerified.Data != null)
             {
                 ModelState.Clear();
 
-                IEnumerable<string> roles = [];
+                response = resultOfVerified.Data;
 
-                Result<IEnumerable<string>> resultOfRoles =
-                    await authenticationService.RolesAsync(
-                        resultOfFind,
-                        cancellation
-                    );
-
-                if (
-                    resultOfRoles &&
-                    resultOfRoles.Data != null &&
-                    resultOfRoles.Data.Any()
-                )
-                {
-                    roles = resultOfRoles.Data;
-                }
-
-                Result<TokenResponse> resultOfToken =
-                    await tokenService.GenerateAsync(
-                        resultOfFind,
-                        roles,
-                        cancellation
-                    );
-
-                if (
-                    resultOfToken && 
-                    resultOfToken.Data != null
-                )
-                {
-                    ModelState.Clear();
-
-                    response = resultOfToken.Data;
-                }
             }
         }
 

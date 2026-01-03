@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Kosha.CustomerManager.Web.Models.Infrastructure.Options;
 
-internal sealed class TokenInformationConfigureOption(IConfiguration configuration) : ConfigureOptions<TokenInformation>(configuration)
+internal sealed class TokenInformationConfigureOption(IConfiguration configuration) : ConfigureOptions<BearerTokenInformation>(configuration)
 {
     internal const string Section = "Token";
 

@@ -1,6 +1,6 @@
-﻿@using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication
+﻿@using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User
 @using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
-@model PaginateResponse<AuthenticationResponse>
+@model PaginateResponse<UserResponse>
 
 <div class="kt-card kt-card-grid h-full min-w-full">
     <div class="kt-card-header">
@@ -60,7 +60,7 @@
                     
                     @if (Model.Any())
                     {
-                        @foreach (AuthenticationResponse item in Model)
+                        @foreach (UserResponse item in Model)
                         {
                             <tr>
                                 <td>@item.Username</td>

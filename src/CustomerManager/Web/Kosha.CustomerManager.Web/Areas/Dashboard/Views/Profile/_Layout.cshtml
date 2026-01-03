@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    @await RenderSectionAsync("Styles", false)
+}
+
+<div class="kt-container-fixed">
+    <div class="flex grow gap-5 lg:gap-7.5">
+        <div class="hidden lg:block w-[230px] shrink-0">
+            <div class="w-[230px]">
+                <div class="flex flex-col grow relative">
+                    <a class="flex items-center rounded-lg pl-2.5 pr-2.5 py-2.5 gap-1.5 active border border-transparent text-sm text-foreground hover:text-primary hover:font-medium kt-scrollspy-active:bg-secondary-active kt-scrollspy-active:text-primary kt-scrollspy-active:font-medium hover:rounded-lg"
+                       href="@Url.Action(nameof(ProfileController.Index), nameof(ProfileController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                        <span class="flex w-1.5 relative">
+                        </span>
+                        تنظیمات اولیه
+                    </a>
+                    <a class="flex items-center rounded-lg pl-2.5 pr-2.5 py-2.5 gap-1.5 active border border-transparent text-sm text-foreground hover:text-primary hover:font-medium kt-scrollspy-active:bg-secondary-active kt-scrollspy-active:text-primary kt-scrollspy-active:font-medium hover:rounded-lg"
+                       href="@Url.Action(nameof(ProfileController.ChangePassword), nameof(ProfileController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                        <span class="flex w-1.5 relative">
+                        </span>
+                        تغییر گذرواژه
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col items-stretch grow gap-5 lg:gap-7.5">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    @await RenderSectionAsync("Scripts", false)
+}

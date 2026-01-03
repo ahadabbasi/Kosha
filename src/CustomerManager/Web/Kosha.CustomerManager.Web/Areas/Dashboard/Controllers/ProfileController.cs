@@ -8,8 +8,10 @@ using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
+using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +22,10 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
     Area(AreaNameConfiguration.Dashboard),
     Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)
 ]
-public sealed class ProfileController(IUserService userService) : Controller
+public sealed class ProfileController(
+    IUserService userService,
+    ICookieAuthenticationMethodService authenticationMethodService
+) : Controller
 {
     public IActionResult Index()
     {
@@ -104,12 +109,15 @@ public sealed class ProfileController(IUserService userService) : Controller
 
         if (ModelState.IsValid)
         {
+            Guid user =
+                Guid.Parse(
+                    User.FindFirstValue(ClaimDefinitionConfiguration.Identifier) ?? Guid.Empty.ToString()
+                );
+
             ModelState.AddError(
                 await userService.UpdateAsync(
-                    Guid.Parse(
-                        User.FindFirstValue(ClaimDefinitionConfiguration.Identifier) ?? Guid.Empty.ToString()
-                    ),
-                    new AuthenticationUpdateRequest(
+                    user,
+                    new UserUpdateRequest(
                         entry.Username,
                         entry.Name,
                         entry.Family,
@@ -119,12 +127,28 @@ public sealed class ProfileController(IUserService userService) : Controller
             );
 
             if (ModelState.IsValid)
+            {
                 result =
                     RedirectToAction(
                         nameof(HomeController.Index),
                         nameof(HomeController).RemoveControllerFromString(),
                         new { Area = AreaNameConfiguration.Dashboard }
                     );
+
+                await authenticationMethodService.RefreshAsync(
+                    new AuthenticationRefreshRequest(
+                        new UserResponse(
+                            user,
+                            entry.Username,
+                            string.Empty,
+                            entry.Name,
+                            entry.Family,
+                            entry.PhoneNumber
+                        ),
+                        string.Empty
+                    )
+                );
+            }
         }
 
         return result;

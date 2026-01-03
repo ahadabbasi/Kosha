@@ -4,5 +4,6 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
 
 public record AuthenticationSignInRequest(
     UserResponse User,
-    string Password
-);
+    string Password,
+    bool RememberMe
+) : UserVerifiedPasswordRequest(User, Password);

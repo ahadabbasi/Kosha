@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
@@ -35,7 +35,7 @@ public class AccountController(IUserService userService) : Controller
         {
             ModelState.AddError(
                 await userService.SaveAsync(
-                    new AuthenticationSaveRequest(
+                    new UserSaveRequest(
                         entry.Username,
                         entry.Password,
                         entry.Name,

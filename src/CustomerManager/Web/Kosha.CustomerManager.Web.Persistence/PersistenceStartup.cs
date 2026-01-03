@@ -1,5 +1,4 @@
 ﻿using Kosha.CustomerManager.Web.Persistence.Contexts;
-using Kosha.CustomerManager.Web.Persistence.Extensions;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Persistence.Interceptors;
 using Kosha.CustomerManager.Web.Persistence.Repositories;
