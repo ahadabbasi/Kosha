@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 using Kosha.CustomerManager.Web.Shared.Results;
 
@@ -16,7 +16,7 @@ public interface IUserService
     /// <param name="request"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<Result<PaginateResponse<AuthenticationResponse>>> PaginateAsync(
+    Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     );
@@ -27,8 +27,8 @@ public interface IUserService
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Result<AuthenticationResponse>> FindByUsernameAsync(
-        AuthenticationRequest request, 
+    Task<Result<UserResponse>> FindByUsernameAsync(
+        UserRequest request, 
         CancellationToken cancellationToken = default
     );
 
@@ -39,7 +39,7 @@ public interface IUserService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Result<IEnumerable<string>>> RolesAsync(
-        AuthenticationRequest request, 
+        UserRequest request, 
         CancellationToken cancellationToken = default
     );
 
@@ -50,7 +50,7 @@ public interface IUserService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result> SaveAsync(
-        AuthenticationSaveRequest request,
+        UserSaveRequest request,
         CancellationToken cancellation = default
     );
 
@@ -63,7 +63,7 @@ public interface IUserService
     /// <returns></returns>
     Task<Result> UpdateAsync(
         Guid id,
-        AuthenticationUpdateRequest request,
+        UserUpdateRequest request,
         CancellationToken cancellation = default
     );
 
@@ -74,7 +74,7 @@ public interface IUserService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result> ChangePasswordAsync(
-        AuthenticationChangePasswordRequest request,
+        UserChangePasswordRequest request,
         CancellationToken cancellation = default
     );
 
@@ -85,7 +85,7 @@ public interface IUserService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result> VerifyPasswordAsync(
-        AuthenticationVerifiedPasswordRequest request,
+        UserVerifiedPasswordRequest request,
         CancellationToken cancellation = default
     );
 }

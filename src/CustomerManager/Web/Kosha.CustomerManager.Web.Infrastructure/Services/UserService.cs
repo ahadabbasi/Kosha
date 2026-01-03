@@ -7,7 +7,7 @@ using Kosha.CustomerManager.Web.Domain.Authenticate;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Extensions;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Algorithms;
@@ -23,7 +23,7 @@ internal sealed class UserService(
     IHasherService hasherService
 ) : IUserService
 {
-    public Task<Result<PaginateResponse<AuthenticationResponse>>> PaginateAsync(
+    public Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     )
@@ -34,7 +34,7 @@ internal sealed class UserService(
             repository.Query()
                 .OrderBy(entity => entity.Inserted)
                 .Select(entity =>
-                    new AuthenticationResponse(
+                    new UserResponse(
                         entity.Id,
                         entity.Username,
                         string.Empty,
@@ -49,13 +49,13 @@ internal sealed class UserService(
                 );
     }
 
-    public async Task<Result<AuthenticationResponse>> FindByUsernameAsync(
-        AuthenticationRequest request,
+    public async Task<Result<UserResponse>> FindByUsernameAsync(
+        UserRequest request,
         CancellationToken cancellationToken = default
     )
     {
-        Result<AuthenticationResponse> result =
-            Result.Failed<AuthenticationResponse>(
+        Result<UserResponse> result =
+            Result.Failed<UserResponse>(
                 ErrorConfiguration.UsernameNotFound
             );
 
@@ -65,7 +65,7 @@ internal sealed class UserService(
         {
             result =
                 Result.Success(
-                    new AuthenticationResponse(
+                    new UserResponse(
                         entity.Id,
                         entity.Username,
                         entity.Password,
@@ -80,7 +80,7 @@ internal sealed class UserService(
     }
 
     public async Task<Result<IEnumerable<string>>> RolesAsync(
-        AuthenticationRequest request,
+        UserRequest request,
         CancellationToken cancellationToken = default
     )
     {
@@ -101,7 +101,7 @@ internal sealed class UserService(
     }
 
     public async Task<Result> SaveAsync(
-        AuthenticationSaveRequest request,
+        UserSaveRequest request,
         CancellationToken cancellation = default
     )
     {
@@ -171,7 +171,7 @@ internal sealed class UserService(
 
     public async Task<Result> UpdateAsync(
         Guid id,
-        AuthenticationUpdateRequest request, 
+        UserUpdateRequest request, 
         CancellationToken cancellation = default
     )
     {
@@ -240,7 +240,7 @@ internal sealed class UserService(
     }
 
     public async Task<Result> ChangePasswordAsync(
-        AuthenticationChangePasswordRequest request,
+        UserChangePasswordRequest request,
         CancellationToken cancellation = default
     )
     {
@@ -289,7 +289,7 @@ internal sealed class UserService(
     }
 
     public Task<Result> VerifyPasswordAsync(
-        AuthenticationVerifiedPasswordRequest request,
+        UserVerifiedPasswordRequest request,
         CancellationToken cancellation = default
     ) =>
         hasherService.VerifyAsync(

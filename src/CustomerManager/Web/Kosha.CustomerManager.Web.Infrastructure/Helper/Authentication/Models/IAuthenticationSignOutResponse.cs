@@ -1,0 +1,3 @@
+﻿namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication.Models;
+
+public interface IAuthenticationSignOutResponse;

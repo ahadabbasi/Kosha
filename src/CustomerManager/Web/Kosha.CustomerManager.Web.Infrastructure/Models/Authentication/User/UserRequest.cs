@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
+namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 
-public record AuthenticationRequest(
+public record UserRequest(
     [Required, Display(Name = "نام کاربری")]
     string Username
 );
