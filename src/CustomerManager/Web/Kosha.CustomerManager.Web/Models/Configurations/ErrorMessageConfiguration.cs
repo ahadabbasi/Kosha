@@ -5,4 +5,6 @@ internal class ErrorMessageConfiguration
     internal const string RequiredErrorMessage = "لطفا برای فیلد '{0}' مقدار وارد کنید";
 
     internal const string CompareErrorMessage = "";
+
+    internal const string DoNotChangeValue = "لطفا از تغییر داده های پنهان خوداری فرمایید.";
 }

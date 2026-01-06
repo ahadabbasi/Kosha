@@ -17,4 +17,6 @@ internal class DisplayNameConfiguration
     internal const string OldPassword = Password + " قبلی";
 
     internal const string PhoneNumber = "شماره تماس";
+
+    internal const string Title = "عنوان";
 }

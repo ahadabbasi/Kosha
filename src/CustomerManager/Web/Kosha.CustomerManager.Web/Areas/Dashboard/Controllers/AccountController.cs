@@ -18,7 +18,7 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
 public class AccountController(IUserService userService) : Controller
 {
     public async Task<IActionResult> List([Bind] PaginateRequest? request = null) => 
-        View(await userService.PaginateAsync(request));
+        View((await userService.PaginateAsync(request)).Data);
 
     public IActionResult Create() 
         => View();
