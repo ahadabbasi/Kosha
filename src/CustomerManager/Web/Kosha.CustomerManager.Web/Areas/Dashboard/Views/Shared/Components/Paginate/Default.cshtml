@@ -1,0 +1,21 @@
+﻿@model NavbarVm
+
+@{
+    bool IsCurrentPage(int page) 
+        => Model.Current == page;
+}
+
+<ol class="kt-pagination">
+
+    @foreach (int page in Model)
+    {
+        <li class="kt-pagination-item">
+            <a href="@Html.Raw(IsCurrentPage(page) ? "#" : Model.LinkGenerator(page) ?? string.Empty)" class="kt-btn kt-btn-icon kt-btn-ghost@(IsCurrentPage(page) ? " active" : string.Empty)">
+                @Html.Raw(page)
+            </a>
+        </li>
+    }
+
+</ol>
+
+
