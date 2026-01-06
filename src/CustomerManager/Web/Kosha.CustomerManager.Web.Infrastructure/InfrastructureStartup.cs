@@ -1,4 +1,5 @@
 ﻿using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Services;
 using Kosha.CustomerManager.Web.Infrastructure.Services.Task;
@@ -22,6 +23,10 @@ public static class InfrastructureStartup
         services.AddScoped<IHasherService, HasherService>();
 
         services.AddScoped<ITaskManagerService, TaskManagerService>();
+
+        services.AddScoped<ITagService, TagService>();
+
+        services.AddScoped<PaginateHelperService>();
 
         services.AddMediator(options =>
             {

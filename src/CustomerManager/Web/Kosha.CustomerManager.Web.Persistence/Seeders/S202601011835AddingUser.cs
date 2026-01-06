@@ -43,7 +43,7 @@ internal sealed class S202601011835AddingUser(
                 foreach ((string username, string phoneNumber) in _users)
                 {
                     if (
-                        !await repository.IsExistUsernameAsync(username) && 
+                        !await repository.IsUsernameExistAsync(username) && 
                         !await repository.Query()
                             .AnyAsync(
                                 item => item.PhoneNumber == phoneNumber,

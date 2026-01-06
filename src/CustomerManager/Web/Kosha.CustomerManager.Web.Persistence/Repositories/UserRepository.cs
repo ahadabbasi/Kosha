@@ -23,10 +23,17 @@ internal sealed class UserRepository(
                 cancellation
             );
 
-    public Task<bool> IsExistUsernameAsync(string username, CancellationToken cancellation = default) => 
+    public Task<bool> IsUsernameExistAsync(string username, CancellationToken cancellation = default) => 
         Query()
             .AnyAsync(
                 PredicateUsername(username),
+                cancellation
+            );
+
+    public Task<bool> IsPhoneNumberExistAsync(string phoneNumber, CancellationToken cancellation = default) =>
+        Query()
+            .AnyAsync(
+                item => item.PhoneNumber.Equals(phoneNumber),
                 cancellation
             );
 

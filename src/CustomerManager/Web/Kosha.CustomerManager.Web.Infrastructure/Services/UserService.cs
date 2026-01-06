@@ -18,36 +18,32 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 
 internal sealed class UserService(
+    PaginateHelperService paginateHelperService,
     IUserRepository repository,
     IUnitOfWork unitOfWork,
     IHasherService hasherService
 ) : IUserService
 {
-    public Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
+    public async Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
-    )
-    {
-        request ??= new PaginateRequest(1, 10);
-
-        return
-            repository.Query()
-                .OrderBy(entity => entity.Inserted)
-                .Select(entity =>
-                    new UserResponse(
-                        entity.Id,
-                        entity.Username,
-                        string.Empty,
-                        entity.Name,
-                        entity.Family,
-                        entity.PhoneNumber
-                    )
+    ) =>
+        await repository.Query()
+            .OrderBy(entity => entity.Inserted)
+            .Select(entity =>
+                new UserResponse(
+                    entity.Id,
+                    entity.Username,
+                    string.Empty,
+                    entity.Name,
+                    entity.Family,
+                    entity.PhoneNumber
                 )
-                .ToPaginateAsync(
-                    request,
-                    cancellation
-                );
-    }
+            )
+            .ToPaginateAsync(
+                await paginateHelperService.ValidateAsync(request),
+                cancellation
+            );
 
     public async Task<Result<UserResponse>> FindByUsernameAsync(
         UserRequest request,
@@ -89,7 +85,7 @@ internal sealed class UserService(
                 ErrorConfiguration.UsernameNotFound
             );
 
-        if (await repository.IsExistUsernameAsync(request.Username, cancellationToken))
+        if (await repository.IsUsernameExistAsync(request.Username, cancellationToken))
         {
             result =
                 Result.Success(
@@ -113,7 +109,7 @@ internal sealed class UserService(
         try
         {
             bool exist =
-                await repository.IsExistUsernameAsync(request.Username, cancellation);
+                await repository.IsUsernameExistAsync(request.Username, cancellation);
 
             if (!exist)
             {
@@ -153,15 +149,22 @@ internal sealed class UserService(
                             }
                         );
 
-                        await unitOfWork.SaveChangesAsync(cancellation);
+                        try
+                        {
+                            await unitOfWork.SaveChangesAsync(cancellation);
 
-                        result = true;
+                            result = true;
+                        }
+                        catch
+                        {
+                            //
+                        }
                     }
 
                 }
             }
         }
-        catch (Exception)
+        catch
         {
             //
         }
@@ -171,7 +174,7 @@ internal sealed class UserService(
 
     public async Task<Result> UpdateAsync(
         Guid id,
-        UserUpdateRequest request, 
+        UserUpdateRequest request,
         CancellationToken cancellation = default
     )
     {
@@ -216,22 +219,29 @@ internal sealed class UserService(
 
                     if (entity != null)
                     {
-                        entity.Name = request.Name; 
+                        entity.Name = request.Name;
                         entity.Family = request.Family;
                         entity.Username = request.Username;
                         entity.PhoneNumber = request.PhoneNumber;
 
                         repository.Update(entity);
 
-                        await unitOfWork.SaveChangesAsync(cancellation);
+                        try
+                        {
+                            await unitOfWork.SaveChangesAsync(cancellation);
 
-                        result = true;
+                            result = true;
+                        }
+                        catch
+                        {
+                            //
+                        }
                     }
 
                 }
             }
         }
-        catch (Exception)
+        catch
         {
             //
         }
@@ -273,9 +283,16 @@ internal sealed class UserService(
 
                         repository.Update(entity);
 
-                        await unitOfWork.SaveChangesAsync(cancellation);
+                        try
+                        {
+                            await unitOfWork.SaveChangesAsync(cancellation);
 
-                        result = true;
+                            result = true;
+                        }
+                        catch
+                        {
+                            //
+                        }
                     }
                 }
             }

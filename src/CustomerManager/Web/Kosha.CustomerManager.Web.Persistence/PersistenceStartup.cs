@@ -1,4 +1,5 @@
 ﻿using Kosha.CustomerManager.Web.Persistence.Contexts;
+using Kosha.CustomerManager.Web.Persistence.Extensions;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Persistence.Interceptors;
 using Kosha.CustomerManager.Web.Persistence.Repositories;
@@ -32,6 +33,8 @@ public static class PersistenceStartup
 
         services.AddScoped<IUserRepository, UserRepository>();
 
+        services.AddScoped<ITagRepository, TagRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddShared();
@@ -46,10 +49,8 @@ public static class PersistenceStartup
     {
         /*
         if (env.IsDevelopment())
-        {
             host.UseMigration<ApplicationContext>();
-        }
-
+        
         host.UseSeeder(typeof(PersistenceStartup).Assembly);
         */
 
