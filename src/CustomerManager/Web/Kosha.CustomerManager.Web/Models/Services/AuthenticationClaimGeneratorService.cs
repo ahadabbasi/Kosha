@@ -72,6 +72,16 @@ internal sealed class AuthenticationClaimGeneratorService(IUserService service)
         if (!roles.Any(item => item.Equals(RoleNameConfiguration.User, StringComparison.OrdinalIgnoreCase)))
             roles.Add(RoleNameConfiguration.User);
 
+        foreach (string role in roles)
+        {
+            result.Add(
+                new Claim(
+                    ClaimDefinitionConfiguration.Role,
+                    role
+                )
+            );
+        }
+
         return result;
     }
 }
