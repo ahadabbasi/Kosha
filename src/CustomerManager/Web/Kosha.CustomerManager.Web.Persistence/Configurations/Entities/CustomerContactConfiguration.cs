@@ -15,7 +15,8 @@ internal sealed class CustomerContactConfiguration : AuditConfiguration<Customer
         builder.Property(model => model.Value)
             .IsRequired();
 
-        builder.HasIndex(model => new { model.Type, model.Value, model.CustomerId });
+        builder.HasIndex(model => new { model.Type, model.Value, model.CustomerId })
+            .IsUnique();
 
     }
 }

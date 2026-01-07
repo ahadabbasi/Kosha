@@ -21,12 +21,12 @@ namespace Kosha.CustomerManager.Web.Models.Services;
 
 internal sealed class BearerAuthenticationMethodService(
     ITimeService timeService, 
-    IOptions<BearerTokenInformation> options,
+    IOptions<BearerInformation> options,
     IUserService userService,
     AuthenticationClaimGeneratorService claimGeneratorService
 ) : IBearerAuthenticationMethodService
 {
-    private BearerTokenInformation Information => options.Value;
+    private BearerInformation Information => options.Value;
 
     public async Task<Result<IAuthenticationSignInResponse>> SignInAsync(AuthenticationSignInRequest request, CancellationToken cancellation = default)
     {

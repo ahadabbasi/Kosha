@@ -215,7 +215,7 @@ internal sealed class UserService(
                     result = false;
 
                     User? entity =
-                        await repository.GetByIdAsync(id);
+                        await repository.GetByIdAsync(id, cancellation);
 
                     if (entity != null)
                     {

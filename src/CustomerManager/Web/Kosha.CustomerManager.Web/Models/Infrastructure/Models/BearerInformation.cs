@@ -1,6 +1,6 @@
 ﻿namespace Kosha.CustomerManager.Web.Models.Infrastructure.Models;
 
-public sealed class BearerTokenInformation
+public sealed class BearerInformation
 {
     public int ValidationTerm { get; set; }
 

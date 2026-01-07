@@ -2,6 +2,7 @@
 using System.Text;
 using Kosha.CustomerManager.Web.Areas.Account.Controllers;
 using Kosha.CustomerManager.Web.Infrastructure;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
@@ -28,7 +29,7 @@ public static class Startup
         IConfiguration configuration
     )
     {
-        services.ConfigureOptions<TokenInformationConfigureOption>();
+        services.ConfigureOptions<BearerInformationConfigureOption>();
 
         services.AddScoped<IBearerAuthenticationMethodService, BearerAuthenticationMethodService>();
 
@@ -37,6 +38,8 @@ public static class Startup
         services.AddScoped<AuthenticationClaimGeneratorService>();
 
         services.AddScoped<ITaskBinderService, TaskBinderService>();
+
+        services.AddScoped<IPathService, PathService>();
 
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(
@@ -70,9 +73,9 @@ public static class Startup
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
                 {
-                    BearerTokenInformation information = new BearerTokenInformation();
+                    BearerInformation information = new BearerInformation();
 
-                    configuration.GetSection(TokenInformationConfigureOption.Section).Bind(information);
+                    configuration.GetSection(BearerInformationConfigureOption.Section).Bind(information);
 
                     options.TokenValidationParameters =
                         new TokenValidationParameters

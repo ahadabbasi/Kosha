@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Areas\Dashboard\Models\ViewModels\Tag\" />
     <Folder Include="wwwroot\lib\metronic\9.3.1\" />
+    <Folder Include="wwwroot\Storages\Customer\" />
   </ItemGroup>
 
 </Project>

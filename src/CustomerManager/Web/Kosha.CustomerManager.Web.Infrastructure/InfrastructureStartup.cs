@@ -1,7 +1,11 @@
-﻿using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
+﻿using Kosha.CustomerManager.Web.Infrastructure.Configurations.Options;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Services;
+using Kosha.CustomerManager.Web.Infrastructure.Services.Customer;
 using Kosha.CustomerManager.Web.Infrastructure.Services.Task;
 using Kosha.CustomerManager.Web.Persistence;
 using Kosha.CustomerManager.Web.Shared.Helper.Hasher.Algorithms;
@@ -18,6 +22,8 @@ public static class InfrastructureStartup
         IConfiguration configuration
     )
     {
+        services.ConfigureOptions<FileInformationConfigureOption>();
+
         services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IHasherService, HasherService>();
@@ -25,6 +31,12 @@ public static class InfrastructureStartup
         services.AddScoped<ITaskManagerService, TaskManagerService>();
 
         services.AddScoped<ITagService, TagService>();
+
+        services.AddScoped<IFileService, FileService>();
+
+        services.AddScoped<ICustomerService, CustomerService>();
+
+        services.AddScoped<ICustomerContactService, CustomerContactService>();
 
         services.AddScoped<PaginateHelperService>();
 
