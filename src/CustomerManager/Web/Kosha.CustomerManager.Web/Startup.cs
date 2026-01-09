@@ -31,6 +31,8 @@ public static class Startup
     {
         services.ConfigureOptions<BearerInformationConfigureOption>();
 
+        services.ConfigureOptions<PathInformationConfigureOption>();
+
         services.AddScoped<IBearerAuthenticationMethodService, BearerAuthenticationMethodService>();
 
         services.AddScoped<ICookieAuthenticationMethodService, CookieAuthenticationMethodService>();
