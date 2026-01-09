@@ -15,7 +15,7 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
     Area(AreaNameConfiguration.Dashboard),
     Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)
 ]
-public class AccountController(IUserService userService) : Controller
+public sealed class AccountController(IUserService userService) : Controller
 {
     public async Task<IActionResult> List([Bind] PaginateRequest? request = null) => 
         View((await userService.PaginateAsync(request)).Data);

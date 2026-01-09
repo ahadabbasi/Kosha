@@ -9,7 +9,7 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
     Area(AreaNameConfiguration.Dashboard), 
     Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)
 ]
-public class HomeController : Controller
+public sealed class HomeController : Controller
 {
     public IActionResult Index() 
         => View();
