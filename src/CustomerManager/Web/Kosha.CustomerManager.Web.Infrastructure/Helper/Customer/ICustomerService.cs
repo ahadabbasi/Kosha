@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
@@ -19,6 +20,14 @@ public interface ICustomerService
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<CustomerResponse>> FindByIdAsync(Guid id, CancellationToken cancellation = default);
 
     /// <summary>
     /// Create new customer
@@ -53,6 +62,17 @@ public interface ICustomerService
     Task<Result> DeleteAsync( 
         Guid id, 
         CancellationToken cancellation = default 
+    );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="customer"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<CustomerContactListResponse>> ListOfCustomerContactAsync(
+        Guid customer, 
+        CancellationToken cancellation = default
     );
 
     /// <summary>
@@ -93,6 +113,29 @@ public interface ICustomerService
     Task<Result> RemoveContactFromCustomerAsync(
         Guid customer,
         Guid contact,
+        CancellationToken cancellation = default
+    );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="customer"></param>
+    /// <param name="contact"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<CustomerContactResponse>> FindContactOfUser(
+        Guid customer,
+        Guid contact,
+        CancellationToken cancellation = default
+    );
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<IEnumerable<CustomerContactTypeResponse>>> AcceptableContactTypesAsync(
         CancellationToken cancellation = default
     );
 }

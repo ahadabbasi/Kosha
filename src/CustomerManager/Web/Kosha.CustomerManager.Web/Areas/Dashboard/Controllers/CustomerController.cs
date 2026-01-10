@@ -1,15 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
+﻿using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Tag;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Models.Extensions;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
 
@@ -17,27 +17,36 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
     Area(AreaNameConfiguration.Dashboard),
     Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)
 ]
-public sealed class TagController(ITagService tagService) : Controller
+public sealed class CustomerController(
+    ICustomerService customerService
+) : Controller
 {
-    public async Task<IActionResult> List([Bind] PaginateRequest? request = null) =>
-        View((await tagService.PaginateAsync(request)).Data);
+    [HttpGet]
+    public async Task<IActionResult> List(
+        [Bind]PaginateRequest? request = null
+    ) =>
+        View(
+            (await customerService.PaginateAsync(request)).Data
+        );
 
-    public IActionResult New() =>
+    [HttpGet]
+    public IActionResult Create() =>
         View();
 
+
     [
-        HttpPost,
+        HttpPost, 
         ValidateAntiForgeryToken
     ]
-    public async Task<IActionResult> New([Bind] NewTagVm entry)
+    public async Task<IActionResult> Create([Bind] CreateCustomerVm request)
     {
-        IActionResult result = View(entry);
+        IActionResult result = View(request);
 
         if (ModelState.IsValid)
         {
             ModelState.AddError(
-                await tagService.CreateAsync(
-                    new TagRequest(entry.Title)
+                await customerService.CreateAsync(
+                    new CustomerRequest(request.Name, request.Family)
                 )
             );
 
@@ -45,7 +54,7 @@ public sealed class TagController(ITagService tagService) : Controller
                 result =
                     RedirectToAction(
                         nameof(List),
-                        nameof(TagController).RemoveControllerFromString(),
+                        nameof(CustomerController).RemoveControllerFromString(),
                         new { Area = AreaNameConfiguration.Dashboard }
                     );
         }
@@ -54,42 +63,36 @@ public sealed class TagController(ITagService tagService) : Controller
     }
 
     [HttpGet]
-    public Task<IActionResult> Edit(Guid id) 
-        => FindByIdAsync(id, nameof(Edit));
+    public Task<IActionResult> Edit(Guid id) =>
+        FindByIdAsync(id, nameof(Edit));
 
     [
         HttpPost,
         ValidateAntiForgeryToken
     ]
-    public async Task<IActionResult> Edit(Guid id, [Bind] TagVm entry)
+    public async Task<IActionResult> Edit(Guid id, [Bind] UpdateCustomerVm entry)
     {
         IActionResult result = View(entry);
 
         if (ModelState.IsValid)
         {
-            ModelState.AddError(
-                new Error(
-                    nameof(ErrorMessageConfiguration.DoNotChangeValue), 
-                    ErrorMessageConfiguration.DoNotChangeValue
-                )
-            );
-
-            if (id == entry.Id)
+            if (entry.Id == id)
             {
-                ModelState.Clear();
-
                 ModelState.AddError(
-                    await tagService.UpdateAsync(
+                    await customerService.UpdateAsync(
                         id, 
-                        new TagRequest(entry.Title)
+                        new CustomerRequest(
+                            entry.Name, 
+                            entry.Family
+                        )
                     )
                 );
 
                 if (ModelState.IsValid)
-                    result =
+                    result = 
                         RedirectToAction(
-                            nameof(List),
-                            nameof(TagController).RemoveControllerFromString(),
+                            nameof(List), 
+                            nameof(CustomerController).RemoveControllerFromString(),
                             new { Area = AreaNameConfiguration.Dashboard }
                         );
             }
@@ -99,37 +102,32 @@ public sealed class TagController(ITagService tagService) : Controller
     }
 
     [HttpGet]
-    public Task<IActionResult> Delete(Guid id)
-        => FindByIdAsync(id, nameof(Delete));
+    public Task<IActionResult> Delete(Guid id) =>
+        FindByIdAsync(id, nameof(Delete));
 
     [
         HttpPost,
         ValidateAntiForgeryToken
     ]
-    public async Task<IActionResult> Delete(Guid id, [Bind] TagVm entry)
+    public async Task<IActionResult> Delete(Guid id, [Bind] UpdateCustomerVm entry)
     {
         IActionResult result = View(entry);
 
         if (ModelState.IsValid)
         {
-            ModelState.AddError(
-                new Error(
-                    nameof(ErrorMessageConfiguration.DoNotChangeValue),
-                    ErrorMessageConfiguration.DoNotChangeValue
-                )
-            );
-
-            if (id == entry.Id)
+            if (entry.Id == id)
             {
-                ModelState.Clear();
-
-                ModelState.AddError(await tagService.DeleteAsync(id));
+                ModelState.AddError(
+                    await customerService.DeleteAsync(
+                        id
+                    )
+                );
 
                 if (ModelState.IsValid)
                     result =
                         RedirectToAction(
                             nameof(List),
-                            nameof(TagController).RemoveControllerFromString(),
+                            nameof(CustomerController).RemoveControllerFromString(),
                             new { Area = AreaNameConfiguration.Dashboard }
                         );
             }
@@ -137,6 +135,7 @@ public sealed class TagController(ITagService tagService) : Controller
 
         return result;
     }
+
 
     private async Task<IActionResult> FindByIdAsync(Guid id, string viewName)
     {
@@ -147,13 +146,13 @@ public sealed class TagController(ITagService tagService) : Controller
                 new { Area = AreaNameConfiguration.Dashboard }
             );
 
-        Result<TagResponse> resultTag = await tagService.FindByIdAsync(id);
+        Result<CustomerResponse> resultCustomer = await customerService.FindByIdAsync(id);
 
-        if (resultTag && resultTag.Data is not null)
+        if (resultCustomer && resultCustomer.Data is not null)
             result =
                 View(
                     viewName,
-                    new TagVm(resultTag.Data)
+                    new UpdateCustomerVm(resultCustomer.Data)
                 );
 
         return result;

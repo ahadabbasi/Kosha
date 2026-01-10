@@ -19,4 +19,8 @@ internal class DisplayNameConfiguration
     internal const string PhoneNumber = "شماره تماس";
 
     internal const string Title = "عنوان";
+
+    internal const string Type = "روش ارتباط";
+
+    internal const string Value = "اطلاعات ارتباط";
 }

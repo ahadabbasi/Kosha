@@ -1,0 +1,59 @@
+﻿@using System.IO
+@using System.Text
+@using System.Text.Encodings.Web
+@using Kosha.CustomerManager.Web.Infrastructure.Models.Customer
+@model ContactTypeResponse
+
+@{
+    string OptionBuilder(CustomerContactTypeResponse request, string selectedItem)
+    {
+        TagBuilder tag =
+            new TagBuilder("option")
+            {
+                TagRenderMode = TagRenderMode.Normal,
+                Attributes =
+                {
+                    {
+                        "value",
+                        request.Type
+                    }
+                }
+
+            };
+
+        if (
+            !string.IsNullOrEmpty(selectedItem) && 
+            request.Type.Equals(selectedItem, StringComparison.OrdinalIgnoreCase)
+        )
+            tag.Attributes.Add("selected", string.Empty);
+
+        tag.InnerHtml.AppendHtml(
+            new StringHtmlContent(request.Title)
+        );
+
+        StringBuilder builder =
+            new StringBuilder();
+
+        using (TextWriter writer = new StringWriter(builder))
+        {
+            tag.WriteTo(writer, HtmlEncoder.Default);
+        }
+
+        return builder.ToString();
+    }
+
+}
+
+<div class="w-full">
+    <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">
+        <label for="@Model.Name" class="kt-form-label flex items-center gap-1 max-w-56">
+            @Model.Title
+        </label>
+        <select name="@Model.Name" class="kt-select" data-kt-select="true"@(Model.Disabled ? " readonly=\"readonly\"" : "")>
+            @foreach (CustomerContactTypeResponse item in Model)
+            {
+                @Html.Raw(OptionBuilder(item, Model.Selected))
+            }
+        </select>
+    </div>
+</div>

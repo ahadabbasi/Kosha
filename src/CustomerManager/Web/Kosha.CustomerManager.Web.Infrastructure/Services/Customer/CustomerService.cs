@@ -27,6 +27,7 @@ internal sealed class CustomerService(
     ) =>
         await repository
             .Query()
+            .OrderBy(item => item.Inserted)
             .Select(item => 
                 new CustomerPaginateResponse(
                     item.Id, 
@@ -38,6 +39,32 @@ internal sealed class CustomerService(
                 await paginateHelperService.ValidateAsync(request),
                 cancellation
             );
+
+    public async Task<Result<CustomerResponse>> FindByIdAsync(Guid id, CancellationToken cancellation = default)
+    {
+        Result<CustomerResponse> result = 
+                Result.Failed<CustomerResponse>(Error.None); //<>;
+
+        IQueryable<Domain.Entities.Customer> query =
+            repository.Query()
+                .Where(item => item.Id == id);
+
+        if (await query.AnyAsync(cancellation))
+            result =
+                Result.Success(
+                    await query
+                        .Select(item =>
+                            new CustomerResponse(
+                                item.Id,
+                                item.Name,
+                                item.Family
+                            )
+                        )
+                        .FirstAsync(cancellation)
+                );
+
+        return result;
+    }
 
     public async Task<Result> CreateAsync(
         CustomerRequest request, 
@@ -135,6 +162,76 @@ internal sealed class CustomerService(
         return result;
     }
 
+    public async Task<Result<CustomerContactListResponse>> ListOfCustomerContactAsync(
+        Guid customer,
+        CancellationToken cancellation = default
+    )
+    {
+        Result<CustomerContactListResponse> result =
+            Result.Failed<CustomerContactListResponse>(Error.None);
+
+        if (await repository.ExistsAsync(customer, cancellation))
+        {
+            Result<IEnumerable<CustomerContactTypeResponse>> resultAcceptable =
+                await AcceptableContactTypesAsync(cancellation);
+
+            if (resultAcceptable && resultAcceptable.Data is not null)
+            {
+                CustomerRequest data =
+                    await repository
+                        .Query()
+                        .Where(item => item.Id == customer)
+                        .Select(item =>
+                            new CustomerRequest(
+                                item.Name,
+                                item.Family
+                            )
+                        ).FirstAsync(cancellation);
+
+                List<CustomerContactResponse> contacts =
+                    await contactRepository.Query()
+                        .Where(item => item.CustomerId == customer)
+                        .Select(item =>
+                            new CustomerContactResponse(
+                                item.Id,
+                                item.Type,
+                                item.Value
+                            )
+                        )
+                        .ToListAsync(cancellation);
+
+                result =
+                    Result.Success(
+                        new CustomerContactListResponse(
+                            customer,
+                            data.Name,
+                            data.Family,
+                            contacts.Select(
+                                item =>
+                                {
+                                    CustomerContactTypeResponse? type =
+                                        resultAcceptable.Data
+                                            .FirstOrDefault(typeItem => typeItem.Type.Equals(item.Type));
+
+                                    if (type is not null)
+                                        item =
+                                            new CustomerContactResponse(
+                                                item.Id, 
+                                                type.Title, 
+                                                item.Value
+                                            );
+                                    
+                                    return item;
+                                }
+                            )
+                        )
+                    );
+            }
+        }
+
+        return result;
+    }
+
     public async Task<Result> AddNewContactToCustomerAsync(
         Guid customer, 
         CustomerContactRequest contact,
@@ -148,7 +245,7 @@ internal sealed class CustomerService(
             result = false;
 
             Result<IEnumerable<CustomerContactTypeResponse>> resultTypes =
-                await customerContactService.TypesAsync(cancellation);
+                await AcceptableContactTypesAsync(cancellation);
 
             if (
                 resultTypes &&
@@ -270,22 +367,67 @@ internal sealed class CustomerService(
     public async Task<Result> RemoveContactFromCustomerAsync(
         Guid customer, 
         Guid contact, 
-        CancellationToken cancelToken = default
+        CancellationToken cancellation = default
     )
     {
         Result result = 
             await ContactBelongsToCustomerAsync(
                 customer, 
-                contact, 
-                cancelToken
+                contact,
+                cancellation
             );
 
         if (result)
         {
             result = false;
 
-            
+            contactRepository.Delete(contact);
+
+            try
+            {
+                await unitOfWork.SaveChangesAsync(cancellation);
+
+                result = true;
+            }
+            catch (Exception )
+            {
+                //
+            }
         }
+
+        return result;
+    }
+
+    public async Task<Result<CustomerContactResponse>> FindContactOfUser(
+        Guid customer,
+        Guid contact,
+        CancellationToken cancellation = default
+    )
+    {
+        Result<CustomerContactResponse> result =
+            Result.Failed<CustomerContactResponse>(Error.None);
+
+        if (
+            await ContactBelongsToCustomerAsync(
+                customer,
+                contact,
+                cancellation
+            )
+        )
+            result = 
+                Result.Success(
+                    await contactRepository
+                        .Query()
+                        .Where(item => item.Id == contact)
+                        .Select(item =>
+                            new CustomerContactResponse(
+                                item.Id,
+                                item.Type,
+                                item.Value
+                            )
+                        )
+                        .FirstAsync(cancellation)
+                );
 
         return result;
     }
@@ -310,7 +452,7 @@ internal sealed class CustomerService(
         CustomerContactTypeResponse? data = null;
 
         Result<IEnumerable<CustomerContactTypeResponse>> resultTypes =
-            await customerContactService.TypesAsync(cancellation);
+            await AcceptableContactTypesAsync(cancellation);
 
         if (
             resultTypes &&
@@ -329,4 +471,9 @@ internal sealed class CustomerService(
                 Result.Failed<CustomerContactTypeResponse>(Error.None) : 
                 Result.Success(data);
     }
+
+    public Task<Result<IEnumerable<CustomerContactTypeResponse>>> AcceptableContactTypesAsync(
+        CancellationToken cancellation = default
+    ) =>
+        customerContactService.TypesAsync(cancellation);
 }

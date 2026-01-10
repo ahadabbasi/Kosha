@@ -6,5 +6,11 @@ public sealed class RouteConfiguration
 
     public const string Separator = "/";
 
-    public const string ApplicationRouteTemplate = Application + Separator + "[area]" + Separator + "[controller]";
+    public const string AreaName = "[area]";
+
+    public const string ControllerName = "[controller]";
+
+    public const string ActionName = "[action]";
+
+    public const string ApplicationRouteTemplate = Application + Separator + AreaName + Separator + ControllerName;
 }

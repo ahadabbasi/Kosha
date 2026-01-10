@@ -1,0 +1,56 @@
+﻿@using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewComponents
+@model EditContactVm
+
+
+@using (
+    Html.BeginForm(
+        nameof(ContactController.Delete),
+        nameof(ContactController).RemoveControllerFromString(),
+        new { Area = AreaNameConfiguration.Dashboard, Model.Customer, Model.Id },
+        FormMethod.Post,
+        true,
+        new { @class = "grid gap-5" }
+    )
+)
+{
+    <div class="text-base font-semibold text-mono">
+        حذف راه ارتباطی برای مشتری @Model.CustomerName @Model.CustomerFamily
+    </div>
+
+    <div class="border-t border-border mt-2 mb-8">
+    </div>
+
+    <input asp-for="Customer" type="hidden" />
+
+    <input asp-for="CustomerName" type="hidden" />
+
+    <input asp-for="CustomerFamily" type="hidden" />
+
+    <input asp-for="Id" type="hidden" />
+
+    @(
+        await Component.InvokeAsync(
+            nameof(ContactTypeViewComponent).RemoveViewComponentFromString(),
+            new ContactTypeRequest(
+                nameof(Model.Type),
+                DisplayNameConfiguration.Type,
+                Model.Type,
+                true
+            )
+        )
+    )
+
+    <div class="w-full">
+        <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">
+            <label asp-for="Value" class="kt-form-label flex items-center gap-1 max-w-56">
+            </label>
+            <input asp-for="Value" class="kt-input" type="text" readonly="readonly">
+        </div>
+    </div>
+
+    <div class="flex justify-end pt-2.5">
+        <button class="kt-btn kt-btn-destructive" type="submit">
+            حذف
+        </button>
+    </div>
+}
