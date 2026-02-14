@@ -1,0 +1,94 @@
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models;
+@model IEnumerable<ObligationVm>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/obligation.css" />
+}
+
+<div class="flex grow gap-1 relative">
+    <!-- List View -->
+    <div class="bg-background border border-input rounded-xl shadow-xs w-full lg:w-[300px] xl:w-(--mail-list-width) shrink-0">
+        <!--Header-->
+        <div class="flex items-center justify-between px-2 py-3 gap-1">
+            <div class="flex items-center w-full gap-1">
+            </div>
+        </div>
+        <!--End Header-->
+        <!-- List -->
+
+        <div class="px-4 py-1">
+            @foreach (ObligationVm item in Model)
+            {
+                <!-- Each item -->
+                <div class="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary">
+
+                    <!-- Information -->
+                    <div class="flex-1 space-y-0.5">
+                        <div class="flex items-center justify-between">
+                            <a class="font-medium text-sm text-foreground hover:text-primary" href="#">
+                                @item.Title
+                            </a>
+                            <!-- Date -->
+                            <span class="text-xs text-secondary-foreground">
+                                @item.Inserted.ToString("D")
+                            </span>
+                            <!-- End Date -->
+                        </div>
+                        <p class="text-xs text-muted-foreground font-normal">
+                            @item.Description
+                        </p>
+                    </div>
+                    <!-- End Information -->
+
+                </div>
+                <!-- End Each item -->
+            }
+        </div>
+
+        <!-- End List -->
+    </div>
+    <!-- End List View -->
+    <!-- Message View -->
+    <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
+        <div class="flex flex-col items-stretch min-h-[calc(100vh-6rem)]">
+            <!-- Header -->
+            <div class="px-4">
+                <div class="py-3">
+                    <span class="text-lg text-foreground text-semibold">
+                        عنوان
+                    </span>
+                </div>
+                <!-- Tags -->
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-row items-center">
+                        <span class="text-sm text-foreground font-medium">
+                            برچسب ها <span class="text-muted-foreground">[2]</span>
+                        </span>
+                        <button type="button" class="kt-btn kt-btn-icon kt-btn-outline kt-btn-sm ms-2.5">
+                            <i class="ki-filled ki-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <!-- Repeat -->
+                        <div class="flex items-center gap-2 rounded-lg border border-border ps-2 p-0.5">
+                            <span class="text-xs max-w-[160px] truncate">فروش</span>
+                            <div class="flex items-center pl-1 border-r border-border">
+                                <button type="button" class="kt-btn kt-btn-icon kt-btn-dim">
+                                    <i class="ki-filled ki-cross"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Repeat -->
+                    </div>
+                </div>
+                <!-- End Tags -->
+            </div>
+            <!-- End Header -->
+            <div class="shrink-0 bg-border h-px w-full mt-4 mb-3"></div>
+
+        </div>
+    </div>
+    <!-- End Message View -->
+</div>

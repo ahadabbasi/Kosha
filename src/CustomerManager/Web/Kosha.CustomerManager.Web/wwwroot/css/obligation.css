@@ -1,0 +1,19 @@
+﻿:root {
+    --mail-list-width: 400px;
+}
+
+@media (min-width: 64rem) {
+    .lg\:w-\[300px\] {
+        width: 300px;
+    }
+}
+
+@media (min-width: 80rem) {
+    .xl\:w-\(--mail-list-width\) {
+        width: var(--mail-list-width);
+    }
+
+    .xl\:w-\(--mail-view-width\) {
+        width: var(--mail-view-width)
+    }
+}

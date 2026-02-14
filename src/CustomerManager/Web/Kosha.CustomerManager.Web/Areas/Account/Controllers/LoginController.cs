@@ -36,25 +36,28 @@ public sealed class LoginController(
     {
         IActionResult result = View(entry);
 
-        Result<UserResponse> resultOfFind =
-            await userService.FindByUsernameAsync(
-                new UserRequest(entry.Username)    
-            );
-
-        ModelState.AddError(ErrorConfiguration.UsernameOrPasswordIsWrong);
-
-        if (!resultOfFind)
+        if (ModelState.IsValid)
         {
-            ModelState.Clear();
-            ModelState.AddError(resultOfFind);
-        }
 
-        if (
-            resultOfFind &&
-            resultOfFind.Data != null
-        )
-        {
-            Result resultOfVerified =
+            Result<UserResponse> resultOfFind =
+                await userService.FindByUsernameAsync(
+                    new UserRequest(entry.Username)
+                );
+
+            ModelState.AddError(ErrorConfiguration.UsernameOrPasswordIsWrong);
+
+            if (!resultOfFind)
+            {
+                ModelState.Clear();
+                ModelState.AddError(resultOfFind);
+            }
+
+            if (
+                resultOfFind &&
+                resultOfFind.Data != null
+            )
+            {
+                Result resultOfVerified =
                     await authenticationMethodService.SignInAsync(
                         new AuthenticationSignInRequest(
                             resultOfFind,
@@ -63,28 +66,28 @@ public sealed class LoginController(
                         )
                     );
 
-            if (resultOfVerified)
-            {
-                ModelState.Clear();
-
-                result = 
-                    RedirectToAction(
-                        nameof(HomeController.Index),
-                        nameof(HomeController).RemoveControllerFromString(),
-                        new { area = AreaNameConfiguration.Dashboard }
-                    );
-
-                if (
-                    !string.IsNullOrWhiteSpace(entry.ReturnUrl) &&
-                    Url.IsLocalUrl(entry.ReturnUrl)
-                )
+                if (resultOfVerified)
                 {
-                    result = Redirect(entry.ReturnUrl);
+                    ModelState.Clear();
+
+                    result =
+                        RedirectToAction(
+                            nameof(HomeController.Index),
+                            nameof(HomeController).RemoveControllerFromString(),
+                            new { area = AreaNameConfiguration.Dashboard }
+                        );
+
+                    if (
+                        !string.IsNullOrWhiteSpace(entry.ReturnUrl) &&
+                        Url.IsLocalUrl(entry.ReturnUrl)
+                    )
+                    {
+                        result = Redirect(entry.ReturnUrl);
+                    }
                 }
+
             }
-
         }
-
 
         return result;
     }

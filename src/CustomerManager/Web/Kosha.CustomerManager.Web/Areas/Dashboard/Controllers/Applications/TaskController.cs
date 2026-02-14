@@ -13,11 +13,11 @@ namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers.Applications;
     Area(AreaNameConfiguration.Dashboard),
     Route(RouteConfiguration.ApplicationRouteTemplate),
     ApiController,
-    Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
+    //Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
 ]
 public sealed class TaskController(ITaskManagerService taskManagerService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody]TaskCreateRequest entry, CancellationToken cancellation)
-        => Ok(await taskManagerService.CreateAsync(entry, cancellation));
+    public async Task<IActionResult> Create(CancellationToken cancellation)
+        => Ok(await taskManagerService.CreateAsync(cancellation));
 }

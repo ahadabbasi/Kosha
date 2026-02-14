@@ -5,4 +5,6 @@ public sealed class AreaNameConfiguration
     public const string Account = nameof(Account);
 
     public const string Dashboard = nameof(Dashboard);
+
+    public const string Obligation = nameof(Obligation);
 }

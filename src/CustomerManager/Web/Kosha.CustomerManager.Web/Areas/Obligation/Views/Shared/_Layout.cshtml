@@ -1,14 +1,11 @@
-﻿@{
-    Layout = "~/Views/Shared/_Dashboard.cshtml";
+﻿@using Kosha.CustomerManager.Web.Models.Extensions
+
+@{
+    Layout = "_Dashboard";
 
     Html.MetronicMainCssClasses(
         "flex",
         "grow",
-        "rounded-xl",
-        "bg-background",
-        "border-x",
-        "border-b",
-        "border-input",
         "mx-5",
         "lg:ms-(--sidebar-width)",
         "mb-5"

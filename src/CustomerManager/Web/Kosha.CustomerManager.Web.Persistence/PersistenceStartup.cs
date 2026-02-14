@@ -37,9 +37,7 @@ public static class PersistenceStartup
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddShared();
-
-        return services;
+        return services.AddShared();
     }
 
     public static IHost UsePersistence(
@@ -47,15 +45,12 @@ public static class PersistenceStartup
         IHostEnvironment env
     )
     {
-        /*
+        
         if (env.IsDevelopment())
             host.UseMigration<ApplicationContext>();
         
         host.UseSeeder(typeof(PersistenceStartup).Assembly);
-        */
-
-        host.UseShared(env);
-
-        return host;
+        
+        return host.UseShared(env);
     }
 }

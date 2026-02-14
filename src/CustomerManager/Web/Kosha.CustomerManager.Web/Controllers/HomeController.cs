@@ -15,7 +15,7 @@ public class HomeController(ILogger<HomeController> logger) : Controller
             nameof(Areas.Dashboard.Controllers.HomeController).RemoveControllerFromString(),
             new
             {
-                Area = AreaNameConfiguration.Dashboard
+                Area = AreaNameConfiguration.Obligation
             }
         );
 
