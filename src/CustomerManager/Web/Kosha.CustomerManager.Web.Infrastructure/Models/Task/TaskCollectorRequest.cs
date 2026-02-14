@@ -2,6 +2,4 @@
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Task;
 
-internal sealed class TaskCollectorRequest : ITaskCollectorRequest
-{ 
-}
+public record TaskCollectorRequest(string Type) : ITaskCollectorRequest;

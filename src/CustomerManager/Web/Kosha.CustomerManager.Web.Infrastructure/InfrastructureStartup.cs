@@ -46,9 +46,7 @@ public static class InfrastructureStartup
             }
         );
 
-        services.AddPersistence(configuration);
-
-        return services;
+        return services.AddPersistence(configuration);
     }
 
     public static IHost UseInfrastructure(
@@ -56,8 +54,6 @@ public static class InfrastructureStartup
         IHostEnvironment env
     )
     {
-        host.UsePersistence(env);
-
-        return host;
+        return host.UsePersistence(env);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 using Kosha.CustomerManager.Web.Shared.Results;
@@ -7,6 +9,20 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 
 public interface ITaskBinderService
 {
-    Task<Result<TRequest>> BindAsync<TRequest>(CancellationToken cancellation = default)
-        where TRequest : class, ITaskCollectorRequest;
+    /// <summary>
+    /// Bind data and try to create valid request for creation task
+    /// </summary>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<ITaskCreateRequest>> BindCreateAsync(CancellationToken cancellation = default);
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="records"></param>
+    /// <param name="cancellation"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    Task<Result<ITaskPaginateRequest>> BindPaginateAsync(ITaskCollectorRequest request, IEnumerable<Guid> records, CancellationToken cancellation = default);
 }
