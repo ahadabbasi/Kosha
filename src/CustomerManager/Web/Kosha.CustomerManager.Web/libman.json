@@ -1,0 +1,31 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "htm@3.1.1",
+      "destination": "wwwroot/lib/htm/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "preact@10.28.3",
+      "destination": "wwwroot/lib/preact"
+    },
+    {
+      "provider": "unpkg",
+      "library": "react@18.3.1",
+      "destination": "wwwroot/lib/react"
+    },
+    {
+      "provider": "unpkg",
+      "library": "react-dom@18.3.1",
+      "destination": "wwwroot/lib/react-dom"
+    },
+    {
+      "provider": "unpkg",
+      "library": "axios@1.13.5",
+      "destination": "wwwroot/lib/axios"
+    }
+  ]
+}
