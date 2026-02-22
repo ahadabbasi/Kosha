@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
@@ -52,4 +53,38 @@ public interface ITagService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result> DeleteAsync(Guid id, CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Get all tags has been added to task
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<IEnumerable<TagResponse>>> FetchTaskTagsAsync(Guid task, CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Search tag with title tag
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string title, CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Attach a tag to the task
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="tag"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result> AttachTagToTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Detach tag from task
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="tag"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result> DetachTagFromTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default);
 }

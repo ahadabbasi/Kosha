@@ -104,7 +104,7 @@ public interface ICustomerService
     );
 
     /// <summary>
-    /// 
+    /// Remove contact information from customer
     /// </summary>
     /// <param name="customer"></param>
     /// <param name="contact"></param>
@@ -117,7 +117,7 @@ public interface ICustomerService
     );
 
     /// <summary>
-    /// 
+    /// Return only specific contact information of the customer
     /// </summary>
     /// <param name="customer"></param>
     /// <param name="contact"></param>
@@ -129,7 +129,6 @@ public interface ICustomerService
         CancellationToken cancellation = default
     );
 
-
     /// <summary>
     /// 
     /// </summary>
@@ -138,4 +137,21 @@ public interface ICustomerService
     Task<Result<IEnumerable<CustomerContactTypeResponse>>> AcceptableContactTypesAsync(
         CancellationToken cancellation = default
     );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<CustomerResponse>> FetchTaskCustomerAsync(Guid task, CancellationToken cancellation = default);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="customer"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result> AssignCustomerToTaskAsync(Guid task, Guid customer, CancellationToken cancellation = default);
 }

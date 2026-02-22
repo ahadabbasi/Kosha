@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Extensions;
@@ -16,6 +17,7 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Services.Customer;
 internal sealed class CustomerService(
     IAuditRepository<Domain.Entities.Customer> repository,
     IAuditRepository<Domain.Entities.CustomerContact> contactRepository,
+    IAuditRepository<Domain.Entities.Task> taskRepository,
     PaginateHelperService paginateHelperService,
     ICustomerContactService customerContactService,
     IUnitOfWork unitOfWork
@@ -476,4 +478,57 @@ internal sealed class CustomerService(
         CancellationToken cancellation = default
     ) =>
         customerContactService.TypesAsync(cancellation);
+
+    public async Task<Result<CustomerResponse>> FetchTaskCustomerAsync(Guid task, CancellationToken cancellation = default)
+    {
+        CustomerResponse? data =
+            await taskRepository.Query()
+                .Where(TaskExpression(task))
+                .Select(item => item.Customer)
+                .Select(MapCustomer())
+                .FirstOrDefaultAsync(cancellation);
+
+        return data is not null ? Result.Success(data) : Result.Failed<CustomerResponse>(Error.None);
+    }
+
+    public async Task<Result> AssignCustomerToTaskAsync(Guid task, Guid customer, CancellationToken cancellation = default)
+    {
+        Result result = false;
+
+        if (await repository.ExistsAsync(task, cancellation))
+        {
+            Domain.Entities.Task? taskEntity = await taskRepository.GetByIdAsync(task, cancellation);
+
+            if (taskEntity is not null)
+            {
+                taskEntity.CustomerId = customer;
+
+                taskRepository.Update(taskEntity);
+
+                try
+                {
+                    await unitOfWork.SaveChangesAsync(cancellation);
+
+                    result = true;
+                }
+                catch (Exception )
+                {
+                    //
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private Expression<Func<Domain.Entities.Task, bool>> TaskExpression(Guid task) => 
+        item => item.Id.Equals(task);
+
+
+    private Expression<Func<Domain.Entities.Customer, CustomerResponse>> MapCustomer() =>
+        item => new CustomerResponse(
+            item.Id,
+            item.Name,
+            item.Family
+        );
 }

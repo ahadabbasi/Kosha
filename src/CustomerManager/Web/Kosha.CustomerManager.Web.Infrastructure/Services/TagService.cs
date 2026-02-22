@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -17,6 +18,7 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 internal sealed class TagService(
     PaginateHelperService paginateHelperService,
     ITagRepository repository,
+    IRepository<TagTask> tagTaskRepository,
     IUnitOfWork unitOfWork
 ) : ITagService
 {
@@ -151,6 +153,88 @@ internal sealed class TagService(
                 result = true;
             }
             catch
+            {
+                //
+            }
+        }
+
+        return result;
+    }
+
+    public async Task<Result<IEnumerable<TagResponse>>> FetchTaskTagsAsync(Guid task, CancellationToken cancellation = default) => 
+        Result.Success<IEnumerable<TagResponse>>(
+            await tagTaskRepository.Query()
+                .Where(item => item.TaskId.Equals(task))
+                .Select(item => item.Tag)
+                .Select(Map())
+                .ToArrayAsync(cancellation)
+        );
+
+    public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string title, CancellationToken cancellation = default) =>
+        Result.Success<IEnumerable<TagResponse>>(
+            await repository.Query()
+                .Where(item => item.Title.Contains(title))
+                .Select(Map())
+                .ToArrayAsync(cancellation)
+        );
+
+    public async Task<Result> AttachTagToTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default)
+    {
+        Result result = false;
+
+        if (
+            ! await tagTaskRepository.Query()
+                .AnyAsync(
+                    item => item.TaskId.Equals(task) && item.Tag.Equals(tag),
+                    cancellation
+                )
+        )
+        {
+            TagTask entity =
+                new TagTask
+                {
+                    TaskId = task,
+                    TagId = tag
+                };
+
+            tagTaskRepository.Add(entity);
+
+            try
+            {
+                await unitOfWork.SaveChangesAsync(cancellation);
+
+                result = true;
+            }
+            catch (Exception )
+            {
+                //
+            }
+        }
+
+        return result;
+    }
+
+    public async Task<Result> DetachTagFromTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default)
+    {
+        Result result = false;
+
+        IQueryable<TagTask> query =
+            tagTaskRepository.Query()
+                .Where(item => item.TaskId.Equals(task) && item.Tag.Equals(tag));
+
+        if (await query.AnyAsync(cancellation))
+        {
+            TagTask entity = await query.FirstAsync(cancellation);
+
+            tagTaskRepository.Delete(entity);
+
+            try
+            {
+                await unitOfWork.SaveChangesAsync(cancellation);
+
+                result = true;
+            }
+            catch 
             {
                 //
             }

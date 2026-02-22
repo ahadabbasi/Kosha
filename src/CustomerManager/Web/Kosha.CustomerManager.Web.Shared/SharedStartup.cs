@@ -9,7 +9,9 @@ public static class SharedStartup
 {
     public static IServiceCollection AddShared(this IServiceCollection services)
     {
-        services.AddScoped<ITimeService, TimeService>();
+        services.AddTransient<ITimeService, TimeService>();
+
+        services.AddTransient<IPersianService, PersianService>();
 
         return services;
     }
