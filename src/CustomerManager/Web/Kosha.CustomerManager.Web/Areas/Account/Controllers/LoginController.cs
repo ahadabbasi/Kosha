@@ -80,10 +80,8 @@ public sealed class LoginController(
                     if (
                         !string.IsNullOrWhiteSpace(entry.ReturnUrl) &&
                         Url.IsLocalUrl(entry.ReturnUrl)
-                    )
-                    {
+                    ) 
                         result = Redirect(entry.ReturnUrl);
-                    }
                 }
 
             }

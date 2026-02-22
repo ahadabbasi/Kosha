@@ -63,7 +63,6 @@ public sealed class TokenController(
                 ModelState.Clear();
 
                 response = resultOfVerified.Data;
-
             }
         }
 

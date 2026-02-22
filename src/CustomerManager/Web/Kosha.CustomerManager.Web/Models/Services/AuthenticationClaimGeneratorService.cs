@@ -33,25 +33,22 @@ internal sealed class AuthenticationClaimGeneratorService(IUserService service)
                 )
             };
 
-        foreach ((string type, string? value) in
-                 new Dictionary<string, string?>
-                 {
-                     {
-                         ClaimDefinitionConfiguration.Name,
-                         request.Name
-                     },
-                     {
-                         ClaimDefinitionConfiguration.Family,
-                         request.Family
-                     }
-                 }
-                )
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
+        foreach (
+            (string type, string? value) in
+                new Dictionary<string, string?>
+                {
+                    {
+                        ClaimDefinitionConfiguration.Name,
+                        request.Name
+                    },
+                    {
+                        ClaimDefinitionConfiguration.Family,
+                        request.Family
+                    }
+                }
+        )
+            if (!string.IsNullOrEmpty(value)) 
                 result.Add(new Claim(type, value));
-            }
-        }
 
         Result<IEnumerable<string>> resultOfRoles =
             await service.RolesAsync(
@@ -73,14 +70,12 @@ internal sealed class AuthenticationClaimGeneratorService(IUserService service)
             roles.Add(RoleNameConfiguration.User);
 
         foreach (string role in roles)
-        {
             result.Add(
                 new Claim(
                     ClaimDefinitionConfiguration.Role,
                     role
                 )
             );
-        }
 
         return result;
     }

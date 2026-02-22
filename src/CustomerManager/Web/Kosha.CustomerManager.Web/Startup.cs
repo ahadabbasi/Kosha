@@ -2,6 +2,7 @@
 using System.Text;
 using Kosha.CustomerManager.Web.Areas.Account.Controllers;
 using Kosha.CustomerManager.Web.Infrastructure;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Models.Configurations;
@@ -42,6 +43,10 @@ public static class Startup
         services.AddScoped<ITaskBinderService, TaskBinderService>();
 
         services.AddScoped<IPathService, PathService>();
+
+        services.AddScoped<AccessTokenService>();
+
+        services.AddScoped<IAuthorizeService, AuthorizeService>();
 
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(
