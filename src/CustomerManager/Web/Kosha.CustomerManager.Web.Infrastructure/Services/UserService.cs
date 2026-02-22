@@ -58,7 +58,6 @@ internal sealed class UserService(
         User? entity = await repository.GetByUsernameAsync(request.Username, cancellationToken);
 
         if (entity is not null)
-        {
             result =
                 Result.Success(
                     new UserResponse(
@@ -70,7 +69,6 @@ internal sealed class UserService(
                         entity.PhoneNumber
                     )
                 );
-        }
 
         return result;
     }
@@ -86,12 +84,10 @@ internal sealed class UserService(
             );
 
         if (await repository.IsUsernameExistAsync(request.Username, cancellationToken))
-        {
             result =
                 Result.Success(
                     await repository.UserRolesAsync(request.Username, cancellationToken)
                 );
-        }
 
         return result;
     }

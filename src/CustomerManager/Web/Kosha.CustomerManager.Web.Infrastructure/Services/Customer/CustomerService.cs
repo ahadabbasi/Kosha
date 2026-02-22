@@ -45,7 +45,7 @@ internal sealed class CustomerService(
     public async Task<Result<CustomerResponse>> FindByIdAsync(Guid id, CancellationToken cancellation = default)
     {
         Result<CustomerResponse> result = 
-                Result.Failed<CustomerResponse>(Error.None); //<>;
+                Result.Failed<CustomerResponse>(Error.None);
 
         IQueryable<Domain.Entities.Customer> query =
             repository.Query()
@@ -55,13 +55,7 @@ internal sealed class CustomerService(
             result =
                 Result.Success(
                     await query
-                        .Select(item =>
-                            new CustomerResponse(
-                                item.Id,
-                                item.Name,
-                                item.Family
-                            )
-                        )
+                        .Select(MapCustomer())
                         .FirstAsync(cancellation)
                 );
 
@@ -483,7 +477,7 @@ internal sealed class CustomerService(
     {
         CustomerResponse? data =
             await taskRepository.Query()
-                .Where(TaskExpression(task))
+                .Where(item => item.Id.Equals(task))
                 .Select(item => item.Customer)
                 .Select(MapCustomer())
                 .FirstOrDefaultAsync(cancellation);
@@ -520,10 +514,6 @@ internal sealed class CustomerService(
 
         return result;
     }
-
-    private Expression<Func<Domain.Entities.Task, bool>> TaskExpression(Guid task) => 
-        item => item.Id.Equals(task);
-
 
     private Expression<Func<Domain.Entities.Customer, CustomerResponse>> MapCustomer() =>
         item => new CustomerResponse(

@@ -30,7 +30,6 @@ public static class UseSeederExtension
                     .ToArray();
 
             if (seederTypes.Any())
-            {
                 using (IServiceScope scope = entry.Services.CreateScope())
                 {
                     foreach (Type seederType in seederTypes)
@@ -39,14 +38,18 @@ public static class UseSeederExtension
 
                         ConstructorInfo[] constructors = seederType.GetConstructors();
 
+                        Func<ConstructorInfo, bool> parameterLessConstructorDetector =
+                            constructor => constructor.GetParameters().Length == 0;
+
                         if (
                             constructors.Length == 0 ||
                             seederType.GetConstructors()
-                                .Any(constructor => constructor.GetParameters().Length == 0))
+                                .Any(parameterLessConstructorDetector)
+                        )
                         {
                             ConstructorInfo? constructor =
                                 seederType.GetConstructors()
-                                    .FirstOrDefault(constructor => constructor.GetParameters().Length == 0);
+                                    .FirstOrDefault(parameterLessConstructorDetector);
 
                             instance = constructor == null
                                 ? Activator.CreateInstance(seederType)
@@ -54,8 +57,7 @@ public static class UseSeederExtension
                         }
 
                         if (instance == null)
-                        {
-                            foreach (ConstructorInfo constructorInfo in constructors.Where(constructor => constructor.GetParameters().Length != 0))
+                            foreach (ConstructorInfo constructorInfo in constructors.Where(constructor => !parameterLessConstructorDetector(constructor)))
                             {
                                 object?[] parameters =
                                     constructorInfo.GetParameters()
@@ -64,7 +66,6 @@ public static class UseSeederExtension
                                         .ToArray();
 
                                 if (parameters.Length == constructorInfo.GetParameters().Length)
-                                {
                                     try
                                     {
                                         instance = constructorInfo.Invoke(parameters);
@@ -75,22 +76,16 @@ public static class UseSeederExtension
                                     {
                                         //
                                     }
-                                    
-                                }
                             }
-                        }
 
                         if (
                             instance != null &&
                             instance is IDataSeeder seeder
                         )
-                        {
                             await seeder.InvokeAsync();
-                        }
 
                     }
                 }
-            }
         }
         catch
         {

@@ -33,7 +33,6 @@ internal sealed class CustomerContactService(
             resultFile && 
             !string.IsNullOrEmpty(resultFile.Data)
         )
-        {
             try
             {
                 types =
@@ -45,13 +44,12 @@ internal sealed class CustomerContactService(
             {
                 //
             }
-        }
 
         return
             types is null || types.Count == 0
                 ? Result.Failed<IEnumerable<CustomerContactTypeResponse>>(Error.None)
-                : Result.Success(
-                    types.Select(pair => new CustomerContactTypeResponse(pair.Key, pair.Value))
+                : Result.Success<IEnumerable<CustomerContactTypeResponse>>(
+                    types.Select(pair => new CustomerContactTypeResponse(pair.Key, pair.Value)).ToArray()
                 );
     }
 }

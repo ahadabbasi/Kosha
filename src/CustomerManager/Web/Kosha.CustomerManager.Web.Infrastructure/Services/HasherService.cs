@@ -14,9 +14,8 @@ internal sealed class HasherService : IHasherService
     public Task<Result<HasherResponse>> HashAsync(
         HasherRequest request, 
         CancellationToken cancellationToken = default
-    )
-    {
-        return System.Threading.Tasks.Task.FromResult(
+    ) =>
+        System.Threading.Tasks.Task.FromResult(
             Result.Success(
                 new HasherResponse(
                     Convert.ToBase64String(
@@ -31,7 +30,6 @@ internal sealed class HasherService : IHasherService
                 )
             )
         );
-    }
 
     public async Task<Result> VerifyAsync(
         HasherRequest request, 
@@ -52,10 +50,8 @@ internal sealed class HasherService : IHasherService
             resultOfHash.Data != null &&
             !string.IsNullOrEmpty(resultOfHash.Data.Hashed)
         )
-        {
             if (resultOfHash.Data.Hashed.Equals(hashed.Hashed)) 
                 result = true;
-        }
 
         return result;
     }

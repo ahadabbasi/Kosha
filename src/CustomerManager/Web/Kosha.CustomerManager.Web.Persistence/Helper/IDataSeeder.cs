@@ -3,7 +3,12 @@ using System.Threading.Tasks;
 
 namespace Kosha.CustomerManager.Web.Persistence.Helper;
 
-public interface IDataSeeder
+internal interface IDataSeeder
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
     Task InvokeAsync(CancellationToken cancellation = default);
 }
