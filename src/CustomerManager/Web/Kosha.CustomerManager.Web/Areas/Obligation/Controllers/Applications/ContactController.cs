@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
 using Kosha.CustomerManager.Web.Models.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +13,8 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
 [
     Route(RouteConfiguration.ApplicationRouteTemplate),
     ApiController,
-    Area(AreaNameConfiguration.Obligation)
+    Area(AreaNameConfiguration.Obligation),
+    Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
 ]
 public sealed class ContactController : ControllerBase
 {

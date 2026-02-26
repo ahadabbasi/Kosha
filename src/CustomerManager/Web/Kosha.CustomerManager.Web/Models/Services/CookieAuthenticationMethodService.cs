@@ -80,6 +80,19 @@ internal sealed class CookieAuthenticationMethodService(
         return Result.Success<IAuthenticationRefreshResponse>(new CookieAuthenticationVm());
     }
 
+    public Result<string> AccessToken()
+    {
+        Result<string> result =
+            Result.Failed<string>(Error.None);
+
+        string? token = Context.User.FindFirstValue(AccessTokenClaimType);
+
+        if(!string.IsNullOrEmpty(token))
+            result = Result.Success(token);
+
+        return result;
+    }
+
     private async Task MakeSignInAsync(AuthenticationSignInRequest request)
     {
         IEnumerable<Claim> claims =

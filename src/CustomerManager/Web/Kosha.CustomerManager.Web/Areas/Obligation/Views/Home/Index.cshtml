@@ -1,4 +1,4 @@
-﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models;
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
 @model IEnumerable<ObligationVm>
 
 @section Styles
@@ -50,6 +50,7 @@
     <!-- End List View -->
     <!-- Message View -->
     <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
+        @await Component.InvokeAsync(nameof(AccessTokenViewComponent).RemoveViewComponentFromString())
         <div id="react-element"></div>
     </div>
     <!-- End Message View -->
@@ -62,6 +63,7 @@
     <script src="~/lib/htm/dist/htm.umd.js"></script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/js/renderer.js"></script>
+    <script src="~/js/token.js"></script>
     <script src="~/js/request.js"></script>
     <script src="~/js/modal.js"></script>
     <script src="~/js/tag.js"></script>

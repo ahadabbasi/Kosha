@@ -1,9 +1,20 @@
 ﻿"use strict";
-(function (axios, global) {
+(function (react, axios, tokenContext, global) {
 
     function create(baseUrl) {
 
-        var client = axios.create({ baseURL: baseUrl });
+        var config = { baseURL: baseUrl };      
+
+        var { state } = react.useContext(tokenContext);
+
+        if (state !== undefined) {
+            config = {
+                ...config,
+                headers: { Authorization: `Bearer ${state}` }
+            };
+        }
+
+        var client = axios.create(config);
 
         function getClient() {
             if (client === undefined)
@@ -37,4 +48,4 @@
         };
     }
 
-})(axios, window);
+})(React, axios, tokenContext, window);

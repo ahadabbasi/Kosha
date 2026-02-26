@@ -2,6 +2,8 @@
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Shared.Helper.Time;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
@@ -9,7 +11,8 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
 [
     Route(RouteConfiguration.ApplicationRouteTemplate),
     ApiController,
-    Area(AreaNameConfiguration.Obligation)
+    Area(AreaNameConfiguration.Obligation),
+    Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
 ]
 public sealed class ActionController(IPersianService persianService) : ControllerBase
 {
