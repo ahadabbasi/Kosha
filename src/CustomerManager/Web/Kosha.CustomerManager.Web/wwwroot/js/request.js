@@ -1,11 +1,11 @@
 ﻿"use strict";
-(function (react, axios, tokenContext, global) {
+(function (axios, token, global) {
 
     function create(baseUrl) {
 
         var config = { baseURL: baseUrl };      
 
-        var { state } = react.useContext(tokenContext);
+        var state = token();
 
         if (state !== undefined) {
             config = {
@@ -48,4 +48,4 @@
         };
     }
 
-})(React, axios, tokenContext, window);
+})(axios, token, window);

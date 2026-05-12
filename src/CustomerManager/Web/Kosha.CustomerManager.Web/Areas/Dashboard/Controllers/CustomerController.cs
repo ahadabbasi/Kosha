@@ -1,4 +1,6 @@
-﻿using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
+﻿using System;
+using System.Threading.Tasks;
+using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
@@ -8,8 +10,6 @@ using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace Kosha.CustomerManager.Web.Areas.Dashboard.Controllers;
 
@@ -74,28 +74,25 @@ public sealed class CustomerController(
     {
         IActionResult result = View(entry);
 
-        if (ModelState.IsValid)
+        if (ModelState.IsValid && entry.Id == id)
         {
-            if (entry.Id == id)
-            {
-                ModelState.AddError(
-                    await customerService.UpdateAsync(
-                        id, 
-                        new CustomerRequest(
-                            entry.Name, 
-                            entry.Family
-                        )
+            ModelState.AddError(
+                await customerService.UpdateAsync(
+                    id, 
+                    new CustomerRequest(
+                        entry.Name, 
+                        entry.Family
                     )
-                );
+                )
+            );
 
-                if (ModelState.IsValid)
-                    result = 
-                        RedirectToAction(
-                            nameof(List), 
-                            nameof(CustomerController).RemoveControllerFromString(),
-                            new { Area = AreaNameConfiguration.Dashboard }
-                        );
-            }
+            if (ModelState.IsValid)
+                result = 
+                    RedirectToAction(
+                        nameof(List), 
+                        nameof(CustomerController).RemoveControllerFromString(),
+                        new { Area = AreaNameConfiguration.Dashboard }
+                    );
         }
 
         return result;
@@ -113,24 +110,21 @@ public sealed class CustomerController(
     {
         IActionResult result = View(entry);
 
-        if (ModelState.IsValid)
+        if (ModelState.IsValid && entry.Id == id)
         {
-            if (entry.Id == id)
-            {
-                ModelState.AddError(
-                    await customerService.DeleteAsync(
-                        id
-                    )
-                );
+            ModelState.AddError(
+                await customerService.DeleteAsync(
+                    id
+                )
+            );
 
-                if (ModelState.IsValid)
-                    result =
-                        RedirectToAction(
-                            nameof(List),
-                            nameof(CustomerController).RemoveControllerFromString(),
-                            new { Area = AreaNameConfiguration.Dashboard }
-                        );
-            }
+            if (ModelState.IsValid)
+                result =
+                    RedirectToAction(
+                        nameof(List),
+                        nameof(CustomerController).RemoveControllerFromString(),
+                        new { Area = AreaNameConfiguration.Dashboard }
+                    );
         }
 
         return result;

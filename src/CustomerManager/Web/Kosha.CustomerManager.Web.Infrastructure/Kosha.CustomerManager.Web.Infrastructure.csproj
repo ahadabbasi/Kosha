@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Persistence\Kosha.CustomerManager.Web.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helper\Action\" />
-  </ItemGroup>
-
 </Project>

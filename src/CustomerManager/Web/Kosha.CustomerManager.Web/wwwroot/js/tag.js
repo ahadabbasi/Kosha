@@ -105,4 +105,4 @@
         global.tag = tag;
     }
 
-})(React, renderer, request, modal, window)
+})(React, renderer, request, suggest, window)

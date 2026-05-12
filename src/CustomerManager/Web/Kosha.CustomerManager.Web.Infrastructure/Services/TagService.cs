@@ -170,13 +170,19 @@ internal sealed class TagService(
                 .ToArrayAsync(cancellation)
         );
 
-    public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string title, CancellationToken cancellation = default) =>
-        Result.Success<IEnumerable<TagResponse>>(
-            await repository.Query()
-                .Where(item => item.Title.Contains(title))
+    public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string? title, CancellationToken cancellation = default)
+    {
+        IQueryable<Tag> query = repository.Query();
+
+        if (!string.IsNullOrEmpty(title))
+            query = query.Where(item => item.Title.Contains(title));
+
+        return Result.Success<IEnumerable<TagResponse>>(
+            await query
                 .Select(Map())
                 .ToArrayAsync(cancellation)
         );
+    }
 
     public async Task<Result> AttachTagToTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default)
     {

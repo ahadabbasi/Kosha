@@ -17,11 +17,17 @@
         return html`<${tokenContext.Provider} value=${{ state, dispatch }}>${children}</${tokenContext.Provider}>`
     }
 
+    function token() {
+        const { state } = react.useContext(tokenContext);
+
+        return state;
+    }
+
     if (typeof global.tokenProvider === 'undefined') {
         global.tokenProvider = tokenProvider
     }
 
-    if (typeof global.tokenContext === 'undefined') {
-        global.tokenContext = tokenContext
+    if (typeof global.token === 'undefined') {
+        global.token = token
     }
 })(React, renderer, window)

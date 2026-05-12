@@ -18,48 +18,49 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
 ]
 public sealed class TagController(ITagService service) : ControllerBase
 {
-    private readonly IEnumerable<ObligationTagVm> _tags = 
+    private readonly IEnumerable<ObligationCaptionVm> _tags =
     [
-        new(Id: 1, Name: "مهم"),
-        new(Id: 2, Name: "فوری"),
-        new(Id: 3, Name: "مالی"),
-        new(Id: 4, Name: "حقوقی"),
-        new(Id: 5, Name: "اداری"),
-        new(Id: 6, Name: "فنی"),
-        new(Id: 7, Name: "آموزشی"),
-        new(Id: 8, Name: "پروژه‌ای"),
-        new(Id: 9, Name: "دوره‌ای"),
-        new(Id: 10, Name: "روزانه"),
-        new(Id: 11, Name: "هفتگی"),
-        new(Id: 12, Name: "ماهیانه"),
-        new(Id: 13, Name: "فصلی"),
-        new(Id: 14, Name: "سالانه"),
-        new(Id: 15, Name: "قراردادی"),
-        new(Id: 16, Name: "مشتری"),
-        new(Id: 17, Name: "داخلی"),
-        new(Id: 18, Name: "خارجی"),
-        new(Id: 19, Name: "بایگانی"),
-        new(Id: 20, Name: "در انتظار")
+        new(Id: Guid.CreateVersion7(), Name: "مهم"),
+        new(Id: Guid.CreateVersion7(), Name: "فوری"),
+        new(Id: Guid.CreateVersion7(), Name: "مالی"),
+        new(Id: Guid.CreateVersion7(), Name: "حقوقی"),
+        new(Id: Guid.CreateVersion7(), Name: "اداری"),
+        new(Id: Guid.CreateVersion7(), Name: "فنی"),
+        new(Id: Guid.CreateVersion7(), Name: "آموزشی"),
+        new(Id: Guid.CreateVersion7(), Name: "پروژه‌ای"),
+        new(Id: Guid.CreateVersion7(), Name: "دوره‌ای"),
+        new(Id: Guid.CreateVersion7(), Name: "روزانه"),
+        new(Id: Guid.CreateVersion7(), Name: "هفتگی"),
+        new(Id: Guid.CreateVersion7(), Name: "ماهیانه"),
+        new(Id: Guid.CreateVersion7(), Name: "فصلی"),
+        new(Id: Guid.CreateVersion7(), Name: "سالانه"),
+        new(Id: Guid.CreateVersion7(), Name: "قراردادی"),
+        new(Id: Guid.CreateVersion7(), Name: "مشتری"),
+        new(Id: Guid.CreateVersion7(), Name: "داخلی"),
+        new(Id: Guid.CreateVersion7(), Name: "خارجی"),
+        new(Id: Guid.CreateVersion7(), Name: "بایگانی"),
+        new(Id: Guid.CreateVersion7(), Name: "در انتظار")
     ];
 
     [HttpGet("{id:guid}")]
-    public IActionResult Index(Guid id) => Ok(new ObligationTagVm[] { new(21, "فروش") });
+    public IActionResult Index(Guid id) => Ok(new ObligationCaptionVm[] { new(Guid.CreateVersion7(), "فروش") });
 
 
     [HttpGet]
-    public IActionResult Search([FromQuery] ObligationTagVm tag) =>
+    public IActionResult Search([FromQuery] ObligationCaptionVm tag) =>
         Ok(
             (
                 !string.IsNullOrEmpty(tag.Name) ?
                     _tags.Where(item => !string.IsNullOrEmpty(item.Name) && item.Name.Contains(tag.Name, StringComparison.OrdinalIgnoreCase)) :
-                    Enumerable.Empty<ObligationTagVm>()
+                    Enumerable.Empty<ObligationCaptionVm>()
             ).ToArray()
         );
 
     [HttpDelete("{id:guid}")]
-    public IActionResult Delete(Guid id, [FromBody] ObligationTagVm tag) => Ok();
+    public IActionResult Delete(Guid id, [FromBody] ObligationCaptionVm tag)
+        => Ok();
 
 
     [HttpPost("{id:guid}")]
-    public IActionResult Add(Guid id, [FromBody] ObligationTagVm tag) => Ok();
+    public IActionResult Add(Guid id, [FromBody] ObligationCaptionVm tag) => Ok();
 }

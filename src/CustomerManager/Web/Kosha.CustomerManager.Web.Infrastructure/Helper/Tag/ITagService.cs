@@ -68,7 +68,7 @@ public interface ITagService
     /// <param name="title"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string title, CancellationToken cancellation = default);
+    Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string? title, CancellationToken cancellation = default);
 
     /// <summary>
     /// Attach a tag to the task
