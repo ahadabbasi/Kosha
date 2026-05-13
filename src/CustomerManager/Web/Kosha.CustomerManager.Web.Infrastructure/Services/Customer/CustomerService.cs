@@ -489,7 +489,7 @@ internal sealed class CustomerService(
     {
         Result result = false;
 
-        if (await repository.ExistsAsync(task, cancellation))
+        if (await repository.ExistsAsync(customer, cancellation))
         {
             Domain.Entities.Task? taskEntity = await taskRepository.GetByIdAsync(task, cancellation);
 

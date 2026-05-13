@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Tag;
 using Kosha.CustomerManager.Web.Models.Configurations;
+using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,49 +21,35 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
 ]
 public sealed class TagController(ITagService service) : ControllerBase
 {
-    private readonly IEnumerable<ObligationCaptionVm> _tags =
-    [
-        new(Id: Guid.CreateVersion7(), Name: "مهم"),
-        new(Id: Guid.CreateVersion7(), Name: "فوری"),
-        new(Id: Guid.CreateVersion7(), Name: "مالی"),
-        new(Id: Guid.CreateVersion7(), Name: "حقوقی"),
-        new(Id: Guid.CreateVersion7(), Name: "اداری"),
-        new(Id: Guid.CreateVersion7(), Name: "فنی"),
-        new(Id: Guid.CreateVersion7(), Name: "آموزشی"),
-        new(Id: Guid.CreateVersion7(), Name: "پروژه‌ای"),
-        new(Id: Guid.CreateVersion7(), Name: "دوره‌ای"),
-        new(Id: Guid.CreateVersion7(), Name: "روزانه"),
-        new(Id: Guid.CreateVersion7(), Name: "هفتگی"),
-        new(Id: Guid.CreateVersion7(), Name: "ماهیانه"),
-        new(Id: Guid.CreateVersion7(), Name: "فصلی"),
-        new(Id: Guid.CreateVersion7(), Name: "سالانه"),
-        new(Id: Guid.CreateVersion7(), Name: "قراردادی"),
-        new(Id: Guid.CreateVersion7(), Name: "مشتری"),
-        new(Id: Guid.CreateVersion7(), Name: "داخلی"),
-        new(Id: Guid.CreateVersion7(), Name: "خارجی"),
-        new(Id: Guid.CreateVersion7(), Name: "بایگانی"),
-        new(Id: Guid.CreateVersion7(), Name: "در انتظار")
-    ];
-
     [HttpGet("{id:guid}")]
-    public IActionResult Index(Guid id) => Ok(new ObligationCaptionVm[] { new(Guid.CreateVersion7(), "فروش") });
-
+    public async Task<IActionResult> Index(Guid id, CancellationToken cancellation)
+    {
+        Result<IEnumerable<TagResponse>> result = await service.FetchTaskTagsAsync(id, cancellation);
+        
+        return result && result.Data != null ? Ok(result.Data) : BadRequest(result.Errors);
+    }
 
     [HttpGet]
-    public IActionResult Search([FromQuery] ObligationCaptionVm tag) =>
-        Ok(
-            (
-                !string.IsNullOrEmpty(tag.Name) ?
-                    _tags.Where(item => !string.IsNullOrEmpty(item.Name) && item.Name.Contains(tag.Name, StringComparison.OrdinalIgnoreCase)) :
-                    Enumerable.Empty<ObligationCaptionVm>()
-            ).ToArray()
-        );
+    public async Task<IActionResult> Search([FromQuery] ObligationCaptionVm tag, CancellationToken cancellation)
+    {
+        Result<IEnumerable<TagResponse>> result = await service.SearchTagsAsync(tag.Name, cancellation);
+
+        return result && result.Data != null ? Ok(result.Data) : BadRequest(result.Errors);
+    }
 
     [HttpDelete("{id:guid}")]
-    public IActionResult Delete(Guid id, [FromBody] ObligationCaptionVm tag)
-        => Ok();
+    public async Task<IActionResult> Delete(Guid id, [FromBody] ObligationCaptionVm tag, CancellationToken cancellation)
+    {
+        Result result = await service.DetachTagFromTaskAsync(id, tag.Id ?? Guid.Empty, cancellation);
 
+        return result ?  Ok() : BadRequest(result.Errors);
+    }
 
     [HttpPost("{id:guid}")]
-    public IActionResult Add(Guid id, [FromBody] ObligationCaptionVm tag) => Ok();
+    public async Task<IActionResult> Add(Guid id, [FromBody] ObligationCaptionVm tag, CancellationToken cancellation)
+    {
+        Result result = await service.AttachTagToTaskAsync(id, tag.Id ?? Guid.Empty, cancellation);
+
+        return result ? Ok() : BadRequest(result.Errors);
+    }
 }

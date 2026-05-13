@@ -130,7 +130,7 @@ public interface ICustomerService
     );
 
     /// <summary>
-    /// 
+    /// All acceptable contact types 
     /// </summary>
     /// <param name="cancellation"></param>
     /// <returns></returns>

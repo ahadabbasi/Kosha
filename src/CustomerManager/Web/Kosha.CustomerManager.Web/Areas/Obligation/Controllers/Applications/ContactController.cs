@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
 using Kosha.CustomerManager.Web.Models.Configurations;
+using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,49 +18,30 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
     Area(AreaNameConfiguration.Obligation),
     Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
 ]
-public sealed class ContactController : ControllerBase
+public sealed class ContactController(ICustomerService service) : ControllerBase
 {
-    private readonly IEnumerable<ObligationCaptionVm> _contacts =
-    [
-        new(Id: Guid.CreateVersion7(), Name: "علی محمدی"),
-        new(Id: Guid.CreateVersion7(), Name: "زهرا حسینی"),
-        new(Id: Guid.CreateVersion7(), Name: "محمد کریمی"),
-        new(Id: Guid.CreateVersion7(), Name: "فاطمه رضایی"),
-        new(Id: Guid.CreateVersion7(), Name: "حسین احمدی"),
-        new(Id: Guid.CreateVersion7(), Name: "مریم السادات موسوی"),
-        new(Id: Guid.CreateVersion7(), Name: "رضا نوروزی"),
-        new(Id: Guid.CreateVersion7(), Name: "سارا محمدپور"),
-        new(Id: Guid.CreateVersion7(), Name: "مهدی رحمانی"),
-        new(Id: Guid.CreateVersion7(), Name: "نرگس صالحی"),
-        new(Id: Guid.CreateVersion7(), Name: "حمیدرضا کاظمی"),
-        new(Id: Guid.CreateVersion7(), Name: "لیلا حیدری"),
-        new(Id: Guid.CreateVersion7(), Name: "سعید طاهری"),
-        new(Id: Guid.CreateVersion7(), Name: "الهام شکوری"),
-        new(Id: Guid.CreateVersion7(), Name: "مجتبی عزیزی"),
-        new(Id: Guid.CreateVersion7(), Name: "پریسا فرهادی"),
-        new(Id: Guid.CreateVersion7(), Name: "امیر عباسی"),
-        new(Id: Guid.CreateVersion7(), Name: "سمانه قدیری"),
-        new(Id: Guid.CreateVersion7(), Name: "جواد میرزایی"),
-        new(Id: Guid.CreateVersion7(), Name: "مینا کوهی")
-    ];
-
     [HttpGet("{id:guid}")]
-    public IActionResult Index(Guid id) => NotFound();
+    public async Task<IActionResult> Index(Guid id, CancellationToken cancellation)
+    {
+        Result<CustomerResponse> result = await service.FetchTaskCustomerAsync(id, cancellation);
+        
+        return result && result.Data != null ? Ok(result.Data) : NotFound();
+    }
 
 
     [HttpGet]
-    public IActionResult Search([FromQuery] ObligationCaptionVm tag) =>
-        Ok(
-            (
-                !string.IsNullOrEmpty(tag.Name) ?
-                    _contacts.Where(item => !string.IsNullOrEmpty(item.Name) && item.Name.Contains(tag.Name, StringComparison.OrdinalIgnoreCase)) :
-                    []
-            ).ToArray()
-        );
+    public IActionResult Search([FromQuery] ObligationCaptionVm tag)
+    {
+        return Ok();
+    }
 
     [HttpPost("{id:guid}")]
-    public IActionResult Add(Guid id, [FromBody] ObligationCaptionVm tag) 
-        => Ok();
+    public async Task<IActionResult> Add(Guid id, [FromBody] ObligationCaptionVm customer, CancellationToken cancellation)
+    {
+        Result result = await service.AssignCustomerToTaskAsync(id, customer.Id ?? Guid.Empty, cancellation);
+
+        return result ? Ok() : BadRequest(result.Errors);
+    }
 
     [HttpGet(RouteConfiguration.ActionName + RouteConfiguration.Separator + "{id:guid}")]
     public IActionResult Information(Guid id) =>

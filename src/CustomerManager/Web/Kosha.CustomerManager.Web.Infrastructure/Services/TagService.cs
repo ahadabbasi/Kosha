@@ -189,6 +189,7 @@ internal sealed class TagService(
         Result result = false;
 
         if (
+            tag != Guid.Empty &&
             ! await tagTaskRepository.Query()
                 .AnyAsync(
                     item => item.TaskId.Equals(task) && item.Tag.Equals(tag),
@@ -224,25 +225,28 @@ internal sealed class TagService(
     {
         Result result = false;
 
-        IQueryable<TagTask> query =
-            tagTaskRepository.Query()
-                .Where(item => item.TaskId.Equals(task) && item.Tag.Equals(tag));
-
-        if (await query.AnyAsync(cancellation))
+        if (tag != Guid.Empty)
         {
-            TagTask entity = await query.FirstAsync(cancellation);
+            IQueryable<TagTask> query =
+                tagTaskRepository.Query()
+                    .Where(item => item.TaskId.Equals(task) && item.Tag.Equals(tag));
 
-            tagTaskRepository.Delete(entity);
-
-            try
+            if (await query.AnyAsync(cancellation))
             {
-                await unitOfWork.SaveChangesAsync(cancellation);
+                TagTask entity = await query.FirstAsync(cancellation);
 
-                result = true;
-            }
-            catch 
-            {
-                //
+                tagTaskRepository.Delete(entity);
+
+                try
+                {
+                    await unitOfWork.SaveChangesAsync(cancellation);
+
+                    result = true;
+                }
+                catch
+                {
+                    //
+                }
             }
         }
 
