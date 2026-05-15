@@ -144,7 +144,10 @@ public interface ICustomerService
     /// <param name="task"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<Result<CustomerResponse>> FetchTaskCustomerAsync(Guid task, CancellationToken cancellation = default);
+    Task<Result<CustomerResponse>> FetchTaskCustomerAsync(
+        Guid task, 
+        CancellationToken cancellation = default
+    );
 
     /// <summary>
     /// 
@@ -153,5 +156,31 @@ public interface ICustomerService
     /// <param name="customer"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<Result> AssignCustomerToTaskAsync(Guid task, Guid customer, CancellationToken cancellation = default);
+    Task<Result> AssignCustomerToTaskAsync(
+        Guid task, 
+        Guid customer, 
+        CancellationToken cancellation = default
+    );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fullName"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<IEnumerable<CustomerResponse>>> SearchCustomerAsync(
+        string? fullName, 
+        CancellationToken cancellation = default
+    );
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<CustomerInformationResponse>> TaskCustomerInformationAsync(
+        Guid task,
+        CancellationToken cancellation = default
+    );
 }

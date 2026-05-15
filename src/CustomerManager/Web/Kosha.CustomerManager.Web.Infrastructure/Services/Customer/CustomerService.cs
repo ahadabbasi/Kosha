@@ -42,7 +42,10 @@ internal sealed class CustomerService(
                 cancellation
             );
 
-    public async Task<Result<CustomerResponse>> FindByIdAsync(Guid id, CancellationToken cancellation = default)
+    public async Task<Result<CustomerResponse>> FindByIdAsync(
+        Guid id, 
+        CancellationToken cancellation = default
+    )
     {
         Result<CustomerResponse> result = 
                 Result.Failed<CustomerResponse>(Error.None);
@@ -473,7 +476,10 @@ internal sealed class CustomerService(
     ) =>
         customerContactService.TypesAsync(cancellation);
 
-    public async Task<Result<CustomerResponse>> FetchTaskCustomerAsync(Guid task, CancellationToken cancellation = default)
+    public async Task<Result<CustomerResponse>> FetchTaskCustomerAsync(
+        Guid task, 
+        CancellationToken cancellation = default
+    )
     {
         CustomerResponse? data =
             await taskRepository.Query()
@@ -485,7 +491,11 @@ internal sealed class CustomerService(
         return data is not null ? Result.Success(data) : Result.Failed<CustomerResponse>(Error.None);
     }
 
-    public async Task<Result> AssignCustomerToTaskAsync(Guid task, Guid customer, CancellationToken cancellation = default)
+    public async Task<Result> AssignCustomerToTaskAsync(
+        Guid task, 
+        Guid customer, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 
@@ -513,6 +523,58 @@ internal sealed class CustomerService(
         }
 
         return result;
+    }
+
+    public async Task<Result<IEnumerable<CustomerResponse>>> SearchCustomerAsync(
+        string? fullName,
+        CancellationToken cancellation = default
+    )
+    {
+        IQueryable<CustomerSearchRepositoryResponse> query =
+            repository.Query()
+                .Select(item =>
+                    new CustomerSearchRepositoryResponse(
+                        item.Id,
+                        item.Name,
+                        item.Family,
+                        string.Concat(item.Name, " ", item.Family),
+                        item.Inserted
+                    )
+                );
+
+        if (!string.IsNullOrEmpty(fullName))
+            query = query.Where(item => item.FullName.Contains(fullName));
+
+        return Result.Success<IEnumerable<CustomerResponse>>(
+            await query.OrderBy(item => item.Inserted).Take(10).ToArrayAsync(cancellation)
+        );
+    }
+
+    public async Task<Result<CustomerInformationResponse>> TaskCustomerInformationAsync(
+        Guid task,
+        CancellationToken cancellation = default
+    )
+    {
+        CustomerInformationResponse? customer =
+            await taskRepository.Query().Where(item => item.Id.Equals(task))
+                .Select(item =>
+                    new CustomerInformationResponse(
+                        item.Customer.Id,
+                        item.Customer.Name,
+                        item.Customer.Family,
+                        item.Customer.Contacts.Select(contact =>
+                            new CustomerContactResponse(
+                                contact.Id,
+                                contact.Type,
+                                contact.Value
+                            )
+                        )
+                    )
+                ).FirstOrDefaultAsync(cancellation);
+
+        return customer != null ? 
+            Result.Success(customer) : 
+            Result.Failed<CustomerInformationResponse>(Error.None);
     }
 
     private Expression<Func<Domain.Entities.Customer, CustomerResponse>> MapCustomer() =>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
@@ -25,14 +27,19 @@ public sealed class ContactController(ICustomerService service) : ControllerBase
     {
         Result<CustomerResponse> result = await service.FetchTaskCustomerAsync(id, cancellation);
         
-        return result && result.Data != null ? Ok(result.Data) : NotFound();
+        return result && result.Data != null ?
+            Ok(Map(result.Data)) : 
+            NotFound();
     }
 
 
     [HttpGet]
-    public IActionResult Search([FromQuery] ObligationCaptionVm tag)
+    public async Task<IActionResult> Search([FromQuery] ObligationCaptionVm tag, CancellationToken cancellation = default)
     {
-        return Ok();
+        Result<IEnumerable<CustomerResponse>> result = 
+            await service.SearchCustomerAsync(tag.Name, cancellation);
+        
+        return result && result.Data != null ? Ok(result.Data.Select(Map)) : BadRequest(result.Errors);
     }
 
     [HttpPost("{id:guid}")]
@@ -44,15 +51,27 @@ public sealed class ContactController(ICustomerService service) : ControllerBase
     }
 
     [HttpGet(RouteConfiguration.ActionName + RouteConfiguration.Separator + "{id:guid}")]
-    public IActionResult Information(Guid id) =>
-        Ok(
-            new ObligationContactVm(
-                "احد", 
-                "عباسی", 
-                [ 
-                    new ObligationContactInformationVm("شماره همراه", "09120276307"),
-                    new ObligationContactInformationVm("دفتر کار", "02186901268")
-                ] 
-            )
+    public async Task<IActionResult> Information(Guid id, CancellationToken cancellation)
+    {
+        Result<CustomerInformationResponse> result =
+            await service.TaskCustomerInformationAsync(id, cancellation);
+
+        return
+            result && result.Data != null
+                ? Ok(
+                    new ObligationContactVm(
+                        result.Data.Name,
+                        result.Data.Family,
+                        (result.Data.Contacts ?? [])
+                            .Select(contact => new ObligationContactInformationVm(contact.Type, contact.Value))
+                    )
+                )
+                : BadRequest(result.Errors);
+    }
+
+    private ObligationCaptionVm Map(CustomerResponse response) =>
+        new(
+            response.Id,
+            string.Concat(response.Name, " ", response.Family)
         );
 }

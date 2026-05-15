@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Obligation.Models;
@@ -26,7 +27,9 @@ public sealed class TagController(ITagService service) : ControllerBase
     {
         Result<IEnumerable<TagResponse>> result = await service.FetchTaskTagsAsync(id, cancellation);
         
-        return result && result.Data != null ? Ok(result.Data) : BadRequest(result.Errors);
+        return result && result.Data != null ? 
+            Ok(result.Data.Select(Map)) : 
+            BadRequest(result.Errors);
     }
 
     [HttpGet]
@@ -34,7 +37,9 @@ public sealed class TagController(ITagService service) : ControllerBase
     {
         Result<IEnumerable<TagResponse>> result = await service.SearchTagsAsync(tag.Name, cancellation);
 
-        return result && result.Data != null ? Ok(result.Data) : BadRequest(result.Errors);
+        return result && result.Data != null ?
+            Ok(result.Data.Select(Map)) : 
+            BadRequest(result.Errors);
     }
 
     [HttpDelete("{id:guid}")]
@@ -52,4 +57,7 @@ public sealed class TagController(ITagService service) : ControllerBase
 
         return result ? Ok() : BadRequest(result.Errors);
     }
+
+    private ObligationCaptionVm Map(TagResponse response) => 
+        new(response.Id, response.Title);
 }

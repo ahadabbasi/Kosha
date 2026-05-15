@@ -34,7 +34,10 @@ internal sealed class TagService(
                 cancellation
             );
 
-    public async Task<Result> CreateAsync(TagRequest request, CancellationToken cancellation = default)
+    public async Task<Result> CreateAsync(
+        TagRequest request, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 
@@ -72,7 +75,10 @@ internal sealed class TagService(
         return result;
     }
 
-    public async Task<Result<TagResponse>> FindByIdAsync(Guid id, CancellationToken cancellation = default)
+    public async Task<Result<TagResponse>> FindByIdAsync(
+        Guid id, 
+        CancellationToken cancellation = default
+    )
     {
         Result<TagResponse> result =
             Result.Failed<TagResponse>(Error.None);
@@ -90,7 +96,11 @@ internal sealed class TagService(
         return result;
     }
 
-    public async Task<Result> UpdateAsync(Guid id, TagRequest request, CancellationToken cancellation = default)
+    public async Task<Result> UpdateAsync(
+        Guid id, 
+        TagRequest request, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 
@@ -131,7 +141,10 @@ internal sealed class TagService(
         return result;
     }
 
-    public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellation = default)
+    public async Task<Result> DeleteAsync(
+        Guid id, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 
@@ -161,7 +174,10 @@ internal sealed class TagService(
         return result;
     }
 
-    public async Task<Result<IEnumerable<TagResponse>>> FetchTaskTagsAsync(Guid task, CancellationToken cancellation = default) => 
+    public async Task<Result<IEnumerable<TagResponse>>> FetchTaskTagsAsync(
+        Guid task, 
+        CancellationToken cancellation = default
+    ) => 
         Result.Success<IEnumerable<TagResponse>>(
             await tagTaskRepository.Query()
                 .Where(item => item.TaskId.Equals(task))
@@ -170,7 +186,10 @@ internal sealed class TagService(
                 .ToArrayAsync(cancellation)
         );
 
-    public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(string? title, CancellationToken cancellation = default)
+    public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(
+        string? title, 
+        CancellationToken cancellation = default
+    )
     {
         IQueryable<Tag> query = repository.Query();
 
@@ -179,12 +198,18 @@ internal sealed class TagService(
 
         return Result.Success<IEnumerable<TagResponse>>(
             await query
+                .OrderBy(item => item.Inserted)
+                .Take(10)
                 .Select(Map())
                 .ToArrayAsync(cancellation)
         );
     }
 
-    public async Task<Result> AttachTagToTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default)
+    public async Task<Result> AttachTagToTaskAsync(
+        Guid task, 
+        Guid tag, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 
@@ -221,7 +246,11 @@ internal sealed class TagService(
         return result;
     }
 
-    public async Task<Result> DetachTagFromTaskAsync(Guid task, Guid tag, CancellationToken cancellation = default)
+    public async Task<Result> DetachTagFromTaskAsync(
+        Guid task, 
+        Guid tag, 
+        CancellationToken cancellation = default
+    )
     {
         Result result = false;
 

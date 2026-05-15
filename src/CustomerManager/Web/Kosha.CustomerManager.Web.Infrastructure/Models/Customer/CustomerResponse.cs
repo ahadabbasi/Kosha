@@ -2,7 +2,7 @@
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
 
-public sealed record CustomerResponse(
+public record CustomerResponse(
     Guid Id, 
     string Name, 
     string Family
