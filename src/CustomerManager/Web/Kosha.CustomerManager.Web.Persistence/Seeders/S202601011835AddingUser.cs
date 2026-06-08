@@ -35,15 +35,11 @@ internal sealed class S202601011835AddingUser(
         {
             Result<HasherResponse> resultOfHash =
                 await hasherService.HashAsync(new HasherRequest("1234"), cancellation);
-            if (
-                resultOfHash && 
-                resultOfHash.Data is not null
-            )
-            {
+
+            if (resultOfHash && resultOfHash.Data is not null)
                 foreach ((string username, string phoneNumber) in _users)
-                {
                     if (
-                        !await repository.IsUsernameExistAsync(username) && 
+                        !await repository.IsUsernameExistAsync(username, cancellation) && 
                         !await repository.Query()
                             .AnyAsync(
                                 item => item.PhoneNumber == phoneNumber,
@@ -61,10 +57,7 @@ internal sealed class S202601011835AddingUser(
                         );
 
                         await unitOfWork.SaveChangesAsync(cancellation);
-
                     }
-                }
-            }
         }
         catch
         {

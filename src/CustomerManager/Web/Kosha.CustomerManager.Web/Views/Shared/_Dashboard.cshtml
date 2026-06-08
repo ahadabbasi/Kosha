@@ -167,10 +167,10 @@
         <!-- Main -->
         <div class="@Html.MetronicMainCssClasses()">
             <div class="flex flex-col grow kt-scrollable-y lg:[scrollbar-width:auto] pt-7 lg:[&_.kt-container-fluid]:pe-4" id="scrollable_content">
-                <main role="content">
+                <main class="flex grow" role="content">
                     <!-- Container -->
-                    <div class="kt-container-fluid">
-                        <div class="animate-pulse rounded-lg" data-slot="skeleton">
+                    <div class="kt-container-fluid flex grow">
+                        <div class="animate-pulse rounded-lg flex grow" data-slot="skeleton">
                             @RenderBody()
                         </div>
                     </div>

@@ -19,19 +19,12 @@ internal sealed class S202601021530AddingRole(
         try
         {
             foreach (string role in new[] { RoleNameConfiguration.User, RoleNameConfiguration.Admin})
-            {
                 if (!await repository.Query().AnyAsync(item => item.Name.Equals(role), cancellation))
                 {
-                    repository.Add(
-                        new Role
-                        {
-                            Name = role
-                        }
-                    );
+                    repository.Add(new Role { Name = role });
 
                     await unitOfWork.SaveChangesAsync(cancellation);
                 }
-            }
         }
         catch 
         {
