@@ -1,7 +1,7 @@
-﻿using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
+﻿using Kosha.CustomerManager.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewComponents;
+namespace Kosha.CustomerManager.Web.Models.ViewComponents;
 
 public sealed class PaginateViewComponent : ViewComponent
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Customer;
 using Kosha.CustomerManager.Web.Models.Configurations;
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
+namespace Kosha.CustomerManager.Web.Models.ViewModels;
 
 public sealed record NavbarVm(
     int Start,
@@ -17,7 +17,7 @@ public sealed record NavbarVm(
     {
         if (Pages == null || Pages.Count == 0)
         {
-            Pages ??= new List<int>();
+            Pages = new List<int>();
 
             for (int index = Start; index <= End; index++)
                 Pages.Add(index);

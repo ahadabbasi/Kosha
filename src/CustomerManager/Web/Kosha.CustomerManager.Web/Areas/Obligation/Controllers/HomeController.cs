@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Areas.Obligation.Models;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
@@ -23,9 +22,17 @@ public sealed class HomeController(ITaskManagerService taskManagerService) : Con
         Result<PaginateResponse<ITaskPaginateResponse>> result =
             await taskManagerService.PaginateAsync();
 
-        return View(
-            (result && result.Data is not null ? result.Data : Enumerable.Empty<ITaskPaginateResponse>())
-            .Select(item => new ObligationVm(item.Id, item.Title, item.Description, item.Inserted))
-        );
+        return 
+            View(
+                result && result.Data is not null ? 
+                    result.Data : 
+                    new PaginateResponse<ITaskPaginateResponse>(
+                        Enumerable.Empty<ITaskPaginateResponse>(), 
+                        0, 
+                        0,
+                        0,
+                        0
+                    )
+            );
     }
 }

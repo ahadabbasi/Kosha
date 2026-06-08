@@ -1,59 +1,87 @@
 ﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
-@model IEnumerable<ObligationVm>
+@using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
+@using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
+@using Kosha.CustomerManager.Web.Models.ViewComponents
+@using Kosha.CustomerManager.Web.Models.ViewModels
+@model PaginateResponse<ITaskPaginateResponse>
 
 @section Styles
 {
     <link rel="stylesheet" href="~/css/obligation.css" />
 }
 
-<div class="flex grow gap-1 relative">
-    <!-- List View -->
-    <div class="bg-background border border-input rounded-xl shadow-xs w-full lg:w-[300px] xl:w-(--mail-list-width) shrink-0">
-        <!--Header-->
-        <div class="flex items-center justify-between px-2 py-3 gap-1">
-            <div class="flex items-center w-full gap-1">
-            </div>
-        </div>
-        <!--End Header-->
-        <!-- List -->
-
-        <div class="px-4 py-1">
-            @foreach (ObligationVm item in Model)
-            {
-                <!-- Each item -->
-                <div class="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary">
-
-                    <!-- Information -->
-                    <div class="flex-1 space-y-0.5">
-                        <div class="flex items-center justify-between">
-                            <a class="font-medium text-sm text-foreground hover:text-primary" href="#">
-                                @item.Title
-                            </a>
-                            <!-- Date -->
-                            <span class="text-xs text-secondary-foreground">
-                                @item.Inserted.ToString("D")
-                            </span>
-                            <!-- End Date -->
-                        </div>
-                        <p class="text-xs text-muted-foreground font-normal">
-                            @item.Description
-                        </p>
-                    </div>
-                    <!-- End Information -->
+<div class="flex grow flex-col">
+    <div class="flex grow gap-1 relative">
+        <!-- List View -->
+        <div class="bg-background border border-input rounded-xl shadow-xs w-full lg:w-[300px] xl:w-(--mail-list-width) shrink-0">
+            <!--Header-->
+            <div class="flex items-center justify-between px-2 py-3 gap-1">
+                <div class="flex items-center w-full gap-1">
                 </div>
-                <!-- End Each item -->
-            }
-        </div>
+            </div>
+            <!--End Header-->
+            <!-- List -->
 
-        <!-- End List -->
+            <div class="px-4 py-1">
+                @foreach (ITaskPaginateResponse item in Model)
+                {
+                    <!-- Each item -->
+                    <div class="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary">
+
+                        <!-- Information -->
+                        <div class="flex-1 space-y-0.5">
+                            <div class="flex items-center justify-between">
+                                <a class="font-medium text-sm text-foreground hover:text-primary" href="#">
+                                    @item.Title
+                                </a>
+                                <!-- Date -->
+                                <span class="text-xs text-secondary-foreground">
+                                    @item.Inserted.ToString("D")
+                                </span>
+                                <!-- End Date -->
+                            </div>
+                            <p class="text-xs text-muted-foreground font-normal">
+                                @item.Description
+                            </p>
+                        </div>
+                        <!-- End Information -->
+                    </div>
+                    <!-- End Each item -->
+                }
+            </div>
+
+            <!-- End List -->
+        </div>
+        <!-- End List View -->
+        <!-- Message View -->
+        <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
+            @await Component.InvokeAsync(nameof(AccessTokenViewComponent).RemoveViewComponentFromString())
+            <div id="react-element"></div>
+        </div>
+        <!-- End Message View -->
     </div>
-    <!-- End List View -->
-    <!-- Message View -->
-    <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
-        @await Component.InvokeAsync(nameof(AccessTokenViewComponent).RemoveViewComponentFromString())
-        <div id="react-element"></div>
+
+    <div class="flex items-center flex-col mt-2 kt-card py-2">
+        @(
+            await Component.InvokeAsync(
+                nameof(PaginateViewComponent).RemoveViewComponentFromString(),
+                new CreatePaginateNavbarVm(
+                    Model,
+                    page =>
+                        Url.Action(
+                            nameof(HomeController.Index),
+                            nameof(HomeController).RemoveControllerFromString(),
+                            new
+                            {
+                                Area = AreaNameConfiguration.Obligation,
+                                Page = page,
+                                Size = 10
+                            }
+                        )
+                    )
+            )
+        )
     </div>
-    <!-- End Message View -->
 </div>
 
 @section Scripts

@@ -1,6 +1,7 @@
-﻿@using Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewComponents
+﻿@using Kosha.CustomerManager.Web.Infrastructure.Models.Customer
 @using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
-@using Kosha.CustomerManager.Web.Infrastructure.Models.Customer
+@using Kosha.CustomerManager.Web.Models.ViewComponents
+@using Kosha.CustomerManager.Web.Models.ViewModels
 @model PaginateResponse<CustomerPaginateResponse>
 
 <div class="kt-card kt-card-grid h-full min-w-full">
@@ -83,7 +84,7 @@
                     nameof(PaginateViewComponent).RemoveViewComponentFromString(),
                         new CreatePaginateNavbarVm(
                             Model,
-                page =>
+                            page =>
                                 Url.Action(
                                     nameof(CustomerController.List),
                                     nameof(CustomerController).RemoveControllerFromString(),
