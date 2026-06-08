@@ -29,10 +29,7 @@ internal sealed class S202601021600AddingRoleToUser(
                 .Where(item => item.Name.Equals(RoleNameConfiguration.Admin));
         try
         {
-            if (
-                await userQuery.AnyAsync(cancellation) &&
-                await roleQuery.AnyAsync(cancellation)
-            )
+            if (await userQuery.AnyAsync(cancellation) && await roleQuery.AnyAsync(cancellation))
             {
                 Guid user =
                     await userQuery.Select(item => item.Id)
