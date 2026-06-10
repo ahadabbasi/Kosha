@@ -22,15 +22,15 @@ internal sealed class TagService(
     IUnitOfWork unitOfWork
 ) : ITagService
 {
-    public async Task<Result<PaginateResponse<TagResponse>>> PaginateAsync(
+    public Task<Result<PaginateResponse<TagResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     ) =>
-        await repository.Query()
+        repository.Query()
             .OrderBy(item => item.Inserted)
             .Select(Map())
             .ToPaginateAsync(
-                await paginateHelperService.ValidateAsync(request),
+                paginateHelperService.Validate(request),
                 cancellation
             );
 

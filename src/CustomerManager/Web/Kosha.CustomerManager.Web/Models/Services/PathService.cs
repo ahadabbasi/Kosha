@@ -1,8 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
+﻿using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
 using Kosha.CustomerManager.Web.Models.Infrastructure.Models;
-using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 
@@ -15,17 +12,13 @@ internal sealed class PathService(
 {
     private PathInformation Information => options.Value;
 
-    public string Separator => 
+    public string Separator =>
         System.IO.Path.DirectorySeparatorChar.ToString();
 
-    public Task<Result<string>> DirectoryPathAsync(CancellationToken cancellation = default) => 
-        Task.FromResult(
-            Result.Success(
-                string.Join(
-                    Separator,
-                    hostEnvironment.WebRootPath,
-                    Information.DirectoryName
-                )
-            )
+    public string DirectoryPath =>
+        string.Join(
+            Separator,
+            hostEnvironment.WebRootPath,
+            Information.DirectoryName
         );
 }

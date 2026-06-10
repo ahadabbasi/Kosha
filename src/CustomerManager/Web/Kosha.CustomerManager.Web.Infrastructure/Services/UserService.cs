@@ -24,11 +24,11 @@ internal sealed class UserService(
     IHasherService hasherService
 ) : IUserService
 {
-    public async Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
+    public Task<Result<PaginateResponse<UserResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     ) =>
-        await repository.Query()
+        repository.Query()
             .OrderBy(entity => entity.Inserted)
             .Select(entity =>
                 new UserResponse(
@@ -41,7 +41,7 @@ internal sealed class UserService(
                 )
             )
             .ToPaginateAsync(
-                await paginateHelperService.ValidateAsync(request),
+                paginateHelperService.Validate(request),
                 cancellation
             );
 

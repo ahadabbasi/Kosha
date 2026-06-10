@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
+﻿using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 
 internal sealed class PaginateHelperService
 {
-    internal async Task<PaginateRequest> ValidateAsync(PaginateRequest? request)
+    internal PaginateRequest Validate(PaginateRequest? request)
     {
-        PaginateRequest defaultRequest = await CreateDefaultAsync();
+        PaginateRequest defaultRequest = CreateDefault();
 
         if (request is null) 
             request = defaultRequest;
@@ -21,8 +20,6 @@ internal sealed class PaginateHelperService
         return request;
     }
 
-    internal Task<PaginateRequest> CreateDefaultAsync() =>
-        System.Threading.Tasks.Task.FromResult(
-            new PaginateRequest(1, 10)
-        );
+    internal PaginateRequest CreateDefault() => 
+        new(1, 10);
 }

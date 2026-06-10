@@ -4,12 +4,23 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 
 public interface ITaskPaginateResponse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     Guid Id { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     string Title { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     string Description { get; }
 
-    DateTime Inserted { get; }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    string Inserted { get; }
 }

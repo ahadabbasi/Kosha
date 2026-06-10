@@ -14,7 +14,6 @@ public interface IPathService
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="cancellation"></param>
     /// <returns></returns>
-    Task<Result<string>> DirectoryPathAsync(CancellationToken cancellation = default);
+    string DirectoryPath { get; }
 }

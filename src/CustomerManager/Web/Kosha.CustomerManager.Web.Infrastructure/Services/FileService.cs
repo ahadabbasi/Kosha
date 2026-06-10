@@ -18,19 +18,15 @@ internal sealed class FileService(
 
     public async Task<Result<string>> ReadContentAsync(string fileName, CancellationToken cancellation = default)
     {
-        Result<string> resultPath =
-            await CompletePathAsync(fileName, cancellation);
+        Result<string> result = Result.Failed<string>(Error.None);
 
-        if (resultPath && !string.IsNullOrEmpty(resultPath.Data))
-        {
-            string path = resultPath.Data;
+        string path = CompletePath(fileName);
 
-            resultPath =
-                Result.Failed<string>(Error.None);
+        if (string.IsNullOrEmpty(path))
             try
             {
                 if (File.Exists(path))
-                    resultPath =
+                    result =
                         Result.Success(
                             await File.ReadAllTextAsync(
                                 path,
@@ -42,15 +38,13 @@ internal sealed class FileService(
             {
                 //
             }
-        }
 
-        return resultPath;
+        return result;
     }
 
-    public async Task<Result<string>> CompletePathAsync(string fileName, CancellationToken cancellation)
+    private string CompletePath(string fileName)
     {
-        string[] files =
-            fileName.Split(pathService.Separator);
+        string[] files = fileName.Split(pathService.Separator);
 
         bool hasExtension = false;
 
@@ -68,14 +62,12 @@ internal sealed class FileService(
         if (!hasExtension) 
             files[^1] = string.Concat(files[^1], Information.DefaultFileExtension);
 
-        return 
-            Result.Success(
-                Path.Combine(
-                    await pathService.DirectoryPathAsync(cancellation),
-                    string.Join(
-                        pathService.Separator,
-                        files
-                    )
+        return
+            Path.Combine(
+                pathService.DirectoryPath,
+                string.Join(
+                    pathService.Separator,
+                    files
                 )
             );
     }

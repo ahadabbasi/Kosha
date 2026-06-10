@@ -6,39 +6,28 @@ namespace Kosha.CustomerManager.Web.Models.Extensions;
 
 public static class AddErrorExtension
 {
-    public static void AddError(
-        this ModelStateDictionary modelState, 
-        Result result, 
-        Error? defaultError = null
-    )
+    extension(ModelStateDictionary modelState)
     {
-        if (!result)
+        public void AddError(Result result, 
+            Error? defaultError = null
+        )
         {
-            Error[] errors = [Error.None];
-
-            if (defaultError != null)
+            if (!result)
             {
-                errors = [defaultError];
-            }
+                Error[] errors = [Error.None];
 
-            if (result.Errors.Any())
-                errors = result.Errors.ToArray();
+                if (defaultError != null) 
+                    errors = [defaultError];
 
-            foreach (Error error in errors)
-            {
-                modelState.AddError(error);
+                if (result.Errors.Any())
+                    errors = result.Errors.ToArray();
+
+                foreach (Error error in errors) 
+                    modelState.AddError(error);
             }
         }
-    }
 
-    public static void AddError(
-        this ModelStateDictionary modelState, 
-        Error error
-    )
-    {
-        modelState.AddModelError(
-            error.Code,
-            error.Message ?? string.Empty
-        );
+        public void AddError(Error error) => 
+            modelState.AddModelError(error.Code, error.Message ?? string.Empty);
     }
 }

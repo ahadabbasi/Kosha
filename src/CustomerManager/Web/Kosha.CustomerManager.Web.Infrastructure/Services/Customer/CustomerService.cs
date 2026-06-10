@@ -23,11 +23,11 @@ internal sealed class CustomerService(
     IUnitOfWork unitOfWork
 ) : ICustomerService
 {
-    public async Task<Result<PaginateResponse<CustomerPaginateResponse>>> PaginateAsync(
+    public Task<Result<PaginateResponse<CustomerPaginateResponse>>> PaginateAsync(
         PaginateRequest? request = null,
         CancellationToken cancellation = default
     ) =>
-        await repository
+        repository
             .Query()
             .OrderBy(item => item.Inserted)
             .Select(item => 
@@ -38,7 +38,7 @@ internal sealed class CustomerService(
                 )
             )
             .ToPaginateAsync(
-                await paginateHelperService.ValidateAsync(request),
+                paginateHelperService.Validate(request),
                 cancellation
             );
 
