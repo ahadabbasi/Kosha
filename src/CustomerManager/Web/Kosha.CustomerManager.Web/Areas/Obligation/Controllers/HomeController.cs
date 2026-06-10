@@ -17,10 +17,10 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers;
 ]
 public sealed class HomeController(ITaskManagerService taskManagerService) : Controller
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([Bind]PaginateRequest? request)
     {
         Result<PaginateResponse<ITaskPaginateResponse>> result =
-            await taskManagerService.PaginateAsync();
+            await taskManagerService.PaginateAsync(request);
 
         return 
             View(

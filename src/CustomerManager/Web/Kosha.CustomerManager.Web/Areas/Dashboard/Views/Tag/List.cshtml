@@ -1,7 +1,5 @@
 ﻿@using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
 @using Kosha.CustomerManager.Web.Infrastructure.Models.Tag
-@using Kosha.CustomerManager.Web.Models.ViewComponents
-@using Kosha.CustomerManager.Web.Models.ViewModels
 @model PaginateResponse<TagResponse>
 
 <div class="kt-card kt-card-grid h-full min-w-full">
@@ -68,25 +66,16 @@
                 </table>
             </div>
             <div class="kt-card-footer mt-auto justify-center md:justify-between flex-col md:flex-row gap-5 text-secondary-foreground text-sm font-medium">
-                @(
-                    await Component.InvokeAsync(
-                        nameof(PaginateViewComponent).RemoveViewComponentFromString(), 
-                        new CreatePaginateNavbarVm(
-                            Model, 
-                            page => 
-                                Url.Action(
-                                    nameof(TagController.List), 
-                                    nameof(TagController).RemoveControllerFromString(), 
-                                    new
-                                    {
-                                        Area = AreaNameConfiguration.Dashboard, 
-                                        Page = page, 
-                                        Size = 10
-                                    }
-                                )
-                        )
-                    )
-                )
+                @await Html.RenderPaginateNavbarAsync(page => Url.Action(
+                    nameof(TagController.List), 
+                    nameof(TagController).RemoveControllerFromString(), 
+                    new
+                    {
+                        Area = AreaNameConfiguration.Dashboard, 
+                        Page = page, 
+                        Size = 10
+                    }
+                ))
             </div>
         </div>
     </div>
