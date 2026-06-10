@@ -9,7 +9,7 @@ public interface IPersianService
     /// </summary>
     /// <param name="dateTime"></param>
     /// <returns></returns>
-    string ConvertToPersianDateTime(DateTime dateTime);
+    string Parse(DateTime dateTime);
 
     /// <summary>
     /// Get current date time on utc and convert it to persian date time string with format of "yyyy/MM/dd"

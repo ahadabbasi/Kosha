@@ -1,4 +1,5 @@
-﻿using Kosha.CustomerManager.Web.Shared.Helper.Time;
+﻿using Kosha.CustomerManager.Web.Shared.Helper;
+using Kosha.CustomerManager.Web.Shared.Helper.Time;
 using Kosha.CustomerManager.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,8 @@ public static class SharedStartup
         services.AddTransient<ITimeService, TimeService>();
 
         services.AddTransient<IPersianService, PersianService>();
+
+        services.AddTransient<IEnumCaptionService, EnumCaptionService>();
 
         return services;
     }

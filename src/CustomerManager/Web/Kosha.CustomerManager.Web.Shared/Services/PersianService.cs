@@ -6,11 +6,10 @@ namespace Kosha.CustomerManager.Web.Shared.Services;
 
 internal sealed class PersianService(ITimeService service) : IPersianService
 {
-    public string ConvertToPersianDateTime(DateTime dateTime)
-    {
-        PersianCalendar calendar = new();
-        return $"{calendar.GetYear(dateTime):0000}/{calendar.GetMonth(dateTime):00}/{calendar.GetDayOfMonth(dateTime):00}";
-    }
+    private readonly PersianCalendar _calendar = new();
 
-    public string Today => ConvertToPersianDateTime(service.Now);
+    public string Parse(DateTime dateTime) => 
+        $"{_calendar.GetYear(dateTime):0000}/{_calendar.GetMonth(dateTime):00}/{_calendar.GetDayOfMonth(dateTime):00}";
+
+    public string Today => Parse(service.Now);
 }
