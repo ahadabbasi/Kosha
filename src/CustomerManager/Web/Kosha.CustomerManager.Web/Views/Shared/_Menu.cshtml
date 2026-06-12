@@ -1,0 +1,67 @@
+﻿@using Kosha.CustomerManager.Web.Areas.Dashboard.Controllers
+@using Kosha.CustomerManager.Web.Models.Configurations
+@using Kosha.CustomerManager.Web.Models.Extensions
+@using Kosha.CustomerManager.Web.Shared.Models.Configurations
+<div class="fixed w-(--sidebar-width) lg:top-(--header-height) top-0 bottom-0 z-20 hidden lg:flex flex-col items-stretch shrink-0 group py-3 lg:py-0 [--kt-drawer-enable:true] lg:[--kt-drawer-enable:false]" data-kt-drawer="true" data-kt-drawer-class="kt-drawer kt-drawer-start top-0 bottom-0" id="sidebar">
+    <div class="flex grow shrink-0" id="sidebar_content">
+        <div class="kt-scrollable-y-auto grow gap-2.5 shrink-0 flex items-center flex-col max-h-[calc(100dvh-10px))] lg:max-h-[calc(100dvh-70px))]">
+            <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(HomeController.Index), nameof(HomeController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                <span class="kt-menu-icon">
+                    <i class="ki-filled ki-chart-line-star text-lg">
+                    </i>
+                </span>
+                <span class="kt-tooltip" data-kt-tooltip-content="true">
+                    صفحه اصلی
+                </span>
+            </a>
+            @if (User.IsInRole(RoleNameConfiguration.Admin))
+            {
+                <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(AccountController.List), nameof(AccountController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                    <span class="kt-menu-icon">
+                        <i class="ki-filled ki-profile-circle text-lg">
+                        </i>
+                    </span>
+                    <span class="kt-tooltip" data-kt-tooltip-content="true">
+                        کاربران
+                    </span>
+                </a>
+            }
+            <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(TagController.List), nameof(TagController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                <span class="kt-menu-icon">
+                    <i class="ki-filled ki-tag-cross text-lg">
+                    </i>
+                </span>
+                <span class="kt-tooltip" data-kt-tooltip-content="true">
+                    برچسب ها
+                </span>
+            </a>
+            <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(CategoryController.List), nameof(CategoryController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                <span class="kt-menu-icon">
+                    <i class="ki-filled ki-category text-lg">
+                    </i>
+                </span>
+                <span class="kt-tooltip" data-kt-tooltip-content="true">
+                    دسته ها
+                </span>
+            </a>
+            <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(CustomerController.List), nameof(CustomerController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })">
+                <span class="kt-menu-icon">
+                    <i class="ki-filled ki-profile-circle text-lg">
+                    </i>
+                </span>
+                <span class="kt-tooltip" data-kt-tooltip-content="true">
+                    مشتری ها
+                </span>
+            </a>
+            <a class="kt-btn kt-btn-ghost kt-btn-icon rounded-full size-10 border border-transparent text-secondary-foreground hover:bg-background hover:[&_i]:text-primary hover:border-input [.active&]:bg-background [.active&]:[&_i]:text-primary [.active&]:border-input" data-kt-tooltip="" data-kt-tooltip-placement="left" href="@Url.Action(nameof(Kosha.CustomerManager.Web.Areas.Obligation.Controllers.HomeController.Index), nameof(Kosha.CustomerManager.Web.Areas.Obligation.Controllers.HomeController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Obligation })">
+                <span class="kt-menu-icon">
+                    <i class="ki-filled ki-messages text-lg">
+                    </i>
+                </span>
+                <span class="kt-tooltip" data-kt-tooltip-content="true">
+                    پیغام ها
+                </span>
+            </a>
+        </div>
+    </div>
+</div>

@@ -21,27 +21,27 @@ public sealed class ActionController(IPersianService persianService) : Controlle
         new(
             "وظیفه جدید ایجاد شد و به تیم مالی ارجاع داده شد.",
             "علی محمدی",
-            persianService.ConvertToPersianDateTime(DateTime.Parse("2025-02-15 09:30:00"))
+            persianService.Parse(DateTime.Parse("2025-02-15 09:30:00"))
         ),
         new(
             "بررسی اولیه انجام شد و برای تایید نهایی ارسال گردید.",
             "زهرا حسینی",
-            persianService.ConvertToPersianDateTime(DateTime.Parse("2025-02-16 11:45:00"))
+            persianService.Parse(DateTime.Parse("2025-02-16 11:45:00"))
         ),
         new(
             "مدارک پیوست شده ناقص است. درخواست اصلاح ارسال شد.",
             "محمد کریمی",
-            persianService.ConvertToPersianDateTime(DateTime.Parse("2025-02-17 14:20:00"))
+            persianService.Parse(DateTime.Parse("2025-02-17 14:20:00"))
         ),
         new(
             "وظیفه با موفقیت تکمیل شد و مستندات آپلود گردید.",
             "فاطمه رضایی",
-            persianService.ConvertToPersianDateTime(DateTime.Parse("2025-02-18 10:15:00"))
+            persianService.Parse(DateTime.Parse("2025-02-18 10:15:00"))
         ),
         new(
             "تغییرات درخواستی اعمال و برای بازبینی مجدد ارسال شد.",
             "رضا نوروزی",
-            persianService.ConvertToPersianDateTime(DateTime.Parse("2025-02-19 16:30:00"))
+            persianService.Parse(DateTime.Parse("2025-02-19 16:30:00"))
         )
     ];
 

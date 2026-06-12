@@ -1,5 +1,18 @@
 ﻿@{
-    Layout = "_Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Html.MetronicBodyCssClasses(
+        "antialiased",
+        "flex",
+        "h-full",
+        "text-base",
+        "text-foreground",
+        "bg-background",
+        "[--header-height:58px]",
+        "[--sidebar-width:58px]",
+        "lg:overflow-hidden",
+        "bg-muted"
+    );
 
     Html.MetronicMainCssClasses(
         "flex",
@@ -12,10 +25,76 @@
 
 @section Styles
 {
+    <link href="~/css/site.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", false)
 }
 
-@RenderBody()
+<!-- Base -->
+<div class="flex grow">
+    <!-- Header -->
+    <header class="flex items-center fixed z-10 top-0 left-0 right-0 shrink-0 h-(--header-height) bg-muted" id="header">
+        <!-- Container -->
+        <div class="kt-container-fluid flex justify-between items-stretch px-5 lg:ps-0 lg:gap-4" id="header_container">
+            <div class="flex items-center me-1">
+                <div class="flex items-center justify-center lg:w-(--sidebar-width) gap-1 shrink-0">
+                    <button class="kt-btn kt-btn-icon kt-btn-ghost -ms-2 lg:hidden" data-kt-drawer-toggle="#sidebar">
+                        <i class="ki-filled ki-menu">
+                        </i>
+                    </button>
+                    <a class="mx-1" href="#">
+                        <img class="dark:hidden min-h-[24px]" src="~/lib/metronic/9.3.1/media/app/mini-logo-primary.svg" />
+                        <img class="hidden dark:block min-h-[24px]" src="~/lib/metronic/9.3.1/media/app/mini-logo-primary-dark.svg" />
+                    </a>
+                </div>
+            </div>
+            <!-- End of Logo -->
+            <!-- Topbar -->
+            <div class="flex items-center lg:gap-3.5">
+
+                <div class="flex items-center gap-1.5">
+                    <!-- Search -->
+                    <button class="group kt-btn kt-btn-ghost kt-btn-icon size-9 rounded-full hover:[&_i]:text-primary">
+                        <i class="ki-filled ki-magnifier text-lg group-hover:text-primary">
+                        </i>
+                    </button>
+                    <!-- End of Search -->
+                </div>
+                <!-- User -->
+                @await Html.PartialAsync("_User")
+                <!-- End of User -->
+            </div>
+            <!-- End of Topbar -->
+        </div>
+        <!-- End of Container -->
+    </header>
+    <!-- End of Header -->
+    <!-- Wrapper -->
+    <div class="flex flex-col lg:flex-row grow pt-(--header-height)">
+        <!-- Sidebar -->
+        @await Html.PartialAsync("_Menu")
+        <!-- End of Sidebar -->
+        <!-- Main -->
+        <div class="@Html.MetronicMainCssClasses()">
+            <div class="flex flex-col grow kt-scrollable-y lg:[scrollbar-width:auto] pt-7 lg:[&_.kt-container-fluid]:pe-4" id="scrollable_content">
+                <main class="flex grow" role="content">
+                    <!-- Container -->
+                    <div class="kt-container-fluid flex grow">
+                        <div class="animate-pulse rounded-lg flex grow" data-slot="skeleton">
+                            @RenderBody()
+                        </div>
+                    </div>
+                    <!-- End of Container -->
+                </main>
+                <!-- Footer -->
+                @await Html.PartialAsync("_Footer")
+                <!-- End of Footer -->
+            </div>
+        </div>
+        <!-- End of Main -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Base -->
 
 @section Scripts {
     @await RenderSectionAsync("Scripts", false)
