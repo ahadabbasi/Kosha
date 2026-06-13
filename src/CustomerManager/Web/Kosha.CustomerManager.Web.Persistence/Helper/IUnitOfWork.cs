@@ -6,6 +6,12 @@ namespace Kosha.CustomerManager.Web.Persistence.Helper;
 public interface IUnitOfWork
 {
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    ITransaction Transaction();
+
+    /// <summary>
     /// save all changes of database
     /// </summary>
     /// <param name="cancellation"></param>
