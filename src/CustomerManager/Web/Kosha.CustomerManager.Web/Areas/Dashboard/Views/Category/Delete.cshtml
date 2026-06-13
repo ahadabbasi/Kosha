@@ -1,26 +1,28 @@
-﻿@model NewTaxonomyVm
+﻿@model TaxonomyVm
 
 @using (
     Html.BeginForm(
-        nameof(TagController.New),
-        nameof(TagController).RemoveControllerFromString(),
-       new { Area = AreaNameConfiguration.Dashboard },
+        nameof(CategoryController.Delete),
+        nameof(CategoryController).RemoveControllerFromString(),
+        new { Area = AreaNameConfiguration.Dashboard, Model.Id },
         FormMethod.Post,
         true,
         new { @class = "grid gap-5" }
     )
 )
 {
+    <input asp-for="Id" type="hidden" />
+
     <div class="w-full">
         <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">
             <label asp-for="Title" class="kt-form-label flex items-center gap-1 max-w-56"></label>
-            <input asp-for="Title" class="kt-input" type="text">
+            <input asp-for="Title" class="kt-input" type="text" readonly="readonly">
         </div>
     </div>
 
     <div class="flex justify-end pt-2.5">
-        <button class="kt-btn kt-btn-primary" type="submit">
-            ذخیره
+        <button class="kt-btn kt-btn-destructive" type="submit">
+            حذف
         </button>
     </div>
 }

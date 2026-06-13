@@ -15,7 +15,6 @@ internal sealed class TagRepository(
     public Task<bool> IsTitleExistAsync(string title, CancellationToken cancellation = default) => 
         Query()
             .AnyAsync(
-                item => item.Title.Equals(title),
-                cancellation
+                item => item.Title.Equals(title), cancellation
             );
 }

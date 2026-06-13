@@ -1,5 +1,6 @@
 ﻿using Kosha.CustomerManager.Web.Infrastructure.Configurations.Options;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Category;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Store;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
@@ -37,6 +38,8 @@ public static class InfrastructureStartup
         services.AddScoped<ICustomerService, CustomerService>();
 
         services.AddScoped<ICustomerContactService, CustomerContactService>();
+
+        services.AddScoped<ICategoryService, CategoryService>();
 
         services.AddScoped<PaginateHelperService>();
 

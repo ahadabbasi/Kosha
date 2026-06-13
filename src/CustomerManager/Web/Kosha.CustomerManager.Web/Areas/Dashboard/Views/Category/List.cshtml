@@ -1,0 +1,102 @@
+﻿@using Kosha.CustomerManager.Web.Domain.Enums
+@using Kosha.CustomerManager.Web.Infrastructure.Models.Category
+@using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
+@model PaginateResponse<CategoryResponse>
+
+<div class="kt-card kt-card-grid h-full min-w-full">
+    <div class="kt-card-header">
+        <h3 class="kt-card-title">
+            دسته ها
+        </h3>
+        <div class="border rounded border-gray-200">
+            <a href="@Url.Action(nameof(CategoryController.New), nameof(CategoryController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard })" class="kt-btn kt-btn-icon kt-btn-dim">
+                <i class="ki-filled ki-plus">
+                </i>
+            </a>
+        </div>
+    </div>
+    <div class="kt-card-table">
+        <div class="grid datatable-initialized" id="teams_datatable">
+            <div class="kt-scrollable-x-auto">
+                <table class="kt-table kt-table-border table-fixed" id="kt_datatable_1">
+                    <thead>
+                        <tr>
+                            <th class="w-[135px]">
+                                <span class="kt-table-col">
+                                    <span class="kt-table-col-label">
+                                        نام
+                                    </span>
+                                </span>
+                            </th>
+                            <th class="w-[135px]">
+                                <span class="kt-table-col">
+                                    <span class="kt-table-col-label">
+                                        ایا دسته ای پیش فرض می باشد.
+                                    </span>
+                                </span>
+                            </th>
+                            <th class="w-[135px]">
+                                <span class="kt-table-col">
+                                    <span class="kt-table-col-label">
+                                    </span>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model.Any())
+                        {
+                            @foreach (CategoryResponse item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.IsDefault.Caption</td>
+                                    <td class="flex">
+                                        @if (item.IsDefault.Value == AnsEnum.No)
+                                        {
+                                            using (Html.BeginForm(nameof(CategoryController.MakeDefault), nameof(CategoryController).RemoveControllerFromString(), new { item.Id, Area = AreaNameConfiguration.Dashboard }, FormMethod.Post))
+                                            {
+                                                Html.AntiForgeryToken();
+                                                <button type="submit" class="kt-btn kt-btn-ghost" title="Active">
+                                                    <i class="ki-filled ki-check"></i>
+                                                </button>
+                                            }
+
+                                        }
+                                        <a class="kt-btn kt-btn-ghost" href="@Url.Action(nameof(TagController.Edit), nameof(TagController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard, item.Id })">
+                                            <i class="ki-filled ki-pencil"></i>
+                                        </a>
+                                        <a class="kt-btn kt-btn-ghost" href="@Url.Action(nameof(TagController.Delete), nameof(TagController).RemoveControllerFromString(), new { Area = AreaNameConfiguration.Dashboard, item.Id })">
+                                            <i class="ki-filled ki-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    دسته ای برای نمایش یافت نشد
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="kt-card-footer mt-auto justify-center md:justify-between flex-col md:flex-row gap-5 text-secondary-foreground text-sm font-medium">
+                @await Html.RenderPaginateNavbarAsync(page => Url.Action(
+                    nameof(CategoryController.List), 
+                    nameof(CategoryController).RemoveControllerFromString(), 
+                    new
+                    {
+                        Area = AreaNameConfiguration.Dashboard, 
+                        Page = page, 
+                        Size = 10
+                    }
+                ))
+            </div>
+        </div>
+    </div>
+</div>

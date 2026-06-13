@@ -51,4 +51,28 @@ public class ErrorConfiguration
             nameof(TaskNotFound),
             "Task couldn't found."
         );
+
+    public static readonly Error CategoryNotFound =
+        new(
+            nameof(CategoryNotFound),
+            "Task couldn't found."
+        );
+
+    public static readonly Error CategoryAlreadyExist =
+        new(
+            nameof(CategoryAlreadyExist),
+            "Task couldn't found."
+        );
+
+    public static readonly Error TagNotFound =
+        new(
+            nameof(TagNotFound),
+            "Task couldn't found."
+        );
+
+    public static readonly Error TagAlreadyExist =
+        new(
+            nameof(TagAlreadyExist),
+            "Task couldn't found."
+        );
 }

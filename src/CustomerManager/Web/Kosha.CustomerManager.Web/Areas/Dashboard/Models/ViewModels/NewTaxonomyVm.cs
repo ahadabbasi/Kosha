@@ -3,7 +3,7 @@ using Kosha.CustomerManager.Web.Models.Configurations;
 
 namespace Kosha.CustomerManager.Web.Areas.Dashboard.Models.ViewModels;
 
-public class NewTagVm
+public class NewTaxonomyVm
 {
     [
         Display(Name = DisplayNameConfiguration.Title),

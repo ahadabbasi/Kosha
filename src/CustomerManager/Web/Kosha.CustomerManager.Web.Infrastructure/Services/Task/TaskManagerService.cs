@@ -89,11 +89,10 @@ internal sealed class TaskManagerService(
             ];
 
         Result<PaginateResponse<KeyValuePair<int, string>>> resultPaginate =
-            await records.AsQueryable()
+            records.AsQueryable()
                 .OrderBy(item => item.Key)
-                .ToPaginateAsync(
-                    paginateHelperService.Validate(request), 
-                    cancellation
+                .ToPaginate(
+                    paginateHelperService.Validate(request)
                 );
 
         ITaskPaginateResponse[] data = [];

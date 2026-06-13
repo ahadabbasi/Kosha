@@ -54,5 +54,6 @@ internal sealed class EnumCaptionService : IEnumCaptionService
 
     public IEnumerable<EnumCaptionResponse<TEnum>> Convert<TEnum>() 
         where TEnum : struct, Enum => 
-        (IEnumerable<EnumCaptionResponse<TEnum>>)Convert<int, TEnum>();
+        Convert<int, TEnum>()
+            .Select(item => new EnumCaptionResponse<TEnum>(item.Id, item.Caption, item.Value));
 }

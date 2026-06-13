@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Domain.Entities;
+using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Extensions;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Tag;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
@@ -35,83 +36,72 @@ internal sealed class TagService(
             );
 
     public async Task<Result> CreateAsync(
-        TagRequest request, 
+        TagRequest request,
         CancellationToken cancellation = default
     )
     {
-        Result result = false;
+        Result result = ErrorConfiguration.TagAlreadyExist;
 
-        try
+        if (!await repository.IsTitleExistAsync(request.Title, cancellation))
         {
-            result = await repository.IsTitleExistAsync(request.Title, cancellation);
+            Tag entity =
+                new Tag
+                {
+                    Title = request.Title
+                };
 
-            if (!result)
+            repository.Add(entity);
+
+            try
             {
-                Tag entity =
-                    new Tag
-                    {
-                        Title = request.Title
-                    };
+                await unitOfWork.SaveChangesAsync(cancellation);
 
-                repository.Add(entity);
-
-                try
-                {
-                    await unitOfWork.SaveChangesAsync(cancellation);
-
-                    result = true;
-                }
-                catch
-                {
-                    //
-                }
+                result = true;
             }
-        }
-        catch
-        {
-            //
+            catch
+            {
+                //
+            }
         }
 
         return result;
     }
 
     public async Task<Result<TagResponse>> FindByIdAsync(
-        Guid id, 
-        CancellationToken cancellation = default
+        Guid id, CancellationToken cancellation = default
     )
     {
         Result<TagResponse> result =
-            Result.Failed<TagResponse>(Error.None);
+            Result.Failed<TagResponse>(ErrorConfiguration.TagNotFound);
 
-        IQueryable<Tag> query = 
-                repository.Query()
-                    .Where(PredicateForId(id));
+        IQueryable<Tag> query =
+                repository.Query().Where(PredicateForId(id));
 
         if (await query.AnyAsync(cancellation))
             result =
                 Result.Success(
                     await query.Select(Map()).FirstAsync(cancellation)
                 );
-        
+
         return result;
     }
 
     public async Task<Result> UpdateAsync(
-        Guid id, 
-        TagRequest request, 
+        Guid id, TagRequest request,
         CancellationToken cancellation = default
     )
     {
-        Result result = false;
+        Result result = ErrorConfiguration.TagNotFound;
 
         IQueryable<Tag> query =
-            repository.Query()
-                .Where(PredicateForId(id));
+            repository.Query().Where(PredicateForId(id));
 
         if (await query.AnyAsync(cancellation))
         {
+            result = ErrorConfiguration.TagAlreadyExist;
+
             if (
-                ! await repository.Query()
+                !await repository.Query()
                     .AnyAsync(
                         item => item.Id != id && item.Title.Equals(request.Title),
                         cancellation
@@ -131,7 +121,7 @@ internal sealed class TagService(
 
                     result = true;
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     //
                 }
@@ -142,20 +132,18 @@ internal sealed class TagService(
     }
 
     public async Task<Result> DeleteAsync(
-        Guid id, 
+        Guid id,
         CancellationToken cancellation = default
     )
     {
-        Result result = false;
+        Result result = ErrorConfiguration.TagNotFound;
 
         IQueryable<Tag> query =
-            repository.Query()
-                .Where(PredicateForId(id));
+            repository.Query().Where(PredicateForId(id));
 
         if (await query.AnyAsync(cancellation))
         {
-            Tag entity =
-                await query.FirstAsync(cancellation);
+            Tag entity = await query.FirstAsync(cancellation);
 
             repository.Delete(entity);
 
@@ -175,9 +163,9 @@ internal sealed class TagService(
     }
 
     public async Task<Result<IEnumerable<TagResponse>>> FetchTaskTagsAsync(
-        Guid task, 
+        Guid task,
         CancellationToken cancellation = default
-    ) => 
+    ) =>
         Result.Success<IEnumerable<TagResponse>>(
             await tagTaskRepository.Query()
                 .Where(item => item.TaskId.Equals(task))
@@ -187,7 +175,7 @@ internal sealed class TagService(
         );
 
     public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(
-        string? title, 
+        string? title,
         CancellationToken cancellation = default
     )
     {
@@ -206,8 +194,8 @@ internal sealed class TagService(
     }
 
     public async Task<Result> AttachTagToTaskAsync(
-        Guid task, 
-        Guid tag, 
+        Guid task,
+        Guid tag,
         CancellationToken cancellation = default
     )
     {
@@ -215,7 +203,7 @@ internal sealed class TagService(
 
         if (
             tag != Guid.Empty &&
-            ! await tagTaskRepository.Query()
+            !await tagTaskRepository.Query()
                 .AnyAsync(
                     item => item.TaskId.Equals(task) && item.Tag.Equals(tag),
                     cancellation
@@ -237,7 +225,7 @@ internal sealed class TagService(
 
                 result = true;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 //
             }
@@ -247,8 +235,8 @@ internal sealed class TagService(
     }
 
     public async Task<Result> DetachTagFromTaskAsync(
-        Guid task, 
-        Guid tag, 
+        Guid task,
+        Guid tag,
         CancellationToken cancellation = default
     )
     {
@@ -285,6 +273,6 @@ internal sealed class TagService(
     private Expression<Func<Tag, bool>> PredicateForId(Guid id) =>
         item => item.Id.Equals(id);
 
-    private Expression<Func<Tag, TagResponse>> Map() => 
+    private Expression<Func<Tag, TagResponse>> Map() =>
         item => new TagResponse(item.Id, item.Title);
 }

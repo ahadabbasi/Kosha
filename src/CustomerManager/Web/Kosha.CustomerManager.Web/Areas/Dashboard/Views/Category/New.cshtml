@@ -2,9 +2,9 @@
 
 @using (
     Html.BeginForm(
-        nameof(TagController.New),
-        nameof(TagController).RemoveControllerFromString(),
-       new { Area = AreaNameConfiguration.Dashboard },
+        nameof(CategoryController.New),
+        nameof(CategoryController).RemoveControllerFromString(),
+        new { Area = AreaNameConfiguration.Dashboard },
         FormMethod.Post,
         true,
         new { @class = "grid gap-5" }

@@ -32,6 +32,8 @@ internal sealed class ApplicationContext(
 
     public DbSet<CustomerContact> CustomerContacts { get; set; }
 
+    public DbSet<Category> Categories { get; set; }
+
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -40,12 +40,8 @@ public static class PersistenceStartup
         return services.AddShared();
     }
 
-    public static IHost UsePersistence(
-        this IHost host,
-        IHostEnvironment env
-    )
+    public static IHost UsePersistence(this IHost host, IHostEnvironment env)
     {
-        
         if (env.IsDevelopment())
             host.UseMigration<ApplicationContext>();
         

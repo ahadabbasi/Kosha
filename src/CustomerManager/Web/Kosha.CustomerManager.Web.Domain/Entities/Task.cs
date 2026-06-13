@@ -20,6 +20,10 @@ public class Task : IAudit
 
     public virtual Customer Customer { get; set; }
 
+    public Guid CategoryId { get; set; }
+
+    public virtual Category Category { get; set; }
+
     public DateTime? Modified { get; set; }
 
     public DateTime Inserted { get; set; }
