@@ -3,4 +3,4 @@
 public interface ITaskCollectorRequest
 {
     string Type { get; }
-};
+}

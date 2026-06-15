@@ -1,7 +1,9 @@
-﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
+@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
 @using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
 @using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
 @using Microsoft.AspNetCore.Routing
+@using Microsoft.Extensions.Primitives
 @model PaginateResponse<ITaskPaginateResponse>
 
 @section Styles
@@ -16,6 +18,7 @@
             <!--Header-->
             <div class="flex items-center justify-between px-2 py-3 gap-1">
                 <div class="flex items-center w-full gap-1">
+                    @await Component.InvokeAsync(nameof(CategoryDropdownViewComponent).RemoveViewComponentFromString())
                 </div>
             </div>
             <!--End Header-->
@@ -65,19 +68,24 @@
             RouteValueDictionary values = 
                 new RouteValueDictionary(
                     [
-                        new KeyValuePair<string, object?>("Area", AreaNameConfiguration.Obligation),
-                        new KeyValuePair<string, object?>("Page", page),
-                        new KeyValuePair<string, object?>("Size", 10)
+                        new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
+                        new KeyValuePair<string, object?>(QueryConfiguration.Page, page),
+                        new KeyValuePair<string, object?>(QueryConfiguration.Size, 10)
                     ]
                 );
 
-                //Html.ViewContext.HttpContext.Request.Query.
+            if (
+                Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) && 
+                value.Count != 0 && Guid.TryParse(value.First(), out Guid category)
+            )
+                values.Add(QueryConfiguration.Category, category);
+            
 
-                return Url.Action(
-                    nameof(HomeController.Index),
-                    nameof(HomeController).RemoveControllerFromString(),
-                    values
-                );
+            return Url.Action(
+                nameof(HomeController.Index),
+                nameof(HomeController).RemoveControllerFromString(),
+                values
+            );
         })
 
     </div>

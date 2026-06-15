@@ -27,6 +27,28 @@ internal sealed class CategoryService(
     private IEnumerable<EnumCaptionResponse<AnsEnum>> Ans() =>
         enumCaptionService.Convert<AnsEnum>();
 
+    public async System.Threading.Tasks.Task<IEnumerable<CategoryResponse>> ListAsync(CancellationToken cancellation = default)
+    {
+        IEnumerable<EnumCaptionResponse<AnsEnum>> ans = Ans();
+
+        return (
+            await repository.Query()
+                .OrderByDescending(item => item.Inserted)
+                .Select(item =>
+                    new CategoryRepositoryResponse(
+                        item.Id, item.Name,
+                        item.IsDefault, item.Inserted
+                    )
+                ).ToListAsync(cancellation)
+        ).Select(response =>
+            new CategoryResponse(
+                response.Id,
+                response.Name,
+                ans.First(item => item.Value == response.IsDefault)
+            )
+        );
+    }
+
     public async System.Threading.Tasks.Task<Result<PaginateResponse<CategoryResponse>>> PaginateAsync(PaginateRequest? request, CancellationToken cancellation = default)
     {
         Result<PaginateResponse<CategoryRepositoryResponse>> paginate =

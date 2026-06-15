@@ -11,10 +11,10 @@ internal sealed class TaskConfiguration : AuditConfiguration<Task>
         base.Configure(builder);
 
         builder.Property(model => model.Title)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(model => model.Description)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(model => model.Type)
             .IsRequired();

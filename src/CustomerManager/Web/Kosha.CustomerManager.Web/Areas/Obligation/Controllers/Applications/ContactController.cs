@@ -16,8 +16,7 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers.Applications;
 
 [
     Route(RouteConfiguration.ApplicationRouteTemplate),
-    ApiController,
-    Area(AreaNameConfiguration.Obligation),
+    ApiController, Area(AreaNameConfiguration.Obligation),
     Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
 ]
 public sealed class ContactController(ICustomerService service) : ControllerBase

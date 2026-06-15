@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Extensions;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Category;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Task;
+using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Services.Task;
 
 internal sealed class TaskManagerService(
     IMediator mediator,
     ITaskBinderService binderService,
-    PaginateHelperService paginateHelperService
+    ICategoryService categoryService,
+    PaginateHelperService paginateHelperService,
+    IAuditRepository<Domain.Entities.Task> repository,
+    IUnitOfWork unitOfWork
 ) : ITaskManagerService
 {
-    public async Task<Result<Guid>> CreateAsync(CancellationToken cancellation)
+    public async System.Threading.Tasks.Task<Result<Guid>> CreateAsync(CancellationToken cancellation)
     {
         Result<Guid> result =
             Result.Failed<Guid>(
@@ -32,7 +37,35 @@ internal sealed class TaskManagerService(
             Result<ITaskCreateRequest> resultRequest = await binderService.BindCreateAsync(cancellation);
 
             if (resultRequest && resultRequest.Data is not null)
+            {
                 result = await mediator.Send(resultRequest.Data, cancellation);
+                if (result && result.Data != Guid.Empty)
+                {
+                    Result<Guid> defaultCategory = await categoryService.DefaultAsync(cancellation);
+
+                    if (defaultCategory && defaultCategory.Data != Guid.Empty)
+                    {
+                        repository.Add(
+                            new Domain.Entities.Task
+                            {
+                                Id = result,
+                                CategoryId = defaultCategory,
+                                Type = resultRequest.Data.Type
+                            }
+                        );
+
+                        try
+                        {
+                            await unitOfWork.SaveChangesAsync(cancellation);
+                        }
+                        catch
+                        {
+                            //
+                        }
+                    }
+                }
+            }
+
         }
         catch (Exception)
         {
@@ -42,7 +75,7 @@ internal sealed class TaskManagerService(
         return result;
     }
 
-    public async Task<Result<PaginateResponse<ITaskPaginateResponse>>> PaginateAsync(PaginateRequest? request = null, CancellationToken cancellation = default)
+    public async System.Threading.Tasks.Task<Result<PaginateResponse<ITaskPaginateResponse>>> PaginateAsync(PaginateRequest? request = null, CancellationToken cancellation = default)
     {
         Result<PaginateResponse<ITaskPaginateResponse>> result =
             Result.Failed<PaginateResponse<ITaskPaginateResponse>>(
@@ -126,6 +159,52 @@ internal sealed class TaskManagerService(
                     )
                 );
         }
+
+        return result;
+    }
+
+    public async System.Threading.Tasks.Task<Result> ChangeCategoryAsync(Guid task, Guid category, CancellationToken cancellation)
+    {
+        Result result = ErrorConfiguration.TaskNotFound;
+
+        Domain.Entities.Task? entity =
+            await repository.GetByIdAsync(task, cancellation);
+
+        if (entity != null && entity.CategoryId != category)
+        {
+            result = ErrorConfiguration.CategoryNotFound;
+
+            entity.CategoryId = category;
+
+            repository.Update(entity);
+
+            try
+            {
+                await unitOfWork.SaveChangesAsync(cancellation);
+
+                result = true;
+            }
+            catch (Exception )
+            {
+               // 
+            }
+        }
+
+        return result;
+    }
+
+
+    public async System.Threading.Tasks.Task<Result<Guid>> CategoryAsync(Guid task, CancellationToken cancellation)
+    {
+        Result<Guid> result = Result.Failed<Guid>(ErrorConfiguration.TaskNotFound);
+
+        Guid category =
+            await repository.Query().Where(item => item.Id == task)
+                .Select(item => item.CategoryId)
+                .FirstOrDefaultAsync(cancellation);
+
+        if (category != Guid.Empty)
+            result = Result.Success(category);
 
         return result;
     }

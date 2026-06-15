@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Category;
@@ -10,7 +11,14 @@ namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Category;
 public interface ICategoryService
 {
     /// <summary>
-    /// paginate all categories
+    /// All the categories
+    /// </summary>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<IEnumerable<CategoryResponse>> ListAsync(CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Paginate all categories
     /// </summary>
     /// <param name="request"></param>
     /// <param name="cancellation"></param>
@@ -20,7 +28,7 @@ public interface ICategoryService
     );
 
     /// <summary>
-    /// 
+    /// Create new category
     /// </summary>
     /// <param name="entry"></param>
     /// <param name="cancellation"></param>
@@ -55,7 +63,7 @@ public interface ICategoryService
     Task<Result> DeleteAsync(Guid id, CancellationToken cancellation = default);
 
     /// <summary>
-    /// 
+    /// Change the default category
     /// </summary>
     /// <param name="id"></param>
     /// <param name="cancellation"></param>
@@ -63,7 +71,7 @@ public interface ICategoryService
     Task<Result> MakeDefaultAsync(Guid id, CancellationToken cancellation = default);
 
     /// <summary>
-    /// 
+    /// Get the default category
     /// </summary>
     /// <param name="cancellation"></param>
     /// <returns></returns>

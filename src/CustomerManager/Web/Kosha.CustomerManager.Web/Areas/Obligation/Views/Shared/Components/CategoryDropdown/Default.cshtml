@@ -1,0 +1,77 @@
+﻿@using System.IO
+@using System.Text
+@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
+@using Microsoft.AspNetCore.Routing
+@model ObligationCategoryVm
+
+@{
+    RouteValueDictionary values =
+        new RouteValueDictionary(
+            [
+                new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation)
+            ]
+        );
+
+    string? GenerateUrl(Guid? id)
+    {
+        values.Remove(QueryConfiguration.Category);
+
+        if(id != null)
+            values.Add(QueryConfiguration.Category, id);
+
+        return Model.Selected == id ? null : Url.Action(nameof(HomeController.Index), nameof(HomeController).RemoveControllerFromString(), values);
+    }
+
+    bool HasBeenSelected(ObligationCaptionVm entry) =>
+        Model.Selected == entry.Id;
+
+    string? MainCaption() => 
+        Model.Where(item => item.Id == Model.Selected)
+            .Select(item => item.Name)
+            .FirstOrDefault();
+
+    string Option(ObligationCaptionVm entry)
+    {
+        TagBuilder tag =
+            new TagBuilder(HasBeenSelected(entry) ? "span" : "a")
+            {
+                TagRenderMode = TagRenderMode.Normal,
+                Attributes = { { "class", "kt-dropdown-menu-link" } }
+            };
+
+        tag.InnerHtml.AppendHtml(
+            new StringHtmlContent(entry.Name ?? string.Empty)
+        );
+
+        if (!HasBeenSelected(entry))
+            tag.Attributes.Add("href", GenerateUrl(entry.Id));
+
+        StringBuilder builder = new StringBuilder();
+
+        using (TextWriter writer = new StringWriter(builder))
+        {
+            tag.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
+        }
+
+        return builder.ToString();
+    }
+}
+
+<div class="ms-auto" data-kt-dropdown="true" data-kt-dropdown-trigger="click" data-kt-dropdown-initialized="true">
+    <button class="kt-btn kt-btn-outline text-secondary" data-kt-dropdown-toggle="true">
+        @Html.Raw(MainCaption())
+        <svg aria-hidden="true" class="lucide lucide-chevron-down" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m6 9 6 6 6-6"></path>
+        </svg>
+    </button>
+    <div class="kt-dropdown-menu" data-kt-dropdown-menu="true">
+        <ul class="kt-dropdown-menu-sub">
+            @foreach (ObligationCaptionVm item in Model)
+            {
+                <li>
+                    @Html.Raw(Option(item))
+                </li>
+            }
+        </ul>
+    </div>
+</div>
