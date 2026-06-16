@@ -1,5 +1,5 @@
 ﻿"use strict";
-(function (react, html, axios, modal, global) {
+(function (react, html, axios, modal, taskValue, global) {
 
     const useState = react.useState;
 
@@ -26,7 +26,9 @@
         }
     }
 
-    function tag({ task }) {
+    function tag() {
+
+        const task = taskValue();
 
         const [tags, setTags] = useState([]);
 
@@ -105,4 +107,4 @@
         global.tag = tag;
     }
 
-})(React, renderer, request, suggest, window)
+})(React, renderer, request, suggest, task, window)

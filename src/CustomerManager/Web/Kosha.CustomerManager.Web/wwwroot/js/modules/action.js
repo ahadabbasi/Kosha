@@ -1,4 +1,5 @@
-﻿(function (react, renderer, axios, global) {
+﻿"use strict";
+(function (react, renderer, axios, taskValue, global) {
 
     const useState = react.useState;
 
@@ -19,7 +20,9 @@
         }
     }
 
-    function action({ task }) {
+    function action() {
+
+        const task = taskValue();
 
         const request = clientRequest();
 
@@ -113,4 +116,4 @@
         global.action = action;
     }
 
-})(React, renderer, request, window)
+})(React, renderer, request, task, window)

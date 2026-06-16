@@ -1,5 +1,5 @@
 ﻿"use strict";
-(function (react, html, axios, suggest, modal, global) {
+(function (react, html, axios, suggest, modal, taskValue, global) {
 
     const useState = react.useState;
 
@@ -28,7 +28,9 @@
         }
     }
 
-    function contact({ task }) {
+    function contact() {
+
+        const [task] = useState(taskValue());
 
         const unkownTitle = "نا مشخص";
 
@@ -162,4 +164,4 @@
         global.contact = contact;
     }
 
-})(React, renderer, request, suggest, modal, window)
+})(React, renderer, request, suggest, modal, task, window)
