@@ -13,7 +13,7 @@ namespace Kosha.CustomerManager.Web.Models.Extensions;
 
 public static class RenderPaginateNavbarExtension
 {
-    extension<TData>(IHtmlHelper<PaginateResponse<TData>> html)
+    extension<TData>(IHtmlHelper<TData> html) where TData : PaginateResponse
     {
         public async Task<IHtmlContent> RenderPaginateNavbarAsync(Func<int, string?> routeBuilder)
         {

@@ -1,0 +1,60 @@
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
+@using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
+@using Microsoft.AspNetCore.Routing
+@using Microsoft.Extensions.Primitives
+@model ITaskPaginateResponse
+
+@{
+
+    string? GenerateUrl(Guid id)
+    {
+        RouteValueDictionary values = 
+            new RouteValueDictionary(
+                [ 
+                    new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
+                    new KeyValuePair<string, object?>(RouteConfiguration.IdName, id)
+                ]
+            );
+
+        foreach (string query in new[] { QueryConfiguration.Page, QueryConfiguration.Size, QueryConfiguration.Category })
+        {
+            if (
+                Html.ViewContext.HttpContext.Request.Query.TryGetValue(query, out StringValues value) &&
+                value.Count != 0 
+            )
+                values.Add(query, value.First());
+        }
+
+        
+
+        return Url.Action(
+            nameof(TaskController.Index),
+            nameof(TaskController).RemoveControllerFromString(),
+            values
+        );
+    }
+
+}
+
+<!-- Each item -->
+<div class="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary">
+
+    <!-- Information -->
+    <div class="flex-1 space-y-0.5">
+        <div class="flex items-center justify-between">
+            <a class="font-medium text-sm text-foreground hover:text-primary" href="@GenerateUrl(Model.Id)">
+                @Model.Title
+            </a>
+            <!-- Date -->
+            <span class="text-xs text-secondary-foreground">
+                @Model.Inserted
+            </span>
+            <!-- End Date -->
+        </div>
+        <p class="text-xs text-muted-foreground font-normal">
+            @Model.Description
+        </p>
+    </div>
+    <!-- End Information -->
+</div>
+<!-- End Each item -->

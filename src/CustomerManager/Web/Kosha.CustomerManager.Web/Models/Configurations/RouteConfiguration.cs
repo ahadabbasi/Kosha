@@ -12,5 +12,7 @@ public sealed class RouteConfiguration
 
     public const string ActionName = "[action]";
 
+    public const string IdName = "id";
+
     public const string ApplicationRouteTemplate = Application + Separator + AreaName + Separator + ControllerName;
 }

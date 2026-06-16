@@ -75,7 +75,7 @@ internal sealed class TaskManagerService(
         return result;
     }
 
-    public async System.Threading.Tasks.Task<Result<PaginateResponse<ITaskPaginateResponse>>> PaginateAsync(PaginateRequest? request = null, CancellationToken cancellation = default)
+    public async System.Threading.Tasks.Task<Result<PaginateResponse<ITaskPaginateResponse>>> PaginateAsync(TaskPaginationRequest? request = null, CancellationToken cancellation = default)
     {
         Result<PaginateResponse<ITaskPaginateResponse>> result =
             Result.Failed<PaginateResponse<ITaskPaginateResponse>>(

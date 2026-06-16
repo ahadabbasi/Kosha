@@ -10,7 +10,7 @@ public record PaginateResponse(
     int Size
 );
 
-public sealed record PaginateResponse<TData>(
+public record PaginateResponse<TData>(
     IEnumerable<TData> Data,
     int TotalRecords,
     int TotalPages,

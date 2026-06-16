@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
+using Kosha.CustomerManager.Web.Infrastructure.Models.Task;
 using Kosha.CustomerManager.Web.Models.Configurations;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -17,7 +18,7 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers;
 ]
 public sealed class HomeController(ITaskManagerService taskManagerService) : Controller
 {
-    public async Task<IActionResult> Index([Bind]PaginateRequest? request)
+    public async Task<IActionResult> Index([Bind] TaskPaginationRequest? request)
     {
         Result<PaginateResponse<ITaskPaginateResponse>> result =
             await taskManagerService.PaginateAsync(request);

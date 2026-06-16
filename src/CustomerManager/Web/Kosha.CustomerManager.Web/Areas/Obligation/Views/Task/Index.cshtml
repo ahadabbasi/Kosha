@@ -1,10 +1,9 @@
 ﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
 @using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
 @using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
-@using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
 @using Microsoft.AspNetCore.Routing
 @using Microsoft.Extensions.Primitives
-@model PaginateResponse<ITaskPaginateResponse>
+@model ObligationTaskVm
 
 @section Styles
 {
@@ -36,6 +35,8 @@
         <!-- End List View -->
         <!-- Message View -->
         <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
+            @await Component.InvokeAsync(nameof(AccessTokenViewComponent).RemoveViewComponentFromString())
+            @Html.HiddenFor(model => model.Task)
             <div id="react-element"></div>
         </div>
         <!-- End Message View -->
@@ -43,7 +44,7 @@
 
     <div class="flex items-center flex-col mt-2 kt-card py-2">
         @await Html.RenderPaginateNavbarAsync(page => {
-            RouteValueDictionary values = 
+            RouteValueDictionary values =
                 new RouteValueDictionary(
                     [
                         new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
@@ -53,11 +54,10 @@
                 );
 
             if (
-                Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) && 
+                Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) &&
                 value.Count != 0 && Guid.TryParse(value.First(), out Guid category)
             )
                 values.Add(QueryConfiguration.Category, category);
-            
 
             return Url.Action(
                 nameof(HomeController.Index),
@@ -68,3 +68,21 @@
 
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/react/umd/react.development.js"></script>
+    <script src="~/lib/react-dom/umd/react-dom.development.js"></script>
+    <script src="~/lib/htm/dist/htm.umd.js"></script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/js/components/renderer.js"></script>
+    <script src="~/js/providers/token.js"></script>
+    <script src="~/js/providers/task.js"></script>
+    <script src="~/js/components/request.js"></script>
+    <script src="~/js/components/modal.js"></script>
+    <script src="~/js/components/suggest.js"></script>
+    <script src="~/js/modules/tag.js"></script>
+    <script src="~/js/modules/contact.js"></script>
+    <script src="~/js/modules/action.js"></script>
+    <script src="~/js/obligation.js"></script>
+}
