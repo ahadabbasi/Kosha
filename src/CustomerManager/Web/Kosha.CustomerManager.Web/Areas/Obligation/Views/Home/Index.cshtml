@@ -1,9 +1,6 @@
-﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
-@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
 @using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
 @using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate
-@using Microsoft.AspNetCore.Routing
-@using Microsoft.Extensions.Primitives
 @model PaginateResponse<ITaskPaginateResponse>
 
 @section Styles
@@ -27,7 +24,7 @@
             <div class="px-4 py-1">
                 @foreach (ITaskPaginateResponse item in Model)
                 {
-                    @await Html.PartialAsync("_TaskItem", item)
+                    @await Html.PartialAsync("_TaskItem", new ObligationTaskItemVm(item))
                 }
             </div>
 
@@ -41,30 +38,5 @@
         <!-- End Message View -->
     </div>
 
-    <div class="flex items-center flex-col mt-2 kt-card py-2">
-        @await Html.RenderPaginateNavbarAsync(page => {
-            RouteValueDictionary values = 
-                new RouteValueDictionary(
-                    [
-                        new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
-                        new KeyValuePair<string, object?>(QueryConfiguration.Page, page),
-                        new KeyValuePair<string, object?>(QueryConfiguration.Size, 10)
-                    ]
-                );
-
-            if (
-                Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) && 
-                value.Count != 0 && Guid.TryParse(value.First(), out Guid category)
-            )
-                values.Add(QueryConfiguration.Category, category);
-            
-
-            return Url.Action(
-                nameof(HomeController.Index),
-                nameof(HomeController).RemoveControllerFromString(),
-                values
-            );
-        })
-
-    </div>
+    @await Html.PartialAsync("_NavbarPaginate", Model)
 </div>

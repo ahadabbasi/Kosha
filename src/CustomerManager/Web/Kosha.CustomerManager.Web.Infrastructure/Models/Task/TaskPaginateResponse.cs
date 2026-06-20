@@ -3,4 +3,4 @@ using System;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Task;
 
-public record TaskPaginateResponse(Guid Id, string Title, string Description, string Inserted) : ITaskPaginateResponse;
+internal record TaskPaginateResponse(Guid Id, string Title, string Description, string Inserted) : ITaskPaginateResponse;

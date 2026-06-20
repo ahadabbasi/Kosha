@@ -3,6 +3,7 @@ using Kosha.CustomerManager.Web.Infrastructure.Models.Paginate;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Task;
 using Kosha.CustomerManager.Web.Shared.Results;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task;
@@ -43,4 +44,12 @@ public interface ITaskManagerService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     System.Threading.Tasks.Task<Result<Guid>> CategoryAsync(Guid task, CancellationToken cancellation);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    System.Threading.Tasks.Task<Result<IEnumerable<ITaskDetailsResponse>>> DetailsAsync(Guid task, CancellationToken cancellation = default);
 }

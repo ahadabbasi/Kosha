@@ -17,12 +17,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Infrastructure.Services.Task;
 
 internal sealed class TaskManagerService(
-    IMediator mediator,
-    ITaskBinderService binderService,
-    ICategoryService categoryService,
-    PaginateHelperService paginateHelperService,
-    IAuditRepository<Domain.Entities.Task> repository,
-    IUnitOfWork unitOfWork
+    IMediator mediator, ITaskBinderService binderService,
+    ICategoryService categoryService, PaginateHelperService paginateHelperService,
+    IAuditRepository<Domain.Entities.Task> repository, IUnitOfWork unitOfWork
 ) : ITaskManagerService
 {
     public async System.Threading.Tasks.Task<Result<Guid>> CreateAsync(CancellationToken cancellation)
@@ -134,7 +131,7 @@ internal sealed class TaskManagerService(
         {
             Result<ITaskPaginateRequest> resultRequest =
                 await binderService.BindPaginateAsync(
-                    new TaskCollectorRequest(TaskTypeConfiguration.Comment),
+                    TaskTypeConfiguration.Comment,
                     resultPaginate.Data.Data.Select(item => item.Value).Select(Guid.Parse),
                     cancellation
                 );
@@ -205,6 +202,28 @@ internal sealed class TaskManagerService(
 
         if (category != Guid.Empty)
             result = Result.Success(category);
+
+        return result;
+    }
+
+    public async System.Threading.Tasks.Task<Result<IEnumerable<ITaskDetailsResponse>>> DetailsAsync(Guid task, CancellationToken cancellation = default)
+    {
+        string? type =
+            await repository.Query().Where(item => item.Id.Equals(task))
+                .Select(item => item.Type)
+                .FirstOrDefaultAsync(cancellation);
+
+        Result<IEnumerable<ITaskDetailsResponse>> result =
+            Result.Failed<IEnumerable<ITaskDetailsResponse>>(ErrorConfiguration.TaskNotFound);
+
+        if (!string.IsNullOrEmpty(type))
+        {
+            Result<ITaskDetailsRequest> resultRequest = 
+                await binderService.BindDetailsAsync(type, task, cancellation);
+
+            if (resultRequest && resultRequest.Data != null)
+                result = await mediator.Send(resultRequest.Data, cancellation);
+        }
 
         return result;
     }

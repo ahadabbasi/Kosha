@@ -1,8 +1,7 @@
 ﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
-@using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
 @using Microsoft.AspNetCore.Routing
 @using Microsoft.Extensions.Primitives
-@model ITaskPaginateResponse
+@model ObligationTaskItemVm
 
 @{
 
@@ -25,11 +24,9 @@
                 values.Add(query, value.First());
         }
 
-        
-
         return Url.Action(
-            nameof(TaskController.Index),
-            nameof(TaskController).RemoveControllerFromString(),
+            nameof(DetailsController.Index),
+            nameof(DetailsController).RemoveControllerFromString(),
             values
         );
     }
@@ -37,22 +34,22 @@
 }
 
 <!-- Each item -->
-<div class="group flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary">
+<div class="group flex items-center gap-2.5 p-2 mb-2 rounded-lg cursor-pointer transition-colors relative hover:bg-secondary@(Model.Task != null && Model.Task.Equals(Model.Item.Id) ? " active" : "")">
 
     <!-- Information -->
     <div class="flex-1 space-y-0.5">
         <div class="flex items-center justify-between">
-            <a class="font-medium text-sm text-foreground hover:text-primary" href="@GenerateUrl(Model.Id)">
-                @Model.Title
+            <a class="font-medium text-sm text-foreground hover:text-primary" href="@GenerateUrl(Model.Item.Id)">
+                @Model.Item.Title
             </a>
             <!-- Date -->
             <span class="text-xs text-secondary-foreground">
-                @Model.Inserted
+                @Model.Item.Inserted
             </span>
             <!-- End Date -->
         </div>
         <p class="text-xs text-muted-foreground font-normal">
-            @Model.Description
+            @Model.Item.Description
         </p>
     </div>
     <!-- End Information -->

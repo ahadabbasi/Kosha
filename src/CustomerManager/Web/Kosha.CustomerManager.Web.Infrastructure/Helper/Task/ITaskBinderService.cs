@@ -24,5 +24,15 @@ public interface ITaskBinderService
     /// <param name="cancellation"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    Task<Result<ITaskPaginateRequest>> BindPaginateAsync(ITaskCollectorRequest request, IEnumerable<Guid> records, CancellationToken cancellation = default);
+    Task<Result<ITaskPaginateRequest>> BindPaginateAsync(string request, IEnumerable<Guid> records, CancellationToken cancellation = default);
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="record"></param>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    Task<Result<ITaskDetailsRequest>> BindDetailsAsync(string request, Guid record, CancellationToken cancellation = default);
 }

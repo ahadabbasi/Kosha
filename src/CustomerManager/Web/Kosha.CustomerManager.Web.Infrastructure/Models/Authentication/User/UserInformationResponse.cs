@@ -1,3 +1,8 @@
-﻿namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
+﻿using System;
 
-public sealed record UserInformationResponse(string Username, string? Name, string? Family);
+namespace Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
+
+public sealed record UserInformationResponse(
+    Guid Id, string Username, 
+    string? Name, string? Family
+);

@@ -179,8 +179,7 @@ internal sealed class TaskBinderService(
                                         invokeMethod.Invoke(null, [body, JsonSerializerOptions.Default]);
 
                                     if (
-                                        value is not null && 
-                                        value is ITaskCreateRequest request &&
+                                        value is not null && value is ITaskCreateRequest request &&
                                         !string.IsNullOrEmpty(request.Type) &&
                                         request.Type.Equals(task.Type, StringComparison.OrdinalIgnoreCase)
                                     )
@@ -212,7 +211,7 @@ internal sealed class TaskBinderService(
         return data != null ? Result.Success(data) : Result.Failed<ITaskCreateRequest>(FailedBindingError);
     }
 
-    public Task<Result<ITaskPaginateRequest>> BindPaginateAsync(ITaskCollectorRequest request, IEnumerable<Guid> records, CancellationToken cancellation = default)
+    public Task<Result<ITaskPaginateRequest>> BindPaginateAsync(string request, IEnumerable<Guid> records, CancellationToken cancellation = default)
     {
         ITaskPaginateRequest? data = null;
 
@@ -242,7 +241,7 @@ internal sealed class TaskBinderService(
                         if (
                             value is ITaskPaginateRequest convert &&
                             !string.IsNullOrEmpty(convert.Type) &&
-                            request.Type.Equals(convert.Type, StringComparison.OrdinalIgnoreCase)
+                            request.Equals(convert.Type, StringComparison.OrdinalIgnoreCase)
                         )
                         {
                             data = convert;
@@ -260,6 +259,56 @@ internal sealed class TaskBinderService(
         }
 
         return Task.FromResult(data != null ? Result.Success(data) : Result.Failed<ITaskPaginateRequest>(FailedBindingError));
+    }
+
+
+    public Task<Result<ITaskDetailsRequest>> BindDetailsAsync(string request, Guid record, CancellationToken cancellation = default)
+    {
+        ITaskDetailsRequest? data = null;
+
+        Type[] types =
+            AccumulateTypes<ITaskDetailsRequest, TaskDetailsRequest>()
+                .ToArray();
+
+        if (types.Length != 0)
+        {
+            foreach (Type type in types)
+            {
+                ConstructorInfo? constructorInfo =
+                    type.GetConstructors()
+                        .Where(constructor => constructor.GetParameters().Length == 1)
+                        .FirstOrDefault(constructor =>
+                            constructor.GetParameters()
+                                .Any(parameter => parameter.ParameterType == typeof(Guid))
+                        );
+
+                if (constructorInfo != null)
+                {
+                    try
+                    {
+                        object value =
+                            constructorInfo.Invoke([record]);
+
+                        if (
+                            value is ITaskDetailsRequest convert && !string.IsNullOrEmpty(convert.Type) &&
+                            request.Equals(convert.Type, StringComparison.OrdinalIgnoreCase)
+                        )
+                        {
+                            data = convert;
+                            break;
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        //
+                    }
+
+                }
+            }
+        }
+
+        return Task.FromResult(data != null ? Result.Success(data) : Result.Failed<ITaskDetailsRequest>(FailedBindingError));
     }
 
 

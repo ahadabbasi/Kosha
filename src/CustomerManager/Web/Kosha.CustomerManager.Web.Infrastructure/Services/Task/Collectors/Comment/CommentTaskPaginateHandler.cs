@@ -12,9 +12,9 @@ using Kosha.CustomerManager.Web.Shared.Results;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Services.Task.Collectors.Comment;
 
-internal sealed class CommentTaskPaginateHandler(IPersianService persianService) : ITaskPaginateHandler<CommandTaskPaginateRequest>
+internal sealed class CommentTaskPaginateHandler(IPersianService persianService) : ITaskPaginateHandler<CommentTaskPaginateRequest>
 {
-    public ValueTask<Result<IEnumerable<ITaskPaginateResponse>>> Handle(CommandTaskPaginateRequest query, CancellationToken cancellationToken)
+    public ValueTask<Result<IEnumerable<ITaskPaginateResponse>>> Handle(CommentTaskPaginateRequest query, CancellationToken cancellationToken)
     {
         IEnumerable<ITaskPaginateResponse> responses =
             [
