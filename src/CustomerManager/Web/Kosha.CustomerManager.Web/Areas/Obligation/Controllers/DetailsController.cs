@@ -18,7 +18,7 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Controllers;
     Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme),
     Route(RouteConfiguration.AreaName + RouteConfiguration.Separator + RouteConfiguration.ControllerName)
 ]
-public sealed class TaskController(ITaskManagerService taskManagerService) : Controller
+public sealed class DetailsController(ITaskManagerService taskManagerService) : Controller
 {
     [HttpGet($"{{{RouteConfiguration.IdName}:guid}}")]
     public async Task<IActionResult> Index(Guid id, [Bind] TaskPaginationRequest? request)
