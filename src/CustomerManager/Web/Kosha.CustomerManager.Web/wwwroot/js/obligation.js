@@ -1,5 +1,5 @@
 ﻿"use strict";
-(function (react, reactDom, html, tag, contact, action, tokenProvider, taskProvider) {
+(function (react, reactDom, html, tag, contact, action, category, tokenProvider, taskProvider) {
 
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -11,7 +11,7 @@
                                 <div className="flex flex-col items-stretch min-h-[calc(100vh-6rem)]">
                                     <div className="px-4">
                                         <div className="flex items-center flex-wrap justify-between pt-3">
-                                            <button className="kt-btn kt-btn-secondary" href="#">شروع نشده</button>
+                                            <${category} />
                                         </div>
                                         <div className="py-3">
                                             <span className="text-lg text-foreground text-semibold">
@@ -38,4 +38,4 @@
 
     });
 
-})(React, ReactDOM, renderer, tag, contact, action, tokenProvider, taskProvider)
+})(React, ReactDOM, renderer, tag, contact, action, category, tokenProvider, taskProvider)
