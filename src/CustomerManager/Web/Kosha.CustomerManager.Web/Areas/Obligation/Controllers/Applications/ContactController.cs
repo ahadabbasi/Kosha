@@ -62,7 +62,7 @@ public sealed class ContactController(ICustomerService service) : ControllerBase
                         result.Data.Name,
                         result.Data.Family,
                         (result.Data.Contacts ?? [])
-                            .Select(contact => new ObligationContactInformationVm(contact.Type, contact.Value))
+                            .Select(contact => new ObligationDetailsInformationVm(contact.Type, contact.Value))
                     )
                 )
                 : BadRequest(result.Errors);

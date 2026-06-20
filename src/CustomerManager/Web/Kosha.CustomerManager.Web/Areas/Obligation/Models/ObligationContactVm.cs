@@ -5,5 +5,5 @@ namespace Kosha.CustomerManager.Web.Areas.Obligation.Models;
 public sealed record ObligationContactVm(
     string Name, 
     string Family, 
-    IEnumerable<ObligationContactInformationVm>? Information = null
+    IEnumerable<ObligationDetailsInformationVm>? Information = null
 );
