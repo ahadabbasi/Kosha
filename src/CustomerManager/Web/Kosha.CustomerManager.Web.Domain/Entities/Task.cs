@@ -8,13 +8,7 @@ public class Task : IAudit
 {
     public Guid Id { get; set; }
 
-    public string? Title { get; set; }
-
-    public string? Description { get; set; }
-
     public string Type { get; set; }
-
-    public string? Data { get; set; }
 
     public Guid? CustomerId { get; set; }
 
@@ -24,9 +18,9 @@ public class Task : IAudit
 
     public virtual Category Category { get; set; }
 
-    public DateTime? Modified { get; set; }
-
     public DateTime Inserted { get; set; }
+
+    public DateTime? Modified { get; set; }
 
     public byte[] RowVersion { get; set; }
 

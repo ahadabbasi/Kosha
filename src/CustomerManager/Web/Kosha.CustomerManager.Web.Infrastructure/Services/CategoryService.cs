@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 
 internal sealed class CategoryService(
-    IAuditRepository<Category> repository, 
+    IEntityRepository<Category> repository, 
     IEnumCaptionService enumCaptionService,
     IUnitOfWork unitOfWork,
     PaginateHelperService paginateHelperService

@@ -10,7 +10,7 @@ namespace Kosha.CustomerManager.Web.Persistence.Seeders;
 
 [Seed(202601021530)]
 internal sealed class S202601021530AddingRole(
-    IAuditRepository<Role> repository, 
+    IEntityRepository<Role> repository, 
     IUnitOfWork unitOfWork
 ) : IDataSeeder
 {

@@ -20,7 +20,7 @@ public static class ToPaginateExtension
     )
     {
         Result<PaginateResponse<TData>> result = 
-                Result.Failed<PaginateResponse<TData>>(Error.None);
+            Result.Failed<PaginateResponse<TData>>(Error.None);
 
         OrderingExpressionVisitor orderingVisitor =
             new OrderingExpressionVisitor();
@@ -29,14 +29,16 @@ public static class ToPaginateExtension
 
         if (orderingVisitor.HasOrdering)
         {
-            int totalRecords = await query.CountAsync(cancellation);
+            int totalRecords = //query.Count();
+                await query.CountAsync(cancellation);
 
             int totalPages = (int)Math.Ceiling((decimal)totalRecords / request.Size);
 
             IList<TData> data =
-                await query
+                 await query
                     .Skip((request.Page - 1) * request.Size)
                     .Take(request.Size)
+                    //.ToList();
                     .ToListAsync(cancellation);
 
             result =
@@ -51,7 +53,45 @@ public static class ToPaginateExtension
                 );
         }
 
-        return result;
+        return result; // Task.FromResult(result);
+    }
+
+
+    public static Result<PaginateResponse<TData>> ToPaginate<TData>(
+        this IQueryable<TData> query, PaginateRequest request
+    )
+    {
+        Result<PaginateResponse<TData>> result =
+            Result.Failed<PaginateResponse<TData>>(Error.None);
+
+        OrderingExpressionVisitor orderingVisitor =
+            new OrderingExpressionVisitor();
+
+        orderingVisitor.Visit(query.Expression);
+
+        if (orderingVisitor.HasOrdering)
+        {
+            int totalRecords = query.Count();
+
+            int totalPages = (int)Math.Ceiling((decimal)totalRecords / request.Size);
+
+            IList<TData> data =
+                query.Skip((request.Page - 1) * request.Size)
+                    .Take(request.Size).ToList();
+
+            result =
+                Result.Success(
+                    new PaginateResponse<TData>(
+                        data,
+                        totalRecords,
+                        totalPages,
+                        request.Page,
+                        data.Count
+                    )
+                );
+        }
+
+        return result; // Task.FromResult(result);
     }
 
     public static Task<Result<PaginateResponse<TData>>> ToPaginateInsertedAsync<TData>(

@@ -11,7 +11,6 @@ internal sealed class Transaction : ITransaction
     {
         Disposed = false;
         _transaction = transaction;
-
     }
 
     private readonly IDbContextTransaction _transaction;
@@ -25,7 +24,6 @@ internal sealed class Transaction : ITransaction
 
         Disposed = true;
         _transaction.Dispose();
-
     }
 
     public Task RollbackAsync(CancellationToken cancellation = default) =>

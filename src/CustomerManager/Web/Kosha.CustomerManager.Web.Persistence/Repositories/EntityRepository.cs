@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Persistence.Repositories;
 
-internal class AuditRepository<TEntity>(
+internal class EntityRepository<TEntity>(
     ApplicationContext context
-) : Repository<TEntity>(context), IAuditRepository<TEntity>
+) : Repository<TEntity>(context), IEntityRepository<TEntity>
     where TEntity : class, IAudit
 {
     public virtual Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellation = default) => 

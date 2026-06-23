@@ -5,7 +5,7 @@ using Kosha.CustomerManager.Web.Domain.Authenticate;
 
 namespace Kosha.CustomerManager.Web.Persistence.Helper;
 
-public interface IUserRepository : IAuditRepository<User>
+public interface IUserRepository : IEntityRepository<User>
 {
     /// <summary>
     /// Find user by username

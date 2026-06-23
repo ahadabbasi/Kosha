@@ -25,6 +25,8 @@ public static class InfrastructureStartup
     {
         services.ConfigureOptions<FileInformationConfigureOption>();
 
+        services.ConfigureOptions<ContactTaskInformationConfigureOption>();
+
         services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IHasherService, HasherService>();

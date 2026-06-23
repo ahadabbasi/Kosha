@@ -4,7 +4,7 @@ using Kosha.CustomerManager.Web.Domain.Entities;
 
 namespace Kosha.CustomerManager.Web.Persistence.Helper;
 
-public interface ITagRepository : IAuditRepository<Tag>
+public interface ITagRepository : IEntityRepository<Tag>
 {
     /// <summary>
     /// Checking the title already exist in the table or not

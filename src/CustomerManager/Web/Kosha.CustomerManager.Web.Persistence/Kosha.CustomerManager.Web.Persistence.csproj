@@ -6,12 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="NewFolder\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
-    <None Remove="NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -26,6 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Domain\Kosha.CustomerManager.Web.Domain.csproj" />
     <ProjectReference Include="..\Kosha.CustomerManager.Web.Shared\Kosha.CustomerManager.Web.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configurations\Entities\Tasks\" />
   </ItemGroup>
 
 </Project>

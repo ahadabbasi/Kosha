@@ -10,5 +10,5 @@ public interface ITaskDetailsResponse
     /// <summary>
     /// 
     /// </summary>
-    string Value { get; }
+    string? Value { get; }
 }

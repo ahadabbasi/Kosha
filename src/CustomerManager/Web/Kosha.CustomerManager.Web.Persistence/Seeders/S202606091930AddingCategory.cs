@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Persistence.Seeders;
 
 [Seed(202606091930)]
-internal sealed class S202606091930AddingCategory(IAuditRepository<Category> repository, IUnitOfWork unitOfWork) : IDataSeeder
+internal sealed class S202606091930AddingCategory(IEntityRepository<Category> repository, IUnitOfWork unitOfWork) : IDataSeeder
 {
     public async System.Threading.Tasks.Task InvokeAsync(CancellationToken cancellation = default)
     {

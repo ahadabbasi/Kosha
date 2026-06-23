@@ -2,5 +2,5 @@
 
 public class TaskTypeConfiguration
 {
-    public const string Comment = nameof(Comment);
+    public const string Contact = nameof(Contact);
 }

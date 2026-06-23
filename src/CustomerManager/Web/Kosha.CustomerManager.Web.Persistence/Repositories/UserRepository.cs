@@ -13,7 +13,7 @@ namespace Kosha.CustomerManager.Web.Persistence.Repositories;
 
 internal sealed class UserRepository(
     ApplicationContext context
-) : AuditRepository<User>(context),
+) : EntityRepository<User>(context),
     IUserRepository
 {
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellation = default) => 

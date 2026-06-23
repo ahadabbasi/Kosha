@@ -1,5 +1,6 @@
 ﻿using Kosha.CustomerManager.Web.Domain.Authenticate;
 using Kosha.CustomerManager.Web.Domain.Entities;
+using Kosha.CustomerManager.Web.Domain.Entities.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kosha.CustomerManager.Web.Persistence.Contexts;
@@ -33,6 +34,12 @@ internal sealed class ApplicationContext(
     public DbSet<CustomerContact> CustomerContacts { get; set; }
 
     public DbSet<Category> Categories { get; set; }
+
+    #endregion
+
+    #region Tasks
+
+    public DbSet<Contact> Contacts { get; set; }
 
     #endregion
 

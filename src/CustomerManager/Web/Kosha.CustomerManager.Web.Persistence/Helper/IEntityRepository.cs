@@ -5,8 +5,8 @@ using Kosha.CustomerManager.Web.Domain.Helper;
 
 namespace Kosha.CustomerManager.Web.Persistence.Helper;
 
-public interface IAuditRepository<TEntity> : IRepository<TEntity>
-    where TEntity : class, IAudit
+public interface IEntityRepository<TEntity> : IRepository<TEntity>
+    where TEntity : class, IEntity
 {
     /// <summary>
     /// Find entity by id

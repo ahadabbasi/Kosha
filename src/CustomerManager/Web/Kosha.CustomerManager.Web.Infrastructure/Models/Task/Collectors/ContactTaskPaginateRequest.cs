@@ -4,5 +4,5 @@ using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Task.Collectors;
 
-internal sealed record CommentTaskPaginateRequest(IEnumerable<Guid> Records) :
-    TaskPaginateRequest(TaskTypeConfiguration.Comment, Records);
+internal sealed record ContactTaskPaginateRequest(IEnumerable<Guid> Records) :
+    TaskPaginateRequest(TaskTypeConfiguration.Contact, Records);

@@ -15,9 +15,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Infrastructure.Services.Customer;
 
 internal sealed class CustomerService(
-    IAuditRepository<Domain.Entities.Customer> repository,
-    IAuditRepository<Domain.Entities.CustomerContact> contactRepository,
-    IAuditRepository<Domain.Entities.Task> taskRepository,
+    IEntityRepository<Domain.Entities.Customer> repository,
+    IEntityRepository<Domain.Entities.CustomerContact> contactRepository,
+    IEntityRepository<Domain.Entities.Task> taskRepository,
     PaginateHelperService paginateHelperService,
     ICustomerContactService customerContactService,
     IUnitOfWork unitOfWork

@@ -9,7 +9,7 @@ namespace Kosha.CustomerManager.Web.Persistence.Repositories;
 
 internal sealed class TagRepository(
     ApplicationContext context
-) : AuditRepository<Tag>(context), 
+) : EntityRepository<Tag>(context), 
     ITagRepository
 {
     public Task<bool> IsTitleExistAsync(string title, CancellationToken cancellation = default) => 

@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kosha.CustomerManager.Web.Infrastructure.Services;
 
 internal sealed class ActionService(
-    IAuditRepository<Domain.Entities.Action> repository,
+    IEntityRepository<Domain.Entities.Action> repository,
     IUnitOfWork unitOfWork, IAuthorizeService authorizeService
 ) : IActionService
 {

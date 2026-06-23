@@ -4,17 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kosha.CustomerManager.Web.Persistence.Configurations.Entities;
 
-internal sealed class TaskConfiguration : AuditConfiguration<Task>
+internal sealed class TaskConfiguration : IEntityTypeConfiguration<Task>
 {
-    public override void Configure(EntityTypeBuilder<Task> builder)
+    public void Configure(EntityTypeBuilder<Task> builder)
     {
-        base.Configure(builder);
-
-        builder.Property(model => model.Title)
-            .IsRequired(false);
-
-        builder.Property(model => model.Description)
-            .IsRequired(false);
+        builder.HasKey(model => model.Id);
 
         builder.Property(model => model.Type)
             .IsRequired();
@@ -28,5 +22,15 @@ internal sealed class TaskConfiguration : AuditConfiguration<Task>
             .WithOne(model => model.Task)
             .HasForeignKey(model => model.TaskId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(model => model.Inserted)
+            .IsRequired();
+
+        builder.Property(model => model.Modified)
+            .IsRequired(false);
+
+        builder.Property(model => model.RowVersion)
+            .IsRowVersion()
+            .IsConcurrencyToken();
     }
 }

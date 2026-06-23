@@ -23,7 +23,7 @@ internal sealed class ModifiedInterceptor(ITimeService timeService) : SaveChange
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = new CancellationToken()
+        CancellationToken cancellationToken = new()
     )
     {
         ModifyEntities(eventData.Context);
@@ -39,9 +39,7 @@ internal sealed class ModifiedInterceptor(ITimeService timeService) : SaveChange
             .Where(entityEntry => entityEntry.Entity is IModified);
 
         foreach (EntityEntry entry in entries)
-        {
             if(entry.Entity is IModified modifiedEntity)
                 modifiedEntity.Modified = timeService.Now;
-        }
     }
 }
