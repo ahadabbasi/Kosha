@@ -51,5 +51,5 @@ public interface ITaskManagerService
     /// <param name="task"></param>
     /// <param name="cancellation"></param>
     /// <returns></returns>
-    System.Threading.Tasks.Task<Result<IEnumerable<ITaskDetailsResponse>>> DetailsAsync(Guid task, CancellationToken cancellation = default);
+    System.Threading.Tasks.Task<Result<ITaskDetailsResponse>> DetailsAsync(Guid task, CancellationToken cancellation = default);
 }

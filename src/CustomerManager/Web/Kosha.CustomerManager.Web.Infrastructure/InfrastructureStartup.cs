@@ -1,4 +1,5 @@
 ﻿using Kosha.CustomerManager.Web.Infrastructure.Configurations.Options;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Action;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Category;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Customer;
@@ -43,12 +44,12 @@ public static class InfrastructureStartup
 
         services.AddScoped<ICategoryService, CategoryService>();
 
+        services.AddScoped<IActionService, ActionService>();
+
         services.AddScoped<PaginateHelperService>();
 
-        services.AddMediator(options =>
-            {
-                options.ServiceLifetime = ServiceLifetime.Scoped;
-            }
+        services.AddMediator(options => 
+            options.ServiceLifetime = ServiceLifetime.Scoped
         );
 
         return services.AddPersistence(configuration);

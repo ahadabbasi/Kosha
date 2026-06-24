@@ -172,15 +172,15 @@ internal sealed class TaskManagerService(
         return result;
     }
 
-    public async System.Threading.Tasks.Task<Result<IEnumerable<ITaskDetailsResponse>>> DetailsAsync(Guid task, CancellationToken cancellation = default)
+    public async System.Threading.Tasks.Task<Result<ITaskDetailsResponse>> DetailsAsync(Guid task, CancellationToken cancellation = default)
     {
         string? type =
             await repository.Query().Where(item => item.Id.Equals(task))
                 .Select(item => item.Type)
                 .FirstOrDefaultAsync(cancellation);
 
-        Result<IEnumerable<ITaskDetailsResponse>> result =
-            Result.Failed<IEnumerable<ITaskDetailsResponse>>(ErrorConfiguration.TaskNotFound);
+        Result<ITaskDetailsResponse> result =
+            Result.Failed<ITaskDetailsResponse>(ErrorConfiguration.TaskNotFound);
 
         if (!string.IsNullOrEmpty(type))
         {

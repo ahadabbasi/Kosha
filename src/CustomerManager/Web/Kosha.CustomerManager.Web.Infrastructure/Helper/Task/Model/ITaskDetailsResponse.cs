@@ -1,4 +1,6 @@
-﻿namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
+﻿using System.Collections.Generic;
+
+namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 
 public interface ITaskDetailsResponse
 {
@@ -10,5 +12,5 @@ public interface ITaskDetailsResponse
     /// <summary>
     /// 
     /// </summary>
-    string? Value { get; }
+    IEnumerable<ITaskDetailsInformationResponse>? Information { get; }
 }

@@ -1,5 +1,9 @@
-﻿using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
+﻿using System.Collections.Generic;
+using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Models.Task;
 
-public record TaskDetailsResponse(string Title, string? Value) : ITaskDetailsResponse;
+internal sealed record TaskDetailsResponse(
+    string Title, 
+    IEnumerable<ITaskDetailsInformationResponse>? Information
+) : ITaskDetailsResponse;

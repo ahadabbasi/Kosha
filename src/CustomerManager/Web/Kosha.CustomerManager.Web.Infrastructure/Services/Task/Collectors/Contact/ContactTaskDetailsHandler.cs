@@ -1,4 +1,6 @@
-﻿using Kosha.CustomerManager.Web.Infrastructure.Configurations;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Kosha.CustomerManager.Web.Infrastructure.Configurations;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Handlers;
 using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Task;
@@ -6,9 +8,6 @@ using Kosha.CustomerManager.Web.Infrastructure.Models.Task.Collectors;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Services.Task.Collectors.Contact;
 
@@ -17,27 +16,30 @@ internal sealed class ContactTaskDetailsHandler(
     IOptions<ContactTaskInformation> options
 ) : ITaskDetailsHandler<ContactTaskDetailsRequest>
 {
-    private ContactTaskCaptionInformation Caption => options.Value.Caption;
+    private ContactTaskInformation Information => options.Value;
 
-    public async ValueTask<Result<IEnumerable<ITaskDetailsResponse>>> Handle(ContactTaskDetailsRequest query, CancellationToken cancellationToken)
+    public async ValueTask<Result<ITaskDetailsResponse>> Handle(ContactTaskDetailsRequest query, CancellationToken cancellationToken)
     {
-        IEnumerable<ITaskDetailsResponse>? data = null;
+        ITaskDetailsResponse? data = null;
 
         Domain.Entities.Tasks.Contact? entity =
             await repository.GetByIdAsync(query.Record, cancellationToken);
 
         if (entity is not null)
             data =
-            [
-                new TaskDetailsResponse(Caption.Name, entity.Name),
-                new TaskDetailsResponse(Caption.Organization, entity.Organization),
-                new TaskDetailsResponse(Caption.Post, entity.Post),
-                new TaskDetailsResponse(Caption.PhoneNumber, entity.PhoneNumber),
-                new TaskDetailsResponse(Caption.Description, entity.Description)
-            ];
+                new TaskDetailsResponse(
+                    entity.Organization ?? Information.UnknownOrganization,
+                    [
+                        new TaskDetailsInformationResponse(Information.Caption.Name, entity.Name),
+                        new TaskDetailsInformationResponse(Information.Caption.Organization, entity.Organization),
+                        new TaskDetailsInformationResponse(Information.Caption.Post, entity.Post),
+                        new TaskDetailsInformationResponse(Information.Caption.PhoneNumber, entity.PhoneNumber),
+                        new TaskDetailsInformationResponse(Information.Caption.Description, entity.Description)
+                    ]
+                );
 
         return data is not null
             ? Result.Success(data)
-            : Result.Failed<IEnumerable<ITaskDetailsResponse>>(ErrorConfiguration.TaskNotFound);
+            : Result.Failed<ITaskDetailsResponse>(ErrorConfiguration.TaskNotFound);
     }
 }

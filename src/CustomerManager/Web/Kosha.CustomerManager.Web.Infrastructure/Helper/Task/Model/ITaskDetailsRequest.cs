@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Mediator;
 
 namespace Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model;
 
-public interface ITaskDetailsRequest : ITaskCollectorRequest, IQuery<Result<IEnumerable<ITaskDetailsResponse>>
+public interface ITaskDetailsRequest : ITaskCollectorRequest, IQuery<Result<ITaskDetailsResponse>>
 {
     /// <summary>
     /// the record need to received
