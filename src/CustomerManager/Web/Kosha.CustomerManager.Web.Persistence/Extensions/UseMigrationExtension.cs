@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,10 +17,13 @@ public static class UseMigrationExtension
                 TContext? context =
                     scope.ServiceProvider.GetService<TContext>();
 
-                if (context != null)
+                if (context != null && context.Database.GetPendingMigrations().Any())
                 {
+                    /*
                     context.Database.EnsureDeleted();
                     context.Database.EnsureCreated();
+                    */
+                    context.Database.Migrate();
                 }
             }
         }

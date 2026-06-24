@@ -12,7 +12,7 @@ namespace Kosha.CustomerManager.Web.Persistence.Repositories;
 internal class EntityRepository<TEntity>(
     ApplicationContext context
 ) : Repository<TEntity>(context), IEntityRepository<TEntity>
-    where TEntity : class, IAudit
+    where TEntity : class, IEntity
 {
     public virtual Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellation = default) => 
         Query().FirstOrDefaultAsync(PredicateId(id), cancellation);

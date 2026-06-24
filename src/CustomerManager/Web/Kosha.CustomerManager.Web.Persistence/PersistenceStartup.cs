@@ -21,13 +21,12 @@ public static class PersistenceStartup
         services.AddScoped<IInterceptor, ModifiedInterceptor>();
 
         services.AddDbContext<ApplicationContext>((provider, options) =>
-            {
-                options.AddInterceptors(provider.GetServices<IInterceptor>());
-                options.UseSqlServer(configuration.GetConnectionString("default"));
-            }
+            options
+                .AddInterceptors(provider.GetServices<IInterceptor>())
+                .UseSqlServer(configuration.GetConnectionString("default"))
         );
 
-        services.AddScoped(typeof(Helper.IEntityRepository<>), typeof(Repositories.EntityRepository<>));
+        services.AddScoped(typeof(IEntityRepository<>), typeof(EntityRepository<>));
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
