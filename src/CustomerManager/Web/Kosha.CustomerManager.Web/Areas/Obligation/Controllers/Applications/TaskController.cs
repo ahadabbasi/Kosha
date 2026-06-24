@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,16 +23,22 @@ public sealed class TaskController(ITaskManagerService taskManagerService) : Con
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Index(Guid id, CancellationToken cancellation)
     {
-        Result<IEnumerable<ITaskDetailsResponse>> result =
+        Result<ITaskDetailsResponse> result =
             await taskManagerService.DetailsAsync(id, cancellation);
 
         return 
             result && result.Data != null ? 
                 Ok(
-                    result.Data
-                        .Select(item => 
-                            new ObligationDetailsInformationVm(item.Title, item.Value)
-                        )
+                    new ObligationDetailsVm(
+                        result.Data.Title, 
+                        (result.Data.Information ?? [])
+                            .Select(item => 
+                                new ObligationDetailsInformationVm(
+                                    item.Key, 
+                                    item.Value ?? string.Empty
+                                )
+                            )
+                    )
                 ) :
                 BadRequest(result.Errors);
     }

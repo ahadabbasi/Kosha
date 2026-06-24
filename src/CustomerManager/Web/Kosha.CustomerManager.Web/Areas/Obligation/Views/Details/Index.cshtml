@@ -1,8 +1,5 @@
-﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.Configurations
-@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
+﻿@using Kosha.CustomerManager.Web.Areas.Obligation.Models.ViewComponents
 @using Kosha.CustomerManager.Web.Infrastructure.Helper.Task.Model
-@using Microsoft.AspNetCore.Routing
-@using Microsoft.Extensions.Primitives
 @model ObligationTaskVm
 
 @section Styles
@@ -34,10 +31,10 @@
         </div>
         <!-- End List View -->
         <!-- Message View -->
-        <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) lg:block">
+        <div class="bg-background border border-input rounded-xl shadow-xs grow lg:w-[calc(100%-300px)] xl:w-(--mail-view-width) flex flex-col">
             @await Component.InvokeAsync(nameof(AccessTokenViewComponent).RemoveViewComponentFromString())
             @Html.HiddenFor(model => model.Task)
-            <div id="react-element"></div>
+            <div id="react-element" class="grow flex flex-col"></div>
         </div>
         <!-- End Message View -->
     </div>
@@ -61,5 +58,6 @@
     <script src="~/js/modules/contact.js"></script>
     <script src="~/js/modules/action.js"></script>
     <script src="~/js/modules/category.js"></script>
+    <script src="~/js/modules/details.js"></script>
     <script src="~/js/obligation.js"></script>
 }

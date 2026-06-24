@@ -33,7 +33,7 @@ internal sealed class BearerAuthenticationMethodService(
                 );
 
         return
-            result || token == null
+            token == null
                 ? Result.Failed<IAuthenticationSignInResponse>(
                     result.Errors.Any() ? result.Errors.ToArray() : [Error.None]
                 )

@@ -33,7 +33,7 @@ public sealed class CategoryController(
                 resultCategory.Errors.Any() ? resultCategory.Errors.ToArray() : [Error.None]
             );
 
-        if (result) 
+        if (resultCategory) 
             result = await categoryService.FindByIdAsync(resultCategory, cancellation);
 
         return result && result.Data != null ? Ok(Map(result.Data)) : BadRequest(result.Errors);

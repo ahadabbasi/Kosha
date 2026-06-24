@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Kosha.CustomerManager.Web.Areas.Account.Models.ViewModels;
 using Kosha.CustomerManager.Web.Infrastructure.Configurations;
@@ -7,7 +8,6 @@ using Kosha.CustomerManager.Web.Infrastructure.Helper.Authentication.Models;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication;
 using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication.User;
 using Kosha.CustomerManager.Web.Models.Configurations;
-using Kosha.CustomerManager.Web.Models.Extensions;
 using Kosha.CustomerManager.Web.Models.Infrastructure.Helper;
 using Kosha.CustomerManager.Web.Shared.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kosha.CustomerManager.Web.Areas.Account.Controllers.Applications;
 
 [
-    Area(AreaNameConfiguration.Account),
-    Route(RouteConfiguration.ApplicationRouteTemplate),
-    ApiController
+    Area(AreaNameConfiguration.Account), ApiController,
+    Route(RouteConfiguration.ApplicationRouteTemplate)
 ]
 public sealed class TokenController(
     IUserService userService,
@@ -29,43 +28,36 @@ public sealed class TokenController(
     {
         IAuthenticationSignInResponse? response = null;
 
+        IEnumerable<Error> errors = [ErrorConfiguration.UsernameOrPasswordIsWrong];
+
         Result<UserResponse> resultOfFind =
             await userService.FindByUsernameAsync(
                 new UserRequest(entry.Username),
                 cancellation
             );
 
-        ModelState.AddError(ErrorConfiguration.UsernameOrPasswordIsWrong);
-
         if (!resultOfFind)
-        {
-            ModelState.Clear();
-            ModelState.AddError(resultOfFind);
-        }
+            errors = resultOfFind.Errors;
 
-        if (
-            resultOfFind &&
-            resultOfFind.Data != null
-        )
+        if (resultOfFind && resultOfFind.Data != null)
         {
             Result<IAuthenticationSignInResponse> resultOfVerified =
                 await authenticationMethodService.SignInAsync(
                     new AuthenticationSignInRequest(
-                        resultOfFind, 
+                        resultOfFind,
                         entry.Password,
                         true
                     ),
                     cancellation
                 );
 
-            if (resultOfVerified && resultOfVerified.Data != null)
-            {
-                ModelState.Clear();
+            if (!resultOfVerified)
+                errors = resultOfVerified.Errors;
 
+            if (resultOfVerified && resultOfVerified.Data != null)
                 response = resultOfVerified.Data;
-            }
         }
 
-        return !ModelState.IsValid || response == null ? BadRequest(ModelState) : Ok(response);
+        return response == null ? BadRequest(errors) : Ok(response);
     }
 }

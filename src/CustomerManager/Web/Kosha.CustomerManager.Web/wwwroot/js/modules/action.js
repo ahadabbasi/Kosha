@@ -72,8 +72,7 @@
             return commentIsValid() ? '' : 'disabled=""';
         }
 
-
-        return renderer`<div className="container-fluid flex flex-col h-[calc(100vh-var(--header-height-mobile)-1.25rem)] lg:h-[calc(100vh-2.2rem)]">
+        return renderer`<div className="container-fluid flex flex-col">
                             <div className="flex-1 flex flex-col rounded-lg bg-background overflow-hidden">
                                 <div id="chat-messages" className="flex flex-col h-full overflow-y-auto space-y-3.5 flex-1 overflow-y-auto px-6 py-4">
                                     ${messages.map(function (item, index) { return renderer`<${userAction} message="${item}" key="${index}" />` })}

@@ -27,8 +27,7 @@ public sealed class ContactController(ICustomerService service) : ControllerBase
         Result<CustomerResponse> result = await service.FetchTaskCustomerAsync(id, cancellation);
         
         return result && result.Data != null ?
-            Ok(Map(result.Data)) : 
-            NotFound();
+            Ok(Map(result.Data)) : NotFound();
     }
 
 

@@ -61,11 +61,11 @@
             request.change(task, value.id);
         }
 
-        function categoryItem({ value, index }) {
-            html`<div key="${index}" className=""flex items-center gap-2.5>
-                    <input className="kt-radio" type="radio" name="category" onclikc=${function (e) { categoryChange(value); }} />
-                    <label>${value.name}</label>
-                </div>`
+        function categoryItem({ value }) {
+            return html`<div className="flex items-center gap-2.5">
+                            <input className="kt-radio" type="radio" name="category" checked=${value.id === current.id} onChange=${function (e) { categoryChange(value); }} />
+                            <label>${value.name}</label>
+                        </div>`
         }
 
         return current === undefined ?
@@ -74,8 +74,7 @@
                     <button className="kt-btn kt-btn-secondary" onClick=${function () { setShowModal(true); }}>${current.name}</button>
                     <${modal} status="${showModal}" setStatus="${setShowModal}">
                         <div className="grid gap-2.5">
-                            ${list.map(function (value, index) {
-                                return html`<${categoryItem} value="${value}" key="${index}"  />`  })}
+                            ${list.map(function (value, index) { return html`<${categoryItem} value="${value}" key="${index}" />`;  })}
                         </div>
                     </${modal}>
                 </${fragment}>`
