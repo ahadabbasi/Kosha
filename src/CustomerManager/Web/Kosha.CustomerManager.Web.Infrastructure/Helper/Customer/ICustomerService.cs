@@ -169,8 +169,7 @@ public interface ICustomerService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result<IEnumerable<CustomerResponse>>> SearchCustomerAsync(
-        string? fullName, 
-        CancellationToken cancellation = default
+        string? fullName, CancellationToken cancellation = default
     );
 
     /// <summary>
@@ -180,7 +179,6 @@ public interface ICustomerService
     /// <param name="cancellation"></param>
     /// <returns></returns>
     Task<Result<CustomerInformationResponse>> TaskCustomerInformationAsync(
-        Guid task,
-        CancellationToken cancellation = default
+        Guid task, CancellationToken cancellation = default
     );
 }

@@ -6,6 +6,5 @@ public sealed record CustomerSearchRepositoryResponse(
     Guid Id, 
     string Name, 
     string Family, 
-    string FullName,
-    DateTime Inserted
+    string FullName
 ) : CustomerResponse(Id, Name, Family);

@@ -22,7 +22,7 @@ internal sealed class FileService(
 
         string path = CompletePath(fileName);
 
-        if (string.IsNullOrEmpty(path))
+        if (!string.IsNullOrEmpty(path))
             try
             {
                 if (File.Exists(path))

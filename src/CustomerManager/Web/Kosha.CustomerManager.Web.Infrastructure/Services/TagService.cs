@@ -36,8 +36,7 @@ internal sealed class TagService(
             );
 
     public async Task<Result> CreateAsync(
-        TagRequest request,
-        CancellationToken cancellation = default
+        TagRequest request, CancellationToken cancellation = default
     )
     {
         Result result = ErrorConfiguration.TagAlreadyExist;

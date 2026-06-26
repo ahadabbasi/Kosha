@@ -43,8 +43,7 @@ internal sealed class CustomerService(
             );
 
     public async Task<Result<CustomerResponse>> FindByIdAsync(
-        Guid id, 
-        CancellationToken cancellation = default
+        Guid id, CancellationToken cancellation = default
     )
     {
         Result<CustomerResponse> result = 
@@ -66,8 +65,7 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result> CreateAsync(
-        CustomerRequest request, 
-        CancellationToken cancellation = default
+        CustomerRequest request, CancellationToken cancellation = default
     )
     {
         Result result = false;
@@ -96,8 +94,7 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result> UpdateAsync(
-        Guid id,
-        CustomerRequest request, 
+        Guid id, CustomerRequest request, 
         CancellationToken cancellation = default
     )
     {
@@ -133,8 +130,7 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result> DeleteAsync(
-        Guid id,
-        CancellationToken cancellation = default
+        Guid id, CancellationToken cancellation = default
     )
     {
         Result result =
@@ -162,8 +158,7 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result<CustomerContactListResponse>> ListOfCustomerContactAsync(
-        Guid customer,
-        CancellationToken cancellation = default
+        Guid customer, CancellationToken cancellation = default
     )
     {
         Result<CustomerContactListResponse> result =
@@ -232,8 +227,7 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result> AddNewContactToCustomerAsync(
-        Guid customer, 
-        CustomerContactRequest contact,
+        Guid customer, CustomerContactRequest contact,
         CancellationToken cancellation = default
     )
     {
@@ -246,10 +240,7 @@ internal sealed class CustomerService(
             Result<IEnumerable<CustomerContactTypeResponse>> resultTypes =
                 await AcceptableContactTypesAsync(cancellation);
 
-            if (
-                resultTypes &&
-                resultTypes.Data != null
-            )
+            if (resultTypes && resultTypes.Data != null)
             {
                 Result<CustomerContactTypeResponse> resultTypeResponse =
                     await ValidateContactType(contact, cancellation);
@@ -297,16 +288,14 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result> UpdateContactOfCustomerAsync(
-        Guid customer, 
-        Guid contact, 
+        Guid customer, Guid contact, 
         CustomerContactRequest request,
         CancellationToken cancellation = default
     )
     {
         Result result =
             await ContactBelongsToCustomerAsync(
-                customer,
-                contact,
+                customer, contact,
                 cancellation
             );
 
@@ -521,33 +510,24 @@ internal sealed class CustomerService(
     }
 
     public async Task<Result<IEnumerable<CustomerResponse>>> SearchCustomerAsync(
-        string? fullName,
-        CancellationToken cancellation = default
+        string? fullName, CancellationToken cancellation = default
     )
     {
-        IQueryable<CustomerSearchRepositoryResponse> query =
+        IQueryable<Domain.Entities.Customer> query =
             repository.Query()
-                .Select(item =>
-                    new CustomerSearchRepositoryResponse(
-                        item.Id,
-                        item.Name,
-                        item.Family,
-                        string.Concat(item.Name, " ", item.Family),
-                        item.Inserted
-                    )
-                );
+                .OrderBy(item => item.Inserted).Take(10);
 
         if (!string.IsNullOrEmpty(fullName))
-            query = query.Where(item => item.FullName.Contains(fullName));
+            query = query.Where(item => item.Name.Contains(fullName) || item.Family.Contains(fullName) );
 
         return Result.Success<IEnumerable<CustomerResponse>>(
-            await query.OrderBy(item => item.Inserted).Take(10).ToArrayAsync(cancellation)
+            await query.Select(item => new CustomerResponse(item.Id, item.Name, item.Family))
+                .ToArrayAsync(cancellation)
         );
     }
 
     public async Task<Result<CustomerInformationResponse>> TaskCustomerInformationAsync(
-        Guid task,
-        CancellationToken cancellation = default
+        Guid task, CancellationToken cancellation = default
     )
     {
         CustomerInformationResponse? customer =
@@ -566,6 +546,35 @@ internal sealed class CustomerService(
                         )
                     )
                 ).FirstOrDefaultAsync(cancellation);
+
+
+        if (customer != null && customer.Contacts is not null)
+        {
+            Result<IEnumerable<CustomerContactTypeResponse>> result =
+                await AcceptableContactTypesAsync(cancellation);
+
+            if (result && result.Data is not null)
+            {
+                customer =
+                    customer with
+                    {
+                        Contacts = customer.Contacts
+                            .Select(contact =>
+                                new CustomerContactResponse(
+                                    contact.Id,
+                                    result.Data.Where(type =>
+                                            type.Type.Equals(
+                                                contact.Type, 
+                                                StringComparison.OrdinalIgnoreCase
+                                            )
+                                        ).Select(type => type.Title)
+                                        .FirstOrDefault() ?? contact.Type,
+                                    contact.Value
+                                )
+                            )
+                    };
+            }
+        }
 
         return customer != null ? 
             Result.Success(customer) : 
