@@ -1,4 +1,5 @@
 ﻿@using Kosha.CustomerManager.Web.Models.Extensions
+@using Kosha.CustomerManager.Web.Models.ViewComponents
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
@@ -53,7 +54,7 @@
                     <!-- End of Search -->
                 </div>
                 <!-- User -->
-                @await Html.PartialAsync("_User")
+                @await Component.InvokeAsync(nameof(UserViewComponent).RemoveViewComponentFromString())
                 <!-- End of User -->
             </div>
             <!-- End of Topbar -->

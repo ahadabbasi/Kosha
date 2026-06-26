@@ -2,6 +2,8 @@
 @using Kosha.CustomerManager.Web.Areas.Dashboard.Controllers
 @using Kosha.CustomerManager.Web.Models.Configurations
 @using Kosha.CustomerManager.Web.Models.Extensions
+@using Kosha.CustomerManager.Web.Infrastructure.Models.Authentication
+@model AuthorizationResponse
 <div data-kt-dropdown="true" data-kt-dropdown-offset="10px, 10px" data-kt-dropdown-offset-rtl="-20px, 10px" data-kt-dropdown-placement="bottom-end" data-kt-dropdown-placement-rtl="bottom-start" data-kt-dropdown-trigger="click">
     <div class="cursor-pointer shrink-0" data-kt-dropdown-toggle="true">
         <img alt="" class="size-9 rounded-full border-2 border-input shrink-0" src="~/lib/metronic/9.3.1/media/avatars/blank.png" />
@@ -11,10 +13,10 @@
             <div class="flex items-center gap-2">
                 <div class="flex flex-col gap-1.5">
                     <span class="text-sm text-foreground font-semibold leading-none">
-                        Cody Fisher
+                        @Model.Name @Model.Family
                     </span>
                     <a class="text-xs text-secondary-foreground hover:text-primary font-medium leading-none" href="#">
-                        c.fisher@gmail.com
+                        @Model.Username
                     </a>
                 </div>
             </div>
