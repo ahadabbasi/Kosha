@@ -10,11 +10,11 @@
         const request = axios.create('/api/obligation/tag');
 
         function remove(task, id) {
-            return request.client().delete(`/${task}`, { data: { id: id } })
+            return request.client().put(`/${task}`, { id: id })
         }
 
         function add(task, id) {
-            return request.client().post(`/${task}`, { data: { id: id } });
+            return request.client().post(`/${task}`, { id: id });
         }
 
         return {

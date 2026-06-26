@@ -80,12 +80,18 @@ internal sealed class TaskManagerService(
                 ErrorConfiguration.TaskTypeInvalid
             );
 
-        Result<PaginateResponse<TaskRepositoryResponse>> resultPaginate =
+        IQueryable<Domain.Entities.Task> query =
             repository.Query()
-                .OrderBy(item => item.Inserted)
+                .OrderBy(item => item.Inserted);
+
+        if (request != null && request.Category != null && request.Category != Guid.Empty)
+            query = query.Where(item => item.CategoryId == request.Category);
+
+        Result<PaginateResponse<TaskRepositoryResponse>> resultPaginate =
+            await query
                 .Select(item => new TaskRepositoryResponse(item.Type, item.Id))
-                .ToPaginate(
-                    paginateHelperService.Validate(request)
+                .ToPaginateAsync(
+                    paginateHelperService.Validate(request), cancellation
                 );
 
         if (resultPaginate && resultPaginate.Data != null)

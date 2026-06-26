@@ -12,7 +12,7 @@
         const request = axios.create('/api/obligation/category');
 
         function change(task, id) {
-            return request.client().post(`/${task}`, { data: { id: id } });
+            return request.client().post(`/${task}`, { id: id });
         }
 
         function list() {

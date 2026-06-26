@@ -4,29 +4,33 @@
 @using Microsoft.Extensions.Primitives
 @model PaginateResponse
 
-<div class="flex items-center flex-col mt-2 kt-card py-2">
-    @await Html.RenderPaginateNavbarAsync(page => {
-        RouteValueDictionary values = 
-            new RouteValueDictionary(
-                [
-                    new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
-                    new KeyValuePair<string, object?>(QueryConfiguration.Page, page),
-                    new KeyValuePair<string, object?>(QueryConfiguration.Size, 10)
-                ]
+@if (Model.TotalPages > 1)
+{
+    <div class="flex items-center flex-col mt-2 kt-card py-2">
+        @await Html.RenderPaginateNavbarAsync(page =>
+        {
+            RouteValueDictionary values =
+                new RouteValueDictionary(
+                    [
+                        new KeyValuePair<string, object?>(QueryConfiguration.Area, AreaNameConfiguration.Obligation),
+                        new KeyValuePair<string, object?>(QueryConfiguration.Page, page),
+                        new KeyValuePair<string, object?>(QueryConfiguration.Size, 10)
+                    ]
+                );
+
+            if (
+                Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) &&
+                value.Count != 0 && Guid.TryParse(value.First(), out Guid category)
+            )
+                values.Add(QueryConfiguration.Category, category);
+
+
+            return Url.Action(
+                nameof(HomeController.Index),
+                nameof(HomeController).RemoveControllerFromString(),
+                values
             );
+        })
 
-        if (
-            Html.ViewContext.HttpContext.Request.Query.TryGetValue(QueryConfiguration.Category, out StringValues value) && 
-            value.Count != 0 && Guid.TryParse(value.First(), out Guid category)
-        )
-            values.Add(QueryConfiguration.Category, category);
-            
-
-        return Url.Action(
-            nameof(HomeController.Index),
-            nameof(HomeController).RemoveControllerFromString(),
-            values
-        );
-    })
-
-</div>
+    </div>
+}

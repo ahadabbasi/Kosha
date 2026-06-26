@@ -132,8 +132,7 @@ internal sealed class TagService(
     }
 
     public async Task<Result> DeleteAsync(
-        Guid id,
-        CancellationToken cancellation = default
+        Guid id, CancellationToken cancellation = default
     )
     {
         Result result = ErrorConfiguration.TagNotFound;
@@ -175,8 +174,7 @@ internal sealed class TagService(
         );
 
     public async Task<Result<IEnumerable<TagResponse>>> SearchTagsAsync(
-        string? title,
-        CancellationToken cancellation = default
+        string? title, CancellationToken cancellation = default
     )
     {
         IQueryable<Tag> query = repository.Query();
@@ -194,8 +192,7 @@ internal sealed class TagService(
     }
 
     public async Task<Result> AttachTagToTaskAsync(
-        Guid task,
-        Guid tag,
+        Guid task, Guid tag,
         CancellationToken cancellation = default
     )
     {
@@ -205,7 +202,7 @@ internal sealed class TagService(
             tag != Guid.Empty &&
             !await tagTaskRepository.Query()
                 .AnyAsync(
-                    item => item.TaskId.Equals(task) && item.Tag.Equals(tag),
+                    item => item.TaskId.Equals(task) && item.TagId.Equals(tag),
                     cancellation
                 )
         )
@@ -235,8 +232,7 @@ internal sealed class TagService(
     }
 
     public async Task<Result> DetachTagFromTaskAsync(
-        Guid task,
-        Guid tag,
+        Guid task, Guid tag,
         CancellationToken cancellation = default
     )
     {
@@ -246,7 +242,7 @@ internal sealed class TagService(
         {
             IQueryable<TagTask> query =
                 tagTaskRepository.Query()
-                    .Where(item => item.TaskId.Equals(task) && item.Tag.Equals(tag));
+                    .Where(item => item.TaskId.Equals(task) && item.TagId.Equals(tag));
 
             if (await query.AnyAsync(cancellation))
             {

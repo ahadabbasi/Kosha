@@ -12,7 +12,7 @@
         const request = axios.create('/api/obligation/contact');
 
         function attach(task, id) {
-            return request.client().post(`/${task}`, { data: { id: id } });
+            return request.client().post(`/${task}`, { id: id });
         }
 
         function information(task) {

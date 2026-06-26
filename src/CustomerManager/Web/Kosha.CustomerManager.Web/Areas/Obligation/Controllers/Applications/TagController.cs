@@ -41,7 +41,7 @@ public sealed class TagController(ITagService service) : ControllerBase
             BadRequest(result.Errors);
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, [FromBody] ObligationCaptionVm tag, CancellationToken cancellation)
     {
         Result result = await service.DetachTagFromTaskAsync(id, tag.Id ?? Guid.Empty, cancellation);

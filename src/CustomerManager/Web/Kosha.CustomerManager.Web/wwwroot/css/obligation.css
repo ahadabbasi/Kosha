@@ -73,3 +73,7 @@
         background-color: var(--secondary);
     }
 }
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
