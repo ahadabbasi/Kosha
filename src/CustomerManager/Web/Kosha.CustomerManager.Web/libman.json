@@ -26,6 +26,11 @@
       "provider": "unpkg",
       "library": "axios@1.13.5",
       "destination": "wwwroot/lib/axios"
+    },
+    {
+      "provider": "unpkg",
+      "library": "requirejs@2.3.7",
+      "destination": "wwwroot/lib/require"
     }
   ]
 }
