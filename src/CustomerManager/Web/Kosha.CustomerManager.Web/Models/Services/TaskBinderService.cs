@@ -132,7 +132,7 @@ internal sealed class TaskBinderService(
                 string body = await reader.ReadToEndAsync(cancellation);
 
                 TaskCreateRequest? task =
-                    JsonSerializer.Deserialize<TaskCreateRequest>(body, JsonSerializerOptions.Default);
+                    JsonSerializer.Deserialize<TaskCreateRequest>(body, SerializerOption());
 
                 if (task is not null)
                 {
@@ -176,7 +176,7 @@ internal sealed class TaskBinderService(
                                 try
                                 {
                                     object? value =
-                                        invokeMethod.Invoke(null, [body, JsonSerializerOptions.Default]);
+                                        invokeMethod.Invoke(null, [body, SerializerOption()]);
 
                                     if (
                                         value is not null && value is ITaskCreateRequest request &&
@@ -249,7 +249,7 @@ internal sealed class TaskBinderService(
                         }
 
                     }
-                    catch (Exception e)
+                    catch
                     {
                         //
                     }
@@ -299,7 +299,7 @@ internal sealed class TaskBinderService(
                         }
 
                     }
-                    catch (Exception e)
+                    catch
                     {
                         //
                     }
@@ -311,7 +311,12 @@ internal sealed class TaskBinderService(
         return Task.FromResult(data != null ? Result.Success(data) : Result.Failed<ITaskDetailsRequest>(FailedBindingError));
     }
 
-
+    private JsonSerializerOptions SerializerOption() =>
+        new()
+        {
+            PropertyNameCaseInsensitive = false,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
     private IEnumerable<Type> AccumulateTypes<TRequest, TClass>()
         where TRequest : ITaskCollectorRequest
