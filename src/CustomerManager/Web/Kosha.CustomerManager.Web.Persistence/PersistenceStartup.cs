@@ -1,5 +1,4 @@
 ﻿using Kosha.CustomerManager.Web.Persistence.Contexts;
-using Kosha.CustomerManager.Web.Persistence.Extensions;
 using Kosha.CustomerManager.Web.Persistence.Helper;
 using Kosha.CustomerManager.Web.Persistence.Interceptors;
 using Kosha.CustomerManager.Web.Persistence.Repositories;
@@ -41,11 +40,13 @@ public static class PersistenceStartup
 
     public static IHost UsePersistence(this IHost host, IHostEnvironment env)
     {
+        /*
         if (env.IsDevelopment())
             host.UseMigration<ApplicationContext>();
         
         host.UseSeeder(typeof(PersistenceStartup).Assembly);
-        
+        */
+
         return host.UseShared(env);
     }
 }
